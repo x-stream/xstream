@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013, 2014, 2015, 2019 XStream Committers.
+ * Copyright (C) 2011, 2013, 2014, 2015, 2019, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,7 +42,7 @@ public class WeakCache<K, V> extends AbstractMap<K, V> {
      * @since 1.4
      */
     public WeakCache() {
-        this(new WeakHashMap<K, Reference<V>>());
+        this(new WeakHashMap<>());
     }
 
     /**

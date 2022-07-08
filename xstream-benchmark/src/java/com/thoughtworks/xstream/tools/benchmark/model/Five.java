@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2015 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,6 +39,6 @@ public class Five extends One {
     }
 
     public int hashCode() {
-        return super.hashCode() + two + new Boolean(three).hashCode() + five.toString().hashCode();
+        return super.hashCode() + two + Boolean.valueOf(three).hashCode() + five.toString().hashCode();
     }
 }

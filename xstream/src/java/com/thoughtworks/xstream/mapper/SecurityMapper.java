@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014, 2015 XStream Committers.
+ * Copyright (C) 2014, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible
@@ -47,8 +47,8 @@ public class SecurityMapper extends MapperWrapper {
     public SecurityMapper(final Mapper wrapped, final TypePermission... permissions) {
         super(wrapped);
         this.permissions = permissions == null //
-            ? new ArrayList<TypePermission>()
-            : new ArrayList<TypePermission>(Arrays.asList(permissions));
+            ? new ArrayList<>()
+            : new ArrayList<>(Arrays.asList(permissions));
     }
 
     /**

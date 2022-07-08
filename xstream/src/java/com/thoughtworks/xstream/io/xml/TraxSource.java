@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004 Joe Walnes.
- * Copyright (C) 2006, 2007, 2013, 2014, 2015, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2013, 2014, 2015, 2020, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -286,7 +286,7 @@ public class TraxSource extends SAXSource {
         }
         @SuppressWarnings("unchecked")
         final List<Object> olist = (List<Object>)list;
-        source = list instanceof Queue ? (Queue<?>)list : new ListWrappingQueue<Object>(olist);
+        source = list instanceof Queue ? (Queue<?>)list : new ListWrappingQueue<>(olist);
 
         configureXMLReader();
     }

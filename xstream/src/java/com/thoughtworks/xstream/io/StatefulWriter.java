@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -97,7 +97,7 @@ public class StatefulWriter extends WriterWrapper {
         }
         state = STATE_NODE_START;
         ++balance;
-        attributes.push(new HashSet<String>());
+        attributes.push(new HashSet<>());
     }
 
     @Override

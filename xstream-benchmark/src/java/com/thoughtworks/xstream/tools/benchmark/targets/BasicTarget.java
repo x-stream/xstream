@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2015 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -31,14 +31,14 @@ public class BasicTarget implements Target {
     
     public BasicTarget() {
         list = new ArrayList();
-        list.add(new Integer(1));
-        list.add(new Byte((byte)2));
-        list.add(new Short((short)3));
-        list.add(new Long(4));
+        list.add(Integer.valueOf(1));
+        list.add(Byte.valueOf((byte)2));
+        list.add(Short.valueOf((short)3));
+        list.add(Long.valueOf(4));
         list.add("Profile");
         list.add(Boolean.TRUE);
-        list.add(new Float(1.2f));
-        list.add(new Double(1.2f));
+        list.add(Float.valueOf(1.2f));
+        list.add(Double.valueOf(1.2f));
         list.add(new File("profile.txt"));
         list.add(Locale.ENGLISH);
     }
