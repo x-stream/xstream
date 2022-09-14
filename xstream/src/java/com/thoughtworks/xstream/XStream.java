@@ -101,6 +101,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -141,6 +142,7 @@ import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter;
 import com.thoughtworks.xstream.converters.extended.CharsetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
@@ -710,7 +712,7 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+        types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
             DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
             String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
@@ -996,6 +998,7 @@ public class XStream {
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaFieldConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new LambdaConverter(mapper, reflectionProvider, classLoaderReference), PRIORITY_NORMAL);
+        registerConverter(new AtomicBooleanConverter(), PRIORITY_NORMAL);
 
         if (JVM.isAWTAvailable()) {
             registerConverter(new FontConverter(mapper), PRIORITY_NORMAL);
