@@ -189,6 +189,7 @@ import com.thoughtworks.xstream.converters.time.YearConverter;
 import com.thoughtworks.xstream.converters.time.YearMonthConverter;
 import com.thoughtworks.xstream.converters.time.ZoneIdConverter;
 import com.thoughtworks.xstream.converters.time.ZonedDateTimeConverter;
+import com.thoughtworks.xstream.core.AbstractTreeMarshallingStrategy;
 import com.thoughtworks.xstream.core.ClassLoaderReference;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.JVM;
@@ -1132,6 +1133,20 @@ public class XStream {
      */
     public void setMarshallingStrategy(final MarshallingStrategy marshallingStrategy) {
         this.marshallingStrategy = marshallingStrategy;
+    }
+
+    /**
+     * Set the recursion depth limit.
+     *
+     * @param recursionDepthLimit the recursion depth limit
+     * @throws UnsupportedOperationException if the recursion depth limit cannot be set
+     */
+    public void setRecursionDepthLimit(int recursionDepthLimit) {
+        if (marshallingStrategy instanceof AbstractTreeMarshallingStrategy) {
+            ((AbstractTreeMarshallingStrategy) marshallingStrategy).setRecursionDepthLimit(recursionDepthLimit);
+        } else {
+            throw new UnsupportedOperationException("Recursion depth limit can only be set for tree marshalling strategy");
+        }
     }
 
     /**

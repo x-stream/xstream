@@ -37,6 +37,7 @@ public class TreeUnmarshaller implements UnmarshallingContext {
     private final FastStack<Class<?>> types = new FastStack<>(16);
     private DataHolder dataHolder;
     private final PrioritizedList<Runnable> validationList = new PrioritizedList<>();
+    private int recursionDepthLimit = 500;
 
     public TreeUnmarshaller(
             final Object root, final HierarchicalStreamReader reader, final ConverterLookup converterLookup,
@@ -45,6 +46,10 @@ public class TreeUnmarshaller implements UnmarshallingContext {
         this.reader = reader;
         this.converterLookup = converterLookup;
         this.mapper = mapper;
+    }
+
+    protected void setRecursionDepthLimit(int recursionDepthLimit) {
+        this.recursionDepthLimit = recursionDepthLimit;
     }
 
     @Override
@@ -70,6 +75,9 @@ public class TreeUnmarshaller implements UnmarshallingContext {
 
     protected Object convert(final Object parent, final Class<?> type, final Converter converter) {
         types.push(type);
+        if (types.size() > recursionDepthLimit) {
+            throw new ConversionException("TreeUnmarshaller has reached recursion depth limit of " + recursionDepthLimit);
+        }
         try {
             return converter.unmarshal(reader, this);
         } catch (final ConversionException conversionException) {

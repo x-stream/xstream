@@ -27,10 +27,19 @@ import com.thoughtworks.xstream.mapper.Mapper;
  */
 public abstract class AbstractTreeMarshallingStrategy implements MarshallingStrategy {
 
+    private int recursionDepthLimit = -1;
+
+    public void setRecursionDepthLimit(int recursionDepthLimit) {
+        this.recursionDepthLimit = recursionDepthLimit;
+    }
+
     @Override
     public Object unmarshal(final Object root, final HierarchicalStreamReader reader, final DataHolder dataHolder,
             final ConverterLookup converterLookup, final Mapper mapper) {
         final TreeUnmarshaller context = createUnmarshallingContext(root, reader, converterLookup, mapper);
+        if (recursionDepthLimit != -1) {
+            context.setRecursionDepthLimit(recursionDepthLimit);
+        }
         return context.start(dataHolder);
     }
 
