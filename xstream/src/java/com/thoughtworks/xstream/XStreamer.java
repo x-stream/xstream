@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2014, 2016, 2017, 2018, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2016, 2017, 2018, 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -65,7 +65,7 @@ public class XStreamer {
         new TypeHierarchyPermission(UnmarshallingContext.class),
         new TypeHierarchyPermission(NameCoder.class),
         new TypeHierarchyPermission(TypePermission.class),
-        new WildcardTypePermission(new String[]{JVM.class.getPackage().getName()+".**"}),
+        new WildcardTypePermission(true, new String[]{JVM.class.getPackage().getName()+".**"}),
         new TypeHierarchyPermission(DatatypeFactory.class) // required by DurationConverter
     };
 

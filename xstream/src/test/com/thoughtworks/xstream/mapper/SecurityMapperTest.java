@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 XStream Committers.
+ * Copyright (C) 2014, 2022 XStream Committers.
  * All rights reserved.
  *
  * Created on 09. January 2014 by Joerg Schaible
@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 
 /**
  * Tests the {@link SecurityMapper} and the {@link TypePermission} implementations.
- * 
+ *
  * @author J&ouml;rg Schaible
  */
 public class SecurityMapperTest extends TestCase {
@@ -181,8 +181,8 @@ public class SecurityMapperTest extends TestCase {
         class Foo$_1 {}
         final Class anonymous = new Object() {}.getClass();
         register(new Class[]{String.class, JVM.class, QuickWriter.class, Foo$_0.class, Foo$_1.class, anonymous});
-        mapper
-            .addPermission(new WildcardTypePermission(new String[]{"**.*_0", "**.core.*", "**.SecurityMapperTest$?"}));
+        mapper.addPermission(new WildcardTypePermission(true, new String[]{
+            "**.*_0", "**.core.*", "**.SecurityMapperTest$?"}));
         assertSame(JVM.class, mapper.realClass(JVM.class.getName()));
         assertSame(Foo$_0.class, mapper.realClass(Foo$_0.class.getName()));
         assertSame(anonymous, mapper.realClass(anonymous.getName()));

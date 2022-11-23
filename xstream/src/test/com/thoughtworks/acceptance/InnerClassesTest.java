@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,7 +11,7 @@
  */
 package com.thoughtworks.acceptance;
 
-import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 public class InnerClassesTest extends AbstractAcceptanceTest {
 
@@ -85,6 +85,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
 
         xstream.alias("inner", OuterType.InnerType.class);
         xstream.alias("Dynamic4", outer.dyn3.dyn4.getClass());
+        xstream.addPermission(new WildcardTypePermission(true, new String[]{InnerClassesTest.class.getName() + "*"}));
 
         String expectedXml = ""
                 + "<inner>\n"
