@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014, 2018 XStream Committers.
+ * Copyright (C) 2014, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * Created on 09. January 2014 by Joerg Schaible
@@ -181,7 +181,7 @@ public class SecurityMapperTest extends TestCase {
         class Foo$_1 {}
         final Class<?> anonymous = new Object() {}.getClass();
         register(String.class, JVM.class, QuickWriter.class, Foo$_0.class, Foo$_1.class, anonymous);
-        mapper.addPermission(new WildcardTypePermission("**.*_0", "**.core.*", "**.SecurityMapperTest$?"));
+        mapper.addPermission(new WildcardTypePermission(true, "**.*_0", "**.core.*", "**.SecurityMapperTest$?"));
         assertSame(JVM.class, mapper.realClass(JVM.class.getName()));
         assertSame(Foo$_0.class, mapper.realClass(Foo$_0.class.getName()));
         assertSame(anonymous, mapper.realClass(anonymous.getName()));

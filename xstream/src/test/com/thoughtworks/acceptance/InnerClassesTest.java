@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2014, 2015, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,6 +10,8 @@
  * Created on 31. January 2005 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
+
+import com.thoughtworks.xstream.security.WildcardTypePermission;
 
 public class InnerClassesTest extends AbstractAcceptanceTest {
 
@@ -85,6 +87,8 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
         xstream.alias("inner", OuterType.InnerType.class);
 
         final OuterType outer = new OuterType();
+        xstream.alias("Dynamic4", outer.dyn3.dyn4.getClass());
+        xstream.addPermission(new WildcardTypePermission(true, InnerClassesTest.class.getName() + "*"));
 
         final String expectedXml = ""
             + "<inner>\n"
@@ -104,7 +108,7 @@ public class InnerClassesTest extends AbstractAcceptanceTest {
             + "      <name2>Name 2</name2>\n"
             + "      <outer-class reference=\"../../dyn1\"/>\n"
             + "      <name3>Name 3</name3>\n"
-            + "      <dyn4 class=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic3$1Dynamic4\">\n"
+            + "      <dyn4 class=\"Dynamic4\">\n"
             + "        <name2>Name 2</name2>\n"
             + "        <outer-class defined-in=\"com.thoughtworks.acceptance.InnerClassesTest$OuterType$InnerType$Dynamic1$Dynamic2\" reference=\"../../../dyn1\"/>\n"
             + "        <name4>Name 4</name4>\n"
