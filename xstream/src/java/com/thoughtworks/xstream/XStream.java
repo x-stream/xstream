@@ -1419,7 +1419,8 @@ public class XStream {
             @SuppressWarnings("unchecked")
             final T t = (T)marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
             return t;
-
+        } catch (final StackOverflowError e) {
+            throw new InputManipulationException("Possible Denial of Service attack by Stack Overflow");
         } catch (final ConversionException e) {
             final Package pkg = getClass().getPackage();
             final String version = pkg != null ? pkg.getImplementationVersion() : null;
