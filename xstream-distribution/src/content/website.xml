@@ -64,6 +64,7 @@
     <section>
         <name>!Vulnerabilities</name>
         <page>CVE-2022-41966.html</page>
+        <page>CVE-2022-40151.html</page>
         <page>CVE-2021-21341.html</page>
         <page>CVE-2021-21342.html</page>
         <page>CVE-2021-21343.html</page>
