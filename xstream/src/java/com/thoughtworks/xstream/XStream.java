@@ -101,6 +101,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -141,6 +142,7 @@ import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter;
 import com.thoughtworks.xstream.converters.extended.CharsetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
@@ -716,9 +718,10 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
-            DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
-            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
+        types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, BitSet.class, Charset.class, Class.class,
+            Currency.class, Date.class, DecimalFormatSymbols.class, File.class, Locale.class, Object.class,
+            Pattern.class, StackTraceElement.class, String.class, StringBuffer.class, StringBuilder.class, URL.class,
+            URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
@@ -823,6 +826,7 @@ public class XStream {
         alias("linked-hash-map", LinkedHashMap.class);
         alias("linked-hash-set", LinkedHashSet.class);
         alias("concurrent-hash-map", ConcurrentHashMap.class);
+        alias("atomic-boolean", AtomicBoolean.class);
 
         alias("enum-set", EnumSet.class);
         alias("enum-map", EnumMap.class);
@@ -954,6 +958,7 @@ public class XStream {
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
         registerConverter(new PathConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new AtomicBooleanConverter(), PRIORITY_NORMAL);
 
         registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);

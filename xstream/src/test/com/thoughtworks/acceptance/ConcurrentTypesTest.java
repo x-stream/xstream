@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2015, 2017, 2018, 2021 XStream Committers.
+ * Copyright (C) 2012, 2015, 2017, 2018, 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,6 +12,7 @@ package com.thoughtworks.acceptance;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 
@@ -19,7 +20,7 @@ import com.thoughtworks.xstream.converters.collections.MapConverter;
 public class ConcurrentTypesTest extends AbstractAcceptanceTest {
 
     public void testConcurrentHashMap() {
-        final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>();
+        final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("walnes", "joe");
         final String xml = xstream.toXML(map);
         final String expected = ""
@@ -54,5 +55,17 @@ public class ConcurrentTypesTest extends AbstractAcceptanceTest {
             + "</derived-map>";
 
         assertBothWays(map, xml);
+    }
+
+    public void testAtomicBoolean() {
+        final AtomicBoolean atomicBoolean = new AtomicBoolean();
+        assertBothWays(atomicBoolean, "<atomic-boolean>" + atomicBoolean + "</atomic-boolean>");
+    }
+
+    public void testAtomicBooleanWithOldFormat() {
+        assertEquals(new AtomicBoolean(true).toString(), xstream.fromXML("" //
+            + "<java.util.concurrent.atomic.AtomicBoolean>\n" //
+            + "  <value>1</value>\n" //
+            + "</java.util.concurrent.atomic.AtomicBoolean>").toString());
     }
 }
