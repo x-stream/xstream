@@ -682,6 +682,7 @@ public class XStream {
         types.add(URL.class);
         types.add(URI.class);
         types.add(JVM.loadClassForName("java.util.UUID"));
+        types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicBoolean"));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
@@ -835,6 +836,7 @@ public class XStream {
             alias("enum-map", JVM.loadClassForName("java.util.EnumMap"));
             alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
             alias("uuid", JVM.loadClassForName("java.util.UUID"));
+            alias("atomic-boolean", JVM.loadClassForName("java.util.concurrent.atomic.AtomicBoolean"));
         }
 
         if (JVM.isVersion(7)) {
@@ -991,6 +993,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.basic.StringBuilderConverter",
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter", PRIORITY_NORMAL,
                 null, null);
         }
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {

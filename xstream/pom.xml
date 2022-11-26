@@ -329,6 +329,7 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/EnumMapper*</exclude>
                 <exclude>**/*15.java</exclude>
+                <exclude>**/Atomic*Converter.java</exclude>
                 <exclude>**/PathConverter.java</exclude>
                 <exclude>**/Base64*Codec.java</exclude>
                 <exclude>**/Types.java</exclude>
@@ -591,6 +592,7 @@
                 <exclude>**/core/util/Types*</exclude>
                 <exclude>**/reflection/*15*</exclude>
                 <exclude>**/extended/*15*</exclude>
+                <exclude>**/extended/Atomic*Converter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>
               </excludes>

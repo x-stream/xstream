@@ -1,17 +1,18 @@
 /*
- * Copyright (C) 2012, 2015, 2017, 2018 XStream Committers.
+ * Copyright (C) 2012, 2015, 2017, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 21. March 2012 by Joerg Schaible
  */
 package com.thoughtworks.acceptance;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.JVM;
@@ -20,10 +21,10 @@ import com.thoughtworks.xstream.core.JVM;
 public class Concurrent15TypesTest extends AbstractAcceptanceTest {
 
     public void testConcurrentHashMap() {
-        ConcurrentHashMap<String, String> map = new ConcurrentHashMap<String, String>();
+        final ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
         map.put("walnes", "joe");
-        String xml = xstream.toXML(map);
-        String expected = ""
+        final String xml = xstream.toXML(map);
+        final String expected = ""
             + "<concurrent-hash-map>\n"
             + "  <entry>\n"
             + "    <string>walnes</string>\n"
@@ -32,7 +33,7 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             + "</concurrent-hash-map>";
         assertEquals(xml, expected);
         @SuppressWarnings("unchecked")
-        ConcurrentHashMap<String, String> out = (ConcurrentHashMap<String, String>)xstream.fromXML(xml);
+        final ConcurrentHashMap<String, String> out = (ConcurrentHashMap<String, String>)xstream.fromXML(xml);
         assertEquals("{walnes=joe}", out.toString());
     }
 
@@ -45,10 +46,10 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             xstream.alias("derived-map", DerivedConcurrentHashMap.class);
             xstream.registerConverter(new MapConverter(xstream.getMapper(), DerivedConcurrentHashMap.class));
 
-            Map<Object, Object> map = new DerivedConcurrentHashMap();
+            final Map<Object, Object> map = new DerivedConcurrentHashMap();
             map.put("test", "JUnit");
 
-            String xml = ""
+            final String xml = ""
                 + "<derived-map>\n"
                 + "  <entry>\n"
                 + "    <string>test</string>\n"
@@ -58,5 +59,17 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
 
             assertBothWays(map, xml);
         }
+    }
+
+    public void testAtomicBoolean() {
+        final AtomicBoolean atomicBoolean = new AtomicBoolean();
+        assertBothWays(atomicBoolean, "<atomic-boolean>" + atomicBoolean + "</atomic-boolean>");
+    }
+
+    public void testAtomicBooleanWithOldFormat() {
+        assertEquals(new AtomicBoolean(true).toString(), xstream.fromXML("" //
+            + "<java.util.concurrent.atomic.AtomicBoolean>\n" //
+            + "  <value>1</value>\n" //
+            + "</java.util.concurrent.atomic.AtomicBoolean>").toString());
     }
 }
