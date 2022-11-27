@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.JVM;
@@ -71,5 +72,17 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             + "<java.util.concurrent.atomic.AtomicBoolean>\n" //
             + "  <value>1</value>\n" //
             + "</java.util.concurrent.atomic.AtomicBoolean>").toString());
+    }
+
+    public void testAtomicInteger() {
+        final AtomicInteger atomicInteger = new AtomicInteger(42);
+        assertBothWays(atomicInteger, "<atomic-int>" + atomicInteger + "</atomic-int>");
+    }
+
+    public void testAtomicIntegerWithOldFormat() {
+        assertEquals(new AtomicInteger(42).toString(), xstream.fromXML("" //
+            + "<java.util.concurrent.atomic.AtomicInteger>\n" //
+            + "  <value>42</value>\n" //
+            + "</java.util.concurrent.atomic.AtomicInteger>").toString());
     }
 }
