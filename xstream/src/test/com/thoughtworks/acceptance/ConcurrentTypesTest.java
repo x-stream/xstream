@@ -15,7 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.thoughtworks.acceptance.objects.Original;
+import com.thoughtworks.acceptance.objects.Replaced;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 
 
@@ -93,5 +96,42 @@ public class ConcurrentTypesTest extends AbstractAcceptanceTest {
             + "<java.util.concurrent.atomic.AtomicLong>\n" //
             + "  <value>42</value>\n" //
             + "</java.util.concurrent.atomic.AtomicLong>").toString());
+    }
+
+    public void testAtomicReference() {
+        final AtomicReference<String> atomicRef = new AtomicReference<>("test");
+        assertBothWays(atomicRef, ("" //
+            + "<atomic-reference>\n" //
+            + "  <value class='string'>test</value>\n" //
+            + "</atomic-reference>").replace('\'', '"'));
+    }
+
+    @SuppressWarnings("unchecked")
+    public void testAtomicReferenceWithOldFormat() {
+        assertEquals(new AtomicReference<String>("test").get(), ((AtomicReference<String>)xstream.fromXML("" //
+            + "<java.util.concurrent.atomic.AtomicReference>\n" //
+            + "  <value class='string'>test</value>\n" //
+            + "</java.util.concurrent.atomic.AtomicReference>")).get());
+    }
+
+    public void testAtomicReferenceWithAlias() {
+        xstream.aliasField("junit", AtomicReference.class, "value");
+        final AtomicReference<String> atomicRef = new AtomicReference<>("test");
+        assertBothWays(atomicRef, ("" //
+            + "<atomic-reference>\n" //
+            + "  <junit class='string'>test</junit>\n" //
+            + "</atomic-reference>").replace('\'', '"'));
+    }
+
+    public void testAtomicReferenceWithReplaced() {
+        xstream.alias("original", Original.class);
+        xstream.alias("replaced", Replaced.class);
+        final AtomicReference<Original> atomicRef = new AtomicReference<>(new Original("test"));
+        assertBothWays(atomicRef, ("" //
+            + "<atomic-reference>\n" //
+            + "  <value class='original' resolves-to='replaced'>\n"
+            + "    <replacedValue>TEST</replacedValue>\n"
+            + "  </value>\n" //
+            + "</atomic-reference>").replace('\'', '"'));
     }
 }

@@ -104,6 +104,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -147,6 +148,7 @@ import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
 import com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter;
 import com.thoughtworks.xstream.converters.extended.AtomicIntegerConverter;
 import com.thoughtworks.xstream.converters.extended.AtomicLongConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicReferenceConverter;
 import com.thoughtworks.xstream.converters.extended.CharsetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
@@ -722,10 +724,10 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, AtomicInteger.class, AtomicLong.class, BitSet.class, Charset.class,
-            Class.class, Currency.class, Date.class, DecimalFormatSymbols.class, File.class, Locale.class, Object.class,
-            Pattern.class, StackTraceElement.class, String.class, StringBuffer.class, StringBuilder.class, URL.class,
-            URI.class, UUID.class));
+        types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, AtomicInteger.class, AtomicLong.class,
+            AtomicReference.class, BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+            DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
+            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
@@ -833,6 +835,7 @@ public class XStream {
         alias("atomic-boolean", AtomicBoolean.class);
         alias("atomic-int", AtomicInteger.class);
         alias("atomic-long", AtomicLong.class);
+        alias("atomic-reference", AtomicReference.class);
 
         alias("enum-set", EnumSet.class);
         alias("enum-map", EnumMap.class);
@@ -967,6 +970,7 @@ public class XStream {
         registerConverter((Converter)new AtomicBooleanConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new AtomicIntegerConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new AtomicLongConverter(), PRIORITY_NORMAL);
+        registerConverter(new AtomicReferenceConverter(mapper), PRIORITY_NORMAL);
 
         registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
