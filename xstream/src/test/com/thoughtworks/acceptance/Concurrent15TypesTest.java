@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.core.JVM;
@@ -84,5 +85,17 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             + "<java.util.concurrent.atomic.AtomicInteger>\n" //
             + "  <value>42</value>\n" //
             + "</java.util.concurrent.atomic.AtomicInteger>").toString());
+    }
+
+    public void testAtomicLong() {
+        final AtomicLong atomicLong = new AtomicLong(42);
+        assertBothWays(atomicLong, "<atomic-long>" + atomicLong + "</atomic-long>");
+    }
+
+    public void testAtomicLongWithOldFormat() {
+        assertEquals(new AtomicInteger(42).toString(), xstream.fromXML("" //
+            + "<java.util.concurrent.atomic.AtomicLong>\n" //
+            + "  <value>42</value>\n" //
+            + "</java.util.concurrent.atomic.AtomicLong>").toString());
     }
 }

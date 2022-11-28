@@ -684,6 +684,7 @@ public class XStream {
         types.add(JVM.loadClassForName("java.util.UUID"));
         types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicBoolean"));
         types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicInteger"));
+        types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicLong"));
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
@@ -839,6 +840,7 @@ public class XStream {
             alias("uuid", JVM.loadClassForName("java.util.UUID"));
             alias("atomic-boolean", JVM.loadClassForName("java.util.concurrent.atomic.AtomicBoolean"));
             alias("atomic-int", JVM.loadClassForName("java.util.concurrent.atomic.AtomicInteger"));
+            alias("atomic-long", JVM.loadClassForName("java.util.concurrent.atomic.AtomicLong"));
         }
 
         if (JVM.isVersion(7)) {
@@ -999,6 +1001,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicIntegerConverter", PRIORITY_NORMAL,
+                null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicLongConverter", PRIORITY_NORMAL,
                 null, null);
         }
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
