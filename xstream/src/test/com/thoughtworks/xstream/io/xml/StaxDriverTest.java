@@ -16,6 +16,8 @@ import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.StreamException;
 
+import java.util.Properties;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -47,8 +49,7 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
     }
 
     public void testCanOverloadStaxReaderAndWriterInstantiation() {
-        final String staxInput = System.getProperty(XMLInputFactory.class.getName());
-        final String staxOutput = System.getProperty(XMLOutputFactory.class.getName());
+        Properties systemProperties = System.getProperties();
         System.setProperty(XMLInputFactory.class.getName(), MXParserFactory.class.getName());
         System.setProperty(XMLOutputFactory.class.getName(), XMLOutputFactoryBase.class.getName());
         try {
@@ -58,16 +59,7 @@ public class StaxDriverTest extends AbstractAcceptanceTest {
             assertTrue(driver.createStaxReaderCalled);
             assertTrue(driver.createStaxWriterCalled);
         } finally {
-            if (staxInput != null) {
-                System.setProperty(XMLInputFactory.class.getName(), staxInput);
-	    } else {
-                System.clearProperty(XMLInputFactory.class.getName());
-            }
-            if (staxOutput != null) {
-                System.setProperty(XMLOutputFactory.class.getName(), staxOutput);
-	    } else {
-                System.clearProperty(XMLOutputFactory.class.getName());
-            }
+            System.setProperties(systemProperties);
         }
     }
 }
