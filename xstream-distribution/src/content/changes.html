@@ -111,6 +111,7 @@
 	<ul>
 		<li>GHI:#308: Add converter for AtomicBoolean, AtomicInteger, AtomicLong, and AtomicReference of
 		package java.util.concurrent.atomic.</li>
+		<li>GHI:#293: Add converter for Optional of package java.util.</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
@@ -118,6 +119,8 @@
 	<ul>
 		<li>The atomic types with new converters of package java.util.concurrent.atomic, that have been written with
 		previous versions of XStream, can still be deserialized.</li>
+		<li>The Optional types with new converters of package java.util, that have been written with previous versions
+		of XStream, can still be deserialized.</li>
 	</ul>
 
 	<h2>API changes</h2>
@@ -127,6 +130,7 @@
 		<li>Added c.t.x.converters.extended.AtomicIntegerConverter.</li>
 		<li>Added c.t.x.converters.extended.AtomicLongConverter.</li>
 		<li>Added c.t.x.converters.extended.AtomicReferenceConverter.</li>
+		<li>Added c.t.x.converters.extended.OptionalConverter.</li>
 	</ul>
 
 	<h1 id="1.4.19">1.4.19</h1>

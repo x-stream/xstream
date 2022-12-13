@@ -92,6 +92,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -162,6 +163,7 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalConverter;
 import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
@@ -758,6 +760,7 @@ public class XStream {
         allowTypeHierarchy(Chronology.class);
         types.add(ValueRange.class);
         types.add(WeekFields.class);
+        types.add(Optional.class);
 
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
@@ -901,6 +904,7 @@ public class XStream {
         alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
         alias("temporal-value-range", ValueRange.class);
         alias("week-fields", WeekFields.class);
+        alias("optional", Optional.class);
         alias("serialized-lambda", SerializedLambda.class);
 
         aliasType("charset", Charset.class);
@@ -1014,6 +1018,7 @@ public class XStream {
         registerConverter(new YearMonthConverter(), PRIORITY_NORMAL);
         registerConverter(new ZonedDateTimeConverter(), PRIORITY_NORMAL);
         registerConverter(new ZoneIdConverter(), PRIORITY_NORMAL);
+        registerConverter(new OptionalConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);

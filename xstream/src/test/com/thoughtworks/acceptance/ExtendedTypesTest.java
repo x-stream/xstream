@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2012, 2014, 2016, 2017, 2018, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2012, 2014, 2016, 2017, 2018, 2020, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,6 +29,7 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -288,4 +289,49 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
             + "  <path>same</path>\n" //
             + "</path-array>");
     }
+
+    public void testEmptyOptional() {
+        final Optional<Object> optional = Optional.empty();
+        assertBothWays(optional, "<optional/>");
+    }
+
+    public void testOptional() {
+        final Optional<String> optional = Optional.of("test");
+        assertBothWays(optional, ("" //
+            + "<optional>\n" //
+            + "  <value class='string'>test</value>\n" //
+            + "</optional>").replace('\'', '"'));
+    }
+
+    public void testOptionalWithAlias() {
+        final Optional<String> optional = Optional.of("test");
+        xstream.aliasField("junit", Optional.class, "value");
+        assertBothWays(optional, ("" //
+            + "<optional>\n" //
+            + "  <junit class='string'>test</junit>\n" //
+            + "</optional>").replace('\'', '"'));
+    }
+
+    public void testOptionalIsRerenceable() {
+        @SuppressWarnings("unchecked")
+        final Optional<Object>[] array = new Optional[3];
+        array[0] = array[2] = Optional.of("test");
+        array[1] = Optional.empty();
+        assertBothWays(array, ("" //
+            + "<optional-array>\n" //
+            + "  <optional>\n" //
+            + "    <value class='string'>test</value>\n" //
+            + "  </optional>\n" //
+            + "  <optional/>\n" //
+            + "  <optional reference='../optional'/>\n" //
+            + "</optional-array>").replace('\'', '"'));
+    }
+
+    public void testOptionalWithOldFormat() {
+        assertEquals(Optional.of("test"), xstream.fromXML("" //
+            + "<java.util.Optional>\n" //
+            + "  <value class='string'>test</value>\n" //
+            + "</java.util.Optional>"));
+    }
+
 }
