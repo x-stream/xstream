@@ -716,6 +716,7 @@ public class XStream {
             allowTypeHierarchy(JVM.loadClassForName("java.time.chrono.Chronology"));
             types.add(JVM.loadClassForName("java.time.temporal.ValueRange"));
             types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
+            types.add(JVM.loadClassForName("java.util.Optional"));
         }
         types.remove(null);
 
@@ -885,6 +886,8 @@ public class XStream {
             alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
             alias("temporal-value-range", JVM.loadClassForName("java.time.temporal.ValueRange"));
             alias("week-fields", JVM.loadClassForName("java.time.temporal.WeekFields"));
+
+            alias("optional", JVM.loadClassForName("java.util.Optional"));
         }
 
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
@@ -1065,6 +1068,8 @@ public class XStream {
             registerConverterDynamically("com.thoughtworks.xstream.converters.reflection.LambdaConverter",
                 PRIORITY_NORMAL, new Class[]{Mapper.class, ReflectionProvider.class, ClassLoaderReference.class},
                 new Object[]{mapper, reflectionProvider, classLoaderReference});
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OptionalConverter",
+                PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
         }
 
         registerConverter(new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);

@@ -331,6 +331,7 @@
                 <exclude>**/*15.java</exclude>
                 <exclude>**/Atomic*Converter.java</exclude>
                 <exclude>**/PathConverter.java</exclude>
+                <exclude>**/Optional*Converter.java</exclude>
                 <exclude>**/Base64*Codec.java</exclude>
                 <exclude>**/Types.java</exclude>
                 <exclude>**/JDom2*.java</exclude>
@@ -354,6 +355,7 @@
                   <excludes combine.self="override">
                     <exclude>**/Lambda**</exclude>
                     <exclude>**/time/**</exclude>
+                    <exclude>**/Optional*Converter.java</exclude>
                     <exclude>**/ISO8601JavaTimeConverter.java</exclude>
                   </excludes>
                   <testExcludes combine.self="override">
@@ -436,6 +438,7 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
                 <exclude>**/ISO8601JavaTimeConverter.java</exclude>
                 <exclude>**/Base64JavaUtilCodec.java</exclude>
@@ -475,6 +478,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
+                <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
                 <exclude>**/ISO8601JavaTimeConverter.java</exclude>
                 <exclude>**/Base64JavaUtilCodec.java</exclude>
@@ -508,6 +512,7 @@
               <excludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
+                <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
                 <exclude>**/ISO8601JavaTimeConverter.java</exclude>
                 <exclude>**/Base64JavaUtilCodec.java</exclude>
@@ -593,6 +598,7 @@
                 <exclude>**/reflection/*15*</exclude>
                 <exclude>**/extended/*15*</exclude>
                 <exclude>**/extended/Atomic*Converter.java</exclude>
+                <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>
               </excludes>
