@@ -93,6 +93,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -164,6 +165,7 @@ import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
 import com.thoughtworks.xstream.converters.extended.OptionalConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalDoubleConverter;
 import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
@@ -761,6 +763,7 @@ public class XStream {
         types.add(ValueRange.class);
         types.add(WeekFields.class);
         types.add(Optional.class);
+        types.add(OptionalDouble.class);
 
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
@@ -905,6 +908,7 @@ public class XStream {
         alias("temporal-value-range", ValueRange.class);
         alias("week-fields", WeekFields.class);
         alias("optional", Optional.class);
+        alias("optional-double", OptionalDouble.class);
         alias("serialized-lambda", SerializedLambda.class);
 
         aliasType("charset", Charset.class);
@@ -1019,6 +1023,7 @@ public class XStream {
         registerConverter(new ZonedDateTimeConverter(), PRIORITY_NORMAL);
         registerConverter(new ZoneIdConverter(), PRIORITY_NORMAL);
         registerConverter(new OptionalConverter(mapper), PRIORITY_NORMAL);
+        registerConverter((Converter)new OptionalDoubleConverter(), PRIORITY_NORMAL);
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
@@ -1143,6 +1148,7 @@ public class XStream {
         addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
         addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
         addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
+        addImmutableType(OptionalDouble.class, false);
     }
 
     private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {

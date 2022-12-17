@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalDouble;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -332,6 +333,44 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
             + "<java.util.Optional>\n" //
             + "  <value class='string'>test</value>\n" //
             + "</java.util.Optional>"));
+    }
+
+    public void testEmptyOptionalDouble() {
+        final OptionalDouble optional = OptionalDouble.empty();
+        assertBothWays(optional, "<optional-double></optional-double>");
+    }
+
+    public void testEmptyOptionalDoubleWithOldFormat() {
+        assertEquals(OptionalDouble.empty(), xstream.fromXML("" //
+            + "<java.util.OptionalDouble>\n" //
+            + "  <isPresent>false</isPresent>\n" //
+            + "  <value>NaN</value>\n" //
+            + "</java.util.OptionalDouble>"));
+    }
+
+    public void testOptionalDouble() {
+        final OptionalDouble optional = OptionalDouble.of(1.8);
+        assertBothWays(optional, "<optional-double>1.8</optional-double>");
+    }
+
+    public void testOptionalDoubleIsImmutable() {
+        final OptionalDouble[] array = new OptionalDouble[3];
+        array[0] = array[2] = OptionalDouble.of(1.8);
+        array[1] = OptionalDouble.empty();
+        assertBothWays(array, "" //
+            + "<optional-double-array>\n" //
+            + "  <optional-double>1.8</optional-double>\n" //
+            + "  <optional-double></optional-double>\n" //
+            + "  <optional-double>1.8</optional-double>\n" //
+            + "</optional-double-array>");
+    }
+
+    public void testOptionalDoubleWithOldFormat() {
+        assertEquals(OptionalDouble.of(1.8), xstream.fromXML("" //
+            + "<java.util.OptionalDouble>\n" //
+            + "  <isPresent>true</isPresent>\n" //
+            + "  <value>1.8</value>\n" //
+            + "</java.util.OptionalDouble>"));
     }
 
 }
