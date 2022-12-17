@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 
@@ -410,6 +411,44 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
             + "  <isPresent>true</isPresent>\n" //
             + "  <value>42</value>\n" //
             + "</java.util.OptionalInt>"));
+    }
+
+    public void testEmptyOptionalLong() {
+        final OptionalLong optional = OptionalLong.empty();
+        assertBothWays(optional, "<optional-long></optional-long>");
+    }
+
+    public void testEmptyOptionalLongWithOldFormat() {
+        assertEquals(OptionalLong.empty(), xstream.fromXML("" //
+            + "<java.util.OptionalLong>\n" //
+            + "  <isPresent>false</isPresent>\n" //
+            + "  <value>0</value>\n" //
+            + "</java.util.OptionalLong>"));
+    }
+
+    public void testOptionalLong() {
+        final OptionalLong optional = OptionalLong.of(2344556678888786L);
+        assertBothWays(optional, "<optional-long>2344556678888786</optional-long>");
+    }
+
+    public void testOptionalLongIsImmutable() {
+        final OptionalLong[] array = new OptionalLong[3];
+        array[0] = array[2] = OptionalLong.of(2344556678888786L);
+        array[1] = OptionalLong.empty();
+        assertBothWays(array, "" //
+            + "<optional-long-array>\n" //
+            + "  <optional-long>2344556678888786</optional-long>\n" //
+            + "  <optional-long></optional-long>\n" //
+            + "  <optional-long>2344556678888786</optional-long>\n" //
+            + "</optional-long-array>");
+    }
+
+    public void testOptionalLongWithOldFormat() {
+        assertEquals(OptionalLong.of(2344556678888786L), xstream.fromXML("" //
+            + "<java.util.OptionalLong>\n" //
+            + "  <isPresent>true</isPresent>\n" //
+            + "  <value>2344556678888786</value>\n" //
+            + "</java.util.OptionalLong>"));
     }
 
 }
