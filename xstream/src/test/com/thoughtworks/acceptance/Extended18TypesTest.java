@@ -12,6 +12,7 @@ package com.thoughtworks.acceptance;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
+import java.util.OptionalInt;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -106,5 +107,43 @@ public class Extended18TypesTest extends AbstractAcceptanceTest {
             + "  <isPresent>true</isPresent>\n" //
             + "  <value>1.8</value>\n" //
             + "</java.util.OptionalDouble>"));
+    }
+
+    public void testEmptyOptionalInt() {
+        final OptionalInt optional = OptionalInt.empty();
+        assertBothWays(optional, "<optional-int></optional-int>");
+    }
+
+    public void testEmptyOptionalIntWithOldFormat() {
+        assertEquals(OptionalInt.empty(), xstream.fromXML("" //
+            + "<java.util.OptionalInt>\n" //
+            + "  <isPresent>false</isPresent>\n" //
+            + "  <value>0</value>\n" //
+            + "</java.util.OptionalInt>"));
+    }
+
+    public void testOptionalInt() {
+        final OptionalInt optional = OptionalInt.of(42);
+        assertBothWays(optional, "<optional-int>42</optional-int>");
+    }
+
+    public void testOptionalIntIsImmutable() {
+        final OptionalInt[] array = new OptionalInt[3];
+        array[0] = array[2] = OptionalInt.of(42);
+        array[1] = OptionalInt.empty();
+        assertBothWays(array, "" //
+            + "<optional-int-array>\n" //
+            + "  <optional-int>42</optional-int>\n" //
+            + "  <optional-int></optional-int>\n" //
+            + "  <optional-int>42</optional-int>\n" //
+            + "</optional-int-array>");
+    }
+
+    public void testOptionalIntWithOldFormat() {
+        assertEquals(OptionalInt.of(42), xstream.fromXML("" //
+            + "<java.util.OptionalInt>\n" //
+            + "  <isPresent>true</isPresent>\n" //
+            + "  <value>42</value>\n" //
+            + "</java.util.OptionalInt>"));
     }
 }

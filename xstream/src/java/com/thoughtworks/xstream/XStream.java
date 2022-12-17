@@ -718,6 +718,7 @@ public class XStream {
             types.add(JVM.loadClassForName("java.time.temporal.WeekFields"));
             types.add(JVM.loadClassForName("java.util.Optional"));
             types.add(JVM.loadClassForName("java.util.OptionalDouble"));
+            types.add(JVM.loadClassForName("java.util.OptionalInt"));
         }
         types.remove(null);
 
@@ -890,6 +891,7 @@ public class XStream {
 
             alias("optional", JVM.loadClassForName("java.util.Optional"));
             alias("optional-double", JVM.loadClassForName("java.util.OptionalDouble"));
+            alias("optional-int", JVM.loadClassForName("java.util.OptionalInt"));
         }
 
         if (JVM.loadClassForName("java.lang.invoke.SerializedLambda") != null) {
@@ -1074,6 +1076,8 @@ public class XStream {
                 PRIORITY_NORMAL, new Class[]{Mapper.class}, new Object[]{mapper});
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OptionalDoubleConverter",
                 PRIORITY_NORMAL, null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.OptionalIntConverter",
+                PRIORITY_NORMAL, null, null);
         }
 
         registerConverter(new SelfStreamingInstanceChecker(converterLookup, this), PRIORITY_NORMAL);
@@ -1201,6 +1205,7 @@ public class XStream {
             addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
 
             addImmutableTypeDynamically("java.util.OptionalDouble", false);
+            addImmutableTypeDynamically("java.util.OptionalInt", false);
         }
     }
 
