@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -150,6 +150,8 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("z").parse("UTC");
             test = true;
+        } catch (RuntimeException e) {
+            test = false;
         } catch (ParseException e) {
             test = false;
         }
@@ -157,9 +159,9 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("X").parse("Z");
             test = true;
-        } catch (final ParseException e) {
+        } catch (final RuntimeException e) {
             test = false;
-        } catch (final IllegalArgumentException e) {
+        } catch (final ParseException e) {
             test = false;
         }
         canParseISO8601TimeZoneInDateFormat = test;
