@@ -23,7 +23,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 /**
  * Converts an AtomicReference type.
  *
- * @since upcoming
+ * @since 1.4.20
  */
 public class OptionalLongConverter extends LongConverter implements Converter {
 
