@@ -29,13 +29,19 @@
 		filter for the appropriate milestone.
 	</p>
 
+<!--
 	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
 
 	<p>Not yet released.</p>
+-->
+
+	<h1 id="1.4.20">1.4.20</h1>
+
+	<p>Released December 24, 2022.</p>
 
 	<p class="highlight">This maintenance release addresses the security vulnerabilities
 	<a href="CVE-2022-40151.html">CVE-2022-40151</a> and <a href="CVE-2022-41966.html">CVE-2022-41966</a>, causing a
-	Denial of Service by raising a stack overflow.</p>
+	Denial of Service by raising a stack overflow.  It also provides new converters for Optional and Atomic types.</p>
 
 	<h2>Major changes</h2>
 
@@ -50,6 +56,7 @@
 
 	<ul>
 		<li>GHPR:#287: Close stream opened from provided URL.</li>
+		<li>GHI:#284: Fix disabling check against hash code attack with XStream.setCollectionUpdateLimit(0).</li>
 	</ul>
 
 	<h2>Stream compatibility</h2>
