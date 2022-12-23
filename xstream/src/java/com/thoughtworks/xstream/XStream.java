@@ -1184,7 +1184,7 @@ public class XStream {
      * Set time limit for adding elements to collections or maps.
      * 
      * Manipulated content may be used to create recursive hash code calculations or sort operations. An
-     * {@link InputManipulationException} is thrown, it the summed up time to add elements to collections or maps
+     * {@link InputManipulationException} is thrown, if the summed up time to add elements to collections or maps
      * exceeds the provided limit.
      * 
      * Note, that the time to add an individual element is calculated in seconds, not milliseconds. However, attacks
@@ -1408,7 +1408,7 @@ public class XStream {
      */
     public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, DataHolder dataHolder) {
         try {
-            if (collectionUpdateLimit >= 0) {
+            if (collectionUpdateLimit > 0) {
                 if (dataHolder == null) {
                     dataHolder = new MapBackedDataHolder();
                 }
@@ -2105,7 +2105,7 @@ public class XStream {
      */
     public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, DataHolder dataHolder)
             throws IOException {
-        if (collectionUpdateLimit >= 0) {
+        if (collectionUpdateLimit > 0) {
             if (dataHolder == null) {
                 dataHolder = new MapBackedDataHolder();
             }
