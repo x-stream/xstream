@@ -24,7 +24,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * Converts an Optional type.
  *
- * @since upcoming
+ * @since 1.4.20
  * @author Emanuel Alves
  * @author J&ouml;rg Schaible
  */

@@ -49,7 +49,7 @@ public class WildcardTypePermission extends RegExpTypePermission {
      *
      * @param allowAnonymous Flag to match also anonymous types with the wildcard
      * @param patterns Array of wildcard patterns for types
-     * @since upcoming
+     * @since 1.4.20
      */
     public WildcardTypePermission(final boolean allowAnonymous, final String... patterns) {
         super(getRegExpPatterns(allowAnonymous, patterns));
