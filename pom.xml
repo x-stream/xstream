@@ -546,6 +546,11 @@
       </dependency>
 
       <dependency>
+        <groupId>com.fasterxml.woodstox</groupId>
+        <artifactId>woodstox-core</artifactId>
+        <version>${version.com.fasterxml.woodstox.core}</version>
+      </dependency>
+      <dependency>
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>wstx-asl</artifactId>
         <version>${version.org.codehaus.woodstox.asl}</version>
@@ -1144,6 +1149,7 @@
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
+    <version.com.fasterxml.woodstox.core>5.4.0</version.com.fasterxml.woodstox.core>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
     <version.commons.cli>1.1</version.commons.cli>
     <version.commons.codec>1.10</version.commons.codec>

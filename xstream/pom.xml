@@ -45,12 +45,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.codehaus.woodstox</groupId>
-      <artifactId>wstx-asl</artifactId>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
       <groupId>stax</groupId>
       <artifactId>stax</artifactId>
       <optional>true</optional>
@@ -530,12 +524,26 @@
           </plugin>
         </plugins>
       </build>
+      <dependencies>
+        <dependency>
+          <groupId>org.codehaus.woodstox</groupId>
+          <artifactId>wstx-asl</artifactId>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>jdk6-ge</id>
       <activation>
         <jdk>[1.6,)</jdk>
       </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.fasterxml.woodstox</groupId>
+          <artifactId>woodstox-core</artifactId>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -630,6 +638,11 @@
           <groupId>xerces</groupId>
           <artifactId>xercesImpl</artifactId>
         </dependency>
+        <dependency>
+          <groupId>org.codehaus.woodstox</groupId>
+          <artifactId>wstx-asl</artifactId>
+          <optional>true</optional>
+        </dependency>
       </dependencies>
       <properties>
         <version.org.codehaus.jettison>1.0.1</version.org.codehaus.jettison>
@@ -665,6 +678,7 @@
         org.xmlpull.mxp1;resolution:=optional,
         org.xmlpull.v1;resolution:=optional,
         io.github.xstream.mxparser.*;resolution:=optional,
+        com.ctc.*;resolution:=optional,
         com.ibm.*;resolution:=optional,
         com.sun.*;resolution:=optional,
         javax.*;resolution:=optional,
