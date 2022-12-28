@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converts an AtomicBoolean type.
  *
  * @author J&ouml;rg Schaible
+ * @since 1.4.20
  */
 public class AtomicBooleanConverter extends BooleanConverter implements Converter {
 
