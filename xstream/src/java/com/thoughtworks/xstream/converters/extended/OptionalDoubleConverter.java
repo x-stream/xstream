@@ -21,8 +21,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
 /**
- * Converts an AtomicReference type.
+ * Converts an OptionalDouble type.
  *
+ * @author J&ouml;rg Schaible
  * @since 1.4.20
  */
 public class OptionalDoubleConverter extends DoubleConverter implements Converter {

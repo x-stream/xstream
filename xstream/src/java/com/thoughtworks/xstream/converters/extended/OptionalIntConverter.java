@@ -21,8 +21,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
 /**
- * Converts an AtomicReference type.
+ * Converts an OptionalInt type.
  *
+ * @author J&ouml;rg Schaible
  * @since 1.4.20
  */
 public class OptionalIntConverter extends IntConverter implements Converter {

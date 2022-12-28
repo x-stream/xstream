@@ -24,9 +24,9 @@ import com.thoughtworks.xstream.mapper.Mapper;
 /**
  * Converts an Optional type.
  *
- * @since 1.4.20
  * @author Emanuel Alves
  * @author J&ouml;rg Schaible
+ * @since 1.4.20
  */
 public class OptionalConverter implements Converter {
 
