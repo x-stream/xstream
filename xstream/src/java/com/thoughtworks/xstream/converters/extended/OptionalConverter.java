@@ -22,9 +22,11 @@ import com.thoughtworks.xstream.mapper.Mapper;
 
 
 /**
- * Converts an AtomicReference type.
+ * Converts an Optional type.
  *
  * @since 1.4.20
+ * @author Emanuel Alves
+ * @author J&ouml;rg Schaible
  */
 public class OptionalConverter implements Converter {
 
