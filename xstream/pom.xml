@@ -482,6 +482,7 @@
         org.xmlpull.mxp1;resolution:=optional,
         org.xmlpull.v1;resolution:=optional,
         io.github.xstream.mxparser.*;resolution:=optional,
+        com.ctc.*;resolution:=optional,
         com.ibm.*;resolution:=optional,
         com.sun.*;resolution:=optional,
         javax.*;resolution:=optional,
