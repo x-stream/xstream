@@ -1463,7 +1463,7 @@ public class XStream {
             try {
                 return marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
             } catch (final StackOverflowError e) {
-                throw new InputManipulationException("Possible Dneial of Service attack by Stack Overflow");
+                throw new InputManipulationException("Possible Denial of Service attack by Stack Overflow");
             }
         } catch (ConversionException e) {
             Package pkg = getClass().getPackage();
