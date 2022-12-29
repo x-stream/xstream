@@ -6,7 +6,7 @@
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 13. January 2017 by Matej Cimbora
+ * Created on 29. December 2022 by Jorg Schaible, renamed from Time18TypesTest
  */
 package com.thoughtworks.acceptance;
 
@@ -58,7 +58,7 @@ import com.thoughtworks.xstream.converters.ConversionException;
  * @author Matej Cimbora
  * @author J&ouml;rg Schaible
  */
-public class Time18TypesTest extends AbstractAcceptanceTest {
+public class TimeTypesTest extends AbstractAcceptanceTest {
     public void testFixedClock() {
         assertBothWays(Clock.fixed(Instant.parse("2017-02-15T18:49:25Z"), ZoneOffset.of("Z")), "" //
             + "<fixed-clock>\n"
