@@ -365,30 +365,9 @@
       </properties>
     </profile>
     <profile>
-      <id>jdk11-ge</id>
+      <id>jdk11-ge-jdk14</id>
       <activation>
-        <jdk>[11,)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.api}</version>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk9-ge-jdk14</id>
-      <activation>
-        <jdk>[9,15)</jdk>
+        <jdk>[11,15)</jdk>
       </activation>
       <build>
         <plugins>
@@ -405,18 +384,9 @@
       </build>
     </profile>
     <profile>
-      <id>jdk9-ge-jdk10</id>
+      <id>jdk11-ge</id>
       <activation>
-        <jdk>[9,11)</jdk>
-      </activation>
-      <properties>
-        <surefire.argline>--add-modules java.activation,java.xml.bind --illegal-access=${surefire.illegal.access}</surefire.argline>
-      </properties>
-    </profile>
-    <profile>
-      <id>jdk8-ge</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
+        <jdk>[11,)</jdk>
       </activation>
       <build>
         <plugins>
@@ -429,25 +399,16 @@
               </compilerArgs>
             </configuration>
           </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk8</id>
-      <activation>
-        <jdk>1.8</jdk>
-      </activation>
-      <build>
-        <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <testExcludes>
-                <exclude>**/*09Test.java</exclude>
-                <exclude>**/Record**</exclude>
-              </testExcludes>
-            </configuration>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>${version.jakarta.xml.bind.api}</version>
+              </dependency>
+            </dependencies>
           </plugin>
         </plugins>
       </build>

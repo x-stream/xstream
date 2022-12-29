@@ -1,4 +1,4 @@
-For Java 8 or higher build with Maven 3
+For Java 11 or higher build with Maven 3
 
 Before building:
 

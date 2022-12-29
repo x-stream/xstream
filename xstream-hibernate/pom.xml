@@ -47,9 +47,9 @@
       </build>
     </profile>
     <profile>
-      <id>jdk9-ge-jdk16</id>
+      <id>jdk11-ge-jdk16</id>
       <activation>
-        <jdk>[9,17)</jdk>
+        <jdk>[11,17)</jdk>
       </activation>
       <properties>
         <surefire.argline>--illegal-access=${surefire.illegal.access}</surefire.argline>
