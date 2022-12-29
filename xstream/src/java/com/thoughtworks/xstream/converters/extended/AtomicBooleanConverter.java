@@ -23,6 +23,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 /**
  * Converts an AtomicBoolean type.
  *
+ * @author Basil Crow
  * @author J&ouml;rg Schaible
  * @since 1.4.20
  */
