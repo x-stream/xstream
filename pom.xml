@@ -1141,8 +1141,6 @@
     <jar.module.name>${project.artifactId}</jar.module.name>
     <javadoc.java.release>16</javadoc.java.release>
     <javadoc.link.javase>https://docs.oracle.com/en/java/javase/16/docs/api/</javadoc.link.javase>
-    <surefire.illegal.access>permit</surefire.illegal.access>
-    <surefire.preview.arg></surefire.preview.arg>
 
     <argLine>${surefire.argline}</argLine>
     <javadoc.doclint>-missing</javadoc.doclint>
