@@ -196,7 +196,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[16,17)</version.java.enforced>
+        <version.java.enforced>[17,18)</version.java.enforced>
       </properties>
       <build>
         <plugins>
@@ -1139,8 +1139,8 @@
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
-    <javadoc.java.release>16</javadoc.java.release>
-    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/16/docs/api/</javadoc.link.javase>
+    <javadoc.java.release>17</javadoc.java.release>
+    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/${javadoc.java.release}/docs/api/</javadoc.link.javase>
 
     <argLine>${surefire.argline}</argLine>
     <javadoc.doclint>-missing</javadoc.doclint>
