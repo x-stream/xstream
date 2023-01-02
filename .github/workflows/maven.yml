@@ -22,5 +22,5 @@ jobs:
         distribution: temurin
         java-version: 17
     - name: Build with Maven
-      run: mvn -V -B install site
+      run: mvn -V -B package site
 
