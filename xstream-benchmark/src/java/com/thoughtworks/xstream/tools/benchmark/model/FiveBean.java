@@ -23,7 +23,7 @@ public class FiveBean extends OneBean {
     private int two;
     private boolean three;
     private char four;
-    private StringBuffer five;
+    private CharSequence five;
 
     public int getTwo() {
         return this.two;
@@ -49,11 +49,11 @@ public class FiveBean extends OneBean {
         this.four = four;
     }
 
-    public StringBuffer getFive() {
+    public CharSequence getFive() {
         return this.five;
     }
 
-    public void setFive(StringBuffer five) {
+    public void setFive(CharSequence five) {
         this.five = five;
     }
 

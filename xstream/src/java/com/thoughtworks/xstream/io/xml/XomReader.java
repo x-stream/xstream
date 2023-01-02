@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006 Joe Walnes.
+ * Copyright (C) 2004, 2005, 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2009, 2011, 2014 XStream Committers.
  * All rights reserved.
  *
@@ -72,7 +72,7 @@ public class XomReader extends AbstractDocumentReader {
     @Override
     public String getValue() {
         // currentElement.getValue() not used as this includes text of child elements, which we don't want.
-        final StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
         final int childCount = currentElement.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final Node child = currentElement.getChild(i);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005 Joe Walnes.
+ * Copyright (C) 2004, 2005, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2009, 2014, 2018 XStream Committers.
  * All rights reserved.
  *
@@ -87,7 +87,7 @@ public final class FastStack<T> {
 
     @Override
     public String toString() {
-        final StringBuffer result = new StringBuffer("[");
+        final StringBuilder result = new StringBuilder("[");
         for (int i = 0; i < pointer; i++) {
             if (i > 0) {
                 result.append(", ");

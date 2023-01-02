@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006 Joe Walnes.
+ * Copyright (C) 2006, 2022 Joe Walnes.
  * Copyright (C) 2006, 2007, 2015 XStream Committers.
  * All rights reserved.
  *
@@ -83,7 +83,7 @@ public class TextReporter implements Reporter {
     }
 
     private String pad(String value) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(value);
         while (result.length() < 50) {
             result.append('.');
