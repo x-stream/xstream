@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2014, 2015, 2017, 2019, 2020, 2021 XStream committers.
+ Copyright (C) 2014, 2015, 2017, 2019, 2020, 2021, 2022 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -29,14 +29,14 @@
 	advantage of this to access private data, delete local files, execute arbitrary code or shell commands in the
 	context of the server running the XStream process or cause a denial of service by crashing the application or
 	manage to enter an endless loop consuming 100% of CPU cycles.</p>
-
-	<p class=highlight>Note: XStream supports other data formats than XML, e.g. JSON. Those formats can be used for
-	the same attacks.</p>
+  
+    <p class=highlight>Note: XStream supports other data formats than XML, e.g. JSON. Those formats can usually be used
+    for the same attacks.</p>
  
-	<p>Note, that the XML data can be manipulated on different levels.  For example, manipulating values on existing
- 	objects (such as a price value), accessing private data, or breaking the format and causing the XML parser to fail.
- 	The latter case will raise an exception, but the former case must be handled by validity checks in any application
- 	which processes user-supplied XML.</p>
+	<p>The XML data can be manipulated on different levels.  For example, manipulating values on existing objects (such
+	as a price value), accessing private data, or breaking the format and causing the XML parser to fail.  The latter
+	case will raise an exception, but the former case must be handled by validity checks in any application which
+	processes user-supplied XML.</p>
 
     <h2 id="CVEs">Documented Vulnerabilities</h2>
 
@@ -48,6 +48,33 @@
       <tr>
         <th>CVE</th>
         <th>Description</th>
+      </tr>
+      <tr>
+        <th>Version 1.4.19</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2022-41966.html">CVE-2022-41966</a></th>
+        <td>XStream can cause a Denial of Service by injecting recursive collections or maps based on element's hash
+        values raising a stack overflow.</td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2022-40151.html">CVE-2022-40151</a></th>
+        <td>XStream can cause a Denial of Service by injecting deeply nested objects raising a stack overflow.</td>
+      </tr>
+      <tr>
+        <th>CVE-2022-40152 to CVE-2022-40156</th>
+        <td>Although unconfirmed these issues had been assigned to XStream nonetheless. However, all these issues are
+        caused by the same problem in Woodstox. Therefore <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-40152">
+        CVE-2022-40152</a> has been officially reassigned and the other CVEs have been revoked.</td>
+      </tr>
+      <tr>
+        <th>Version 1.4.18</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th><a href="CVE-2021-43859.html">CVE-2021-43859</a></th>
+        <td>XStream can cause a Denial of Service by injecting highly recursive collections or maps.</td>
       </tr>
       <tr>
         <th>Version 1.4.17</th>
@@ -258,6 +285,16 @@
     because no-one can assure, that no other vulnerability is found.  A better approach is the usage of a whitelist
     i.e. the allowed class types are setup explicitly. This is the default for XStream 1.4.18 (see below).</p>
     
+    <p>XStream supports references to objects already occuring on the object graph in an earlier location.  This allows
+    an attacker to create a highly recursive object structure.  Some collections or maps calculate the position of a
+    member based on the data of the member itself.  This is true for sorting collections or maps, but also for
+    collections or maps based on the hash code of the individual members.  The calculation time for the member's
+    position can increase exponentially depending on the recursive depth of the structure and cause therefore a Denial
+    of Service.  Therefore XStream measures the time consumed to add an element to a collection or map since version
+    1.4.19.  Normally this operation is performed in a view milliseconds, but if adding elements take longer than a
+    second, then the time is accumulated and an exception is thrown if it exceeds a definable limit (20 seconds by
+    default).</p>   
+    
     <h2 id="explicit">Explicit Security</h2>
     
 	<p>Starting with XStream 1.4.7, it is possible to define <a href="#framework">permissions</a> for types, to check
@@ -284,6 +321,16 @@
          
 	<p class=highlight>Apart from value manipulations, this implementation still allows the injection of allowed
 	objects at wrong locations, e.g. inserting an integer into a list of strings.</p>
+    
+    <p>To avoid an attack based on the position of an element in a collection or map, you should also use XStream's
+    default converters for 3rd party or own implementations of collections or maps.  Own custom converters of such
+    types should measure the time to add an element at deserialization time using the following sequence in the
+    implementation of the unmarshal method:<div class="Source Java">
+<pre>// unmarshal element of collection 
+long now = System.currentTimeMillis();
+// add element here, e.g. list.add(element);
+SecurityUtils.checkForCollectionDoSAttack(context, now);
+</pre></div></p>   
     
     <h2 id="validation">XML Validation</h2>
 

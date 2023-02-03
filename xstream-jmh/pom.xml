@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
-     Copyright (C) 2015, 2017, 2018, 2019, 2020, 2021 XStream committers.
+     Copyright (C) 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -22,9 +22,9 @@
 
   <profiles>
     <profile>
-      <id>jdk16</id>
+      <id>jdk17</id>
       <activation>
-        <jdk>16</jdk>
+        <jdk>17</jdk>
       </activation>
       <build>
         <plugins>
@@ -55,27 +55,6 @@
                 <version>${version.jakarta.annotation.api}</version>
               </dependency>
             </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>jdk9-ge-jdk10</id>
-      <activation>
-        <jdk>[9,11)</jdk>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <fork>true</fork>
-              <compilerArgs>
-                <arg>-J--add-modules</arg>
-                <arg>-Jjava.xml.ws.annotation</arg>
-              </compilerArgs>
-            </configuration>
           </plugin>
         </plugins>
       </build>

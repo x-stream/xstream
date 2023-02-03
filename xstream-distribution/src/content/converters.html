@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2019 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2019, 2022 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -426,6 +426,38 @@
                 <td>normal</td>
             </tr>
             <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalConverter.html">OptionalConverter</a></td>
+                <td>java.util.Optional</td>
+                <td class="example">
+                &lt;optional&gt;<br/>
+                &nbsp;&nbsp;&lt;value&nbsp;&nbsp;class=&quot;string&quot;&gt;test&lt;/value&gt;<br/>
+                &lt;/optional&gt;
+                </td>
+                <td>Available with Java 1.8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalDoubleConverter.html">OptionalDoubleConverter</a></td>
+                <td>java.util.OptionalDouble</td>
+                <td class="example">&lt;optional-double&gt;1.8&lt;/optional-double&gt;</td>
+                <td>Available with Java 1.8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalIntConverter.html">OptionalIntConverter</a></td>
+                <td>java.util.OptionalInt</td>
+                <td class="example">&lt;optional-int&gt;42&lt;/optional-int&gt;</td>
+                <td>Available with Java 1.8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalLongConverter.html">OptionalLongConverter</a></td>
+                <td>java.util.OptionalLong</td>
+                <td class="example">&lt;optional-long&gt;2344556678888786&lt;/optional-long&gt;</td>
+                <td>Available with Java 1.8 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumMapConverter.html">EnumMapConverter</a></td>
                 <td>java.util.EnumMap</td>
                 <td class="example">
@@ -462,6 +494,56 @@
 				&lt;/java.util.regex.Pattern&gt;
                 </td>
                 <td>Available with Java 1.4 or greater.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.util.concurrent.atomic">java.util.concurrent.atomic</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/AtomicBooleanConverter.html">AtomicBooleanConverter</a></td>
+                <td>java.util.concurrent.atomic.AtomicBoolean</td>
+                <td class="example">
+                    &lt;atomic-boolean&gt;true&lt;/atomic-boolean&gt;
+                </td>
+                <td>Available with Java 1.5 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/AtomicIntegerConverter.html">AtomicIntegerConverter</a></td>
+                <td>java.util.concurrent.atomic.AtomicInteger</td>
+                <td class="example">
+                    &lt;atomic-integer&gt;12345678&lt;/atomic-integer&gt;
+                </td>
+                <td>Available with Java 1.5 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/AtomicLongConverter.html">AtomicLongConverter</a></td>
+                <td>java.util.concurrent.atomic.AtomicLong</td>
+                <td class="example">
+                    &lt;atomic-long&gt;2344556678888786&lt;/atomic-long&gt;
+                </td>
+                <td>Available with Java 1.5 or greater.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/AtomicReferenceConverter.html">AtomicReferenceConverter</a></td>
+                <td>java.util.concurrent.atomic.AtomicReference</td>
+                <td class="example">
+                    &lt;atomic-reference&gt;<br/>
+                    &nbsp;&nbsp;&lt;value&nbsp;class=&quot;string&quot;&gt;test&lt;/value&gt;<br/>
+                    &lt;/atomic-reference&gt;
+                </td>
+                <td>Available with Java 1.5 or greater.</td>
                 <td>normal</td>
             </tr>
 

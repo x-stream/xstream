@@ -44,12 +44,11 @@ set JAVA_BIN=%JAVA_EXE%
 for %%i in (lib\*.jar) do call :APP_CP_append %%i
 call :APP_CP_append "config"
 
-@REM * Open modules for parsers using Java 17 or higher
+@REM * Open modules for parsers
 @REM *************
-for /F "tokens=2 usebackq" %%j in (`%JAVA_BIN% -cp "%APP_CP%" com.thoughtworks.xstream.core.JVM ^| find "java.specification.version"`) DO SET JAVA_VERSION=%%j
-if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
-if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
-if %JAVA_VERSION% GEQ 17 set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED
+set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
+set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+set JAVA_OPTS=%JAVA_OPTS% --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED
 
 @REM * Set options
 @REM *************

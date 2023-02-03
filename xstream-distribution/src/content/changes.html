@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -41,6 +41,7 @@
 		<li>Support for fail-safe deserialization unless the parser is not directly involved (I/O or syntax error) as
 		combination of new method getLevel() of HierarchicalStreamReader and GHPR:#91.</li>
 		<li>GHI:#120: Add <em>Automatic-Module-Name</em> entry to XStream's manifests.</li>
+		<li>Remove obsolete xstream-benchmark project and resulting artifacts.</li>
 	</ul>
 
 	<h2>Minor changes</h2>
@@ -73,6 +74,7 @@
 	<ul>
 		<li>Generification of the API.</li>
 		<li>Remove any stuff deprecated in XStream 1.2.x.</li>
+		<li>Remove obsolete benchmark project (included package c.t.x.tools.benchmark).</li>
 		<li>Merge functionality of ExtendedHierarchicalStreamReader into HierarchicalStreamReader.</li>
 		<li>Merge functionality of ExtendedHierarchicalStreamWriter into HierarchicalStreamWriter.</li>
 		<li>HierarchicalStreamReader and HierarchicalStreamWriter extend AutoCloseable instead of Closeable now.</li>
@@ -108,9 +110,71 @@
 	<p>Not yet released.</p>
 -->
 
-	<h1 id="upcoming-1.4.x">Upcoming 1.4.x maintenance release</h1>
+	<h1 id="1.4.20">1.4.20</h1>
 
-	<p>Not yet released.</p>
+	<p>Released December 24, 2022.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerabilities
+	<a href="CVE-2022-40151.html">CVE-2022-40151</a> and <a href="CVE-2022-41966.html">CVE-2022-41966</a>, causing a
+	Denial of Service by raising a stack overflow.  It also provides new converters for Optional and Atomic types.</p>
+
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>GHI:#308: Add converter for AtomicBoolean, AtomicInteger, AtomicLong, and AtomicReference of
+		package java.util.concurrent.atomic.</li>
+		<li>GHI:#293: Add converter for Optional, OptionalDouble, OptionalInt, and OptionalLong of package
+		java.util.</li>
+	</ul>
+
+	<h2>Minor changes</h2>
+
+	<ul>
+		<li>GHPR:#287: Close stream opened from provided URL.</li>
+		<li>GHI:#284: Fix disabling check against hash code attack with XStream.setCollectionUpdateLimit(0).</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The atomic types with new converters of package java.util.concurrent.atomic, that have been written with
+		previous versions of XStream, can still be deserialized.</li>
+		<li>The Optional types with new converters of package java.util, that have been written with previous versions
+		of XStream, can still be deserialized.</li>
+		<li>The WildcardTypePermission allows by default no longer anonymous class types.</li>
+	</ul>
+
+	<h2>API changes</h2>
+
+	<ul>
+		<li>Added c.t.x.converters.extended.AtomicBooleanConverter.</li>
+		<li>Added c.t.x.converters.extended.AtomicIntegerConverter.</li>
+		<li>Added c.t.x.converters.extended.AtomicLongConverter.</li>
+		<li>Added c.t.x.converters.extended.AtomicReferenceConverter.</li>
+		<li>Added c.t.x.converters.extended.OptionalConverter.</li>
+		<li>Added c.t.x.converters.extended.OptionalDoubleConverter.</li>
+		<li>Added c.t.x.converters.extended.OptionalIntConverter.</li>
+		<li>Added c.t.x.converters.extended.OptionalLongConverter.</li>
+		<li>Added c.t.x.security.WildcardTypePermission.WildcardTypePermission(boolean,String[]).</li>
+	</ul>
+
+	<h1 id="1.4.19">1.4.19</h1>
+
+	<p>Released January 29, 2022.</p>
+
+	<p class="highlight">This maintenance release addresses the security vulnerability
+	<a href="CVE-2021-43859.html">CVE-2021-43859</a>, when unmarshalling highly recursive collections or maps causing a
+	Denial of Service.</p>
+
+	<h2>API changes</h2>
+
+	<ul>
+		<li>Added c.t.x.XStream.COLLECTION_UPDATE_LIMIT and c.t.x.XStream.COLLECTION_UPDATE_SECONDS.</li>
+		<li>Added c.t.x.XStream.setCollectionUpdateLimit(int).</li>
+		<li>Added c.t.x.core.SecurityUtils.</li>
+		<li>Added c.t.x.security.AbstractSecurityException and c.t.x.security.InputManipulationException.</li>
+		<li>c.t.x.security.InputManipulationException derives now from c.t.x.security.AbstractSecurityException.</li>
+	</ul>
 
 	<h1 id="1.4.18">1.4.18</h1>
 

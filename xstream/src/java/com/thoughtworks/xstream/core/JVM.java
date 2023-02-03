@@ -168,14 +168,14 @@ public class JVM implements Caching {
         try {
             new SimpleDateFormat("z").parse("UTC");
             test = true;
-        } catch (final ParseException e) {
+        } catch (final ParseException | RuntimeException e) {
             test = false;
         }
         canParseUTCDateFormat = test;
         try {
             new SimpleDateFormat("X").parse("Z");
             test = true;
-        } catch (final ParseException | IllegalArgumentException e) {
+        } catch (final ParseException | RuntimeException e) {
             test = false;
         }
         canParseISO8601TimeZoneInDateFormat = test;

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <!--
      Copyright (C) 2006 Joe Walnes.
-     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream committers.
+     Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 XStream committers.
      All rights reserved.
      
      The software in this package is published under the terms of the BSD
@@ -196,7 +196,7 @@
     <profile>
       <id>xstream-release</id>
       <properties>
-        <version.java.enforced>[16,17)</version.java.enforced>
+        <version.java.enforced>[17,18)</version.java.enforced>
       </properties>
       <build>
         <plugins>
@@ -277,7 +277,6 @@
     <module>xstream-hibernate</module>
     <!--module>xstream-its</module-->
     <module>xstream-jmh</module>
-    <module>xstream-benchmark</module>
     <module>xstream-distribution</module>
   </modules>
 
@@ -374,18 +373,6 @@
       <dependency>
         <groupId>com.thoughtworks.xstream</groupId>
         <artifactId>xstream-jmh</artifactId>
-        <version>1.5.0-SNAPSHOT</version>
-        <classifier>javadoc</classifier>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream-benchmark</artifactId>
-        <version>1.5.0-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>com.thoughtworks.xstream</groupId>
-        <artifactId>xstream-benchmark</artifactId>
         <version>1.5.0-SNAPSHOT</version>
         <classifier>javadoc</classifier>
         <scope>provided</scope>
@@ -729,8 +716,7 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${version.plugin.maven.compiler}</version>
           <configuration>
-            <source>${version.java.source}</source>
-            <target>${version.java.target}</target>
+            <release>${version.java.target}</release>
           </configuration>
         </plugin>
         <plugin>
@@ -781,8 +767,7 @@
                 <Specification-Version>${project.info.majorVersion}.${project.info.minorVersion}</Specification-Version>
                 <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Automatic-Module-Name>${jar.module.name}</Automatic-Module-Name>
-                <X-Compile-Source>${version.java.source}</X-Compile-Source>
-                <X-Compile-Target>${version.java.target}</X-Compile-Target>
+                <X-Compile-Release>${version.java.release}</X-Compile-Release>
               </manifestEntries>
             </archive>
           </configuration>
@@ -873,8 +858,7 @@
                 <Bundle-Version>${project.info.osgiVersion}</Bundle-Version>
                 <Bundle-License>BSD-3-Clause</Bundle-License>
                 <Eclipse-SourceBundle>${project.artifactId};version=${project.info.osgiVersion}</Eclipse-SourceBundle>
-                <X-Compile-Source>${version.java.source}</X-Compile-Source>
-                <X-Compile-Target>${version.java.target}</X-Compile-Target>
+                <X-Compile-Release>${version.java.release}</X-Compile-Release>
               </manifestEntries>
             </archive>
           </configuration>
@@ -1075,9 +1059,8 @@
     <project.build.outputTimestamp>1</project.build.outputTimestamp>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <version.java.source>1.8</version.java.source>
-    <version.java.target>1.8</version.java.target>
-    <version.java.enforced>[1.8,)</version.java.enforced>
+    <version.java.target>11</version.java.target>
+    <version.java.enforced>[11,)</version.java.enforced>
     <version.maven.enforced>[3.3.9,)</version.maven.enforced>
 
     <version.plugin.codehaus.xsite>1.4</version.plugin.codehaus.xsite>
@@ -1124,10 +1107,10 @@
     <version.joda-time>2.10.14</version.joda-time>
     <version.junit>4.13.2</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
-    <version.org.apache.felix>7.0.5</version.org.apache.felix>
-    <version.org.codehaus.jettison>1.5.0</version.org.codehaus.jettison>
-    <version.com.fasterxml.woodstox.core>6.2.8</version.com.fasterxml.woodstox.core>
-    <version.org.dom4j>2.1.3</version.org.dom4j>
+    <version.org.apache.felix>6.0.3</version.org.apache.felix>
+    <version.org.codehaus.jettison>1.4.1</version.org.codehaus.jettison>
+    <version.com.fasterxml.woodstox.core>6.4.0</version.com.fasterxml.woodstox.core>
+    <version.org.dom4j>2.0.2</version.org.dom4j>
     <version.org.hibernate.core>4.2.5.Final</version.org.hibernate.core>
     <version.org.hibernate.envers>${version.org.hibernate.core}</version.org.hibernate.envers>
     <version.org.jdom>1.1.3</version.org.jdom>
@@ -1143,10 +1126,8 @@
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
-    <javadoc.java.release>16</javadoc.java.release>
-    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/16/docs/api/</javadoc.link.javase>
-    <surefire.illegal.access>permit</surefire.illegal.access>
-    <surefire.preview.arg></surefire.preview.arg>
+    <javadoc.java.release>17</javadoc.java.release>
+    <javadoc.link.javase>https://docs.oracle.com/en/java/javase/${javadoc.java.release}/docs/api/</javadoc.link.javase>
 
     <argLine>${surefire.argline}</argLine>
     <javadoc.doclint>-missing</javadoc.doclint>

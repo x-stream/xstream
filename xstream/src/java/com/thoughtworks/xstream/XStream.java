@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -92,6 +92,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalDouble;
+import java.util.OptionalInt;
+import java.util.OptionalLong;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
@@ -101,6 +105,10 @@ import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -141,6 +149,10 @@ import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicIntegerConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicLongConverter;
+import com.thoughtworks.xstream.converters.extended.AtomicReferenceConverter;
 import com.thoughtworks.xstream.converters.extended.CharsetConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.CurrencyConverter;
@@ -154,6 +166,10 @@ import com.thoughtworks.xstream.converters.extended.JavaFieldConverter;
 import com.thoughtworks.xstream.converters.extended.JavaMethodConverter;
 import com.thoughtworks.xstream.converters.extended.LocaleConverter;
 import com.thoughtworks.xstream.converters.extended.LookAndFeelConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalDoubleConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalIntConverter;
+import com.thoughtworks.xstream.converters.extended.OptionalLongConverter;
 import com.thoughtworks.xstream.converters.extended.PathConverter;
 import com.thoughtworks.xstream.converters.extended.RegexPatternConverter;
 import com.thoughtworks.xstream.converters.extended.SqlDateConverter;
@@ -230,6 +246,7 @@ import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
+import com.thoughtworks.xstream.security.InputManipulationException;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
 import com.thoughtworks.xstream.security.InterfaceTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
@@ -374,6 +391,8 @@ public class XStream {
 
     // CAUTION: The sequence of the fields is intentional for an optimal XML output of a
     // self-serialization!
+    private int collectionUpdateLimit = 20;
+
     private final ReflectionProvider reflectionProvider;
     private final HierarchicalStreamDriver hierarchicalStreamDriver;
     private final ClassLoaderReference classLoaderReference;
@@ -407,6 +426,9 @@ public class XStream {
     public static final int PRIORITY_NORMAL = 0;
     public static final int PRIORITY_LOW = -10;
     public static final int PRIORITY_VERY_LOW = -20;
+
+    public static final String COLLECTION_UPDATE_LIMIT = "XStreamCollectionUpdateLimit";
+    public static final String COLLECTION_UPDATE_SECONDS = "XStreamCollectionUpdateSeconds";
 
     private static final Pattern IGNORE_ALL = Pattern.compile(".*");
 
@@ -710,7 +732,8 @@ public class XStream {
         allowTypeHierarchy(Path.class);
 
         final Set<Class<?>> types = new HashSet<>();
-        types.addAll(Arrays.<Class<?>>asList(BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
+        types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, AtomicInteger.class, AtomicLong.class,
+            AtomicReference.class, BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
             DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
             String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
         if (JVM.isSQLAvailable()) {
@@ -743,6 +766,10 @@ public class XStream {
         allowTypeHierarchy(Chronology.class);
         types.add(ValueRange.class);
         types.add(WeekFields.class);
+        types.add(Optional.class);
+        types.add(OptionalDouble.class);
+        types.add(OptionalInt.class);
+        types.add(OptionalLong.class);
 
         types.remove(null);
         allowTypes(types.toArray(new Class[types.size()]));
@@ -817,6 +844,10 @@ public class XStream {
         alias("linked-hash-map", LinkedHashMap.class);
         alias("linked-hash-set", LinkedHashSet.class);
         alias("concurrent-hash-map", ConcurrentHashMap.class);
+        alias("atomic-boolean", AtomicBoolean.class);
+        alias("atomic-int", AtomicInteger.class);
+        alias("atomic-long", AtomicLong.class);
+        alias("atomic-reference", AtomicReference.class);
 
         alias("enum-set", EnumSet.class);
         alias("enum-map", EnumMap.class);
@@ -882,6 +913,10 @@ public class XStream {
         alias("julian-field", JVM.loadClassForName("java.time.temporal.JulianFields$Field"));
         alias("temporal-value-range", ValueRange.class);
         alias("week-fields", WeekFields.class);
+        alias("optional", Optional.class);
+        alias("optional-double", OptionalDouble.class);
+        alias("optional-int", OptionalInt.class);
+        alias("optional-long", OptionalLong.class);
         alias("serialized-lambda", SerializedLambda.class);
 
         aliasType("charset", Charset.class);
@@ -948,6 +983,10 @@ public class XStream {
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
         registerConverter(new PathConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new AtomicBooleanConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new AtomicIntegerConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new AtomicLongConverter(), PRIORITY_NORMAL);
+        registerConverter(new AtomicReferenceConverter(mapper), PRIORITY_NORMAL);
 
         registerConverter(new ArrayConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new CharArrayConverter(), PRIORITY_NORMAL);
@@ -991,6 +1030,10 @@ public class XStream {
         registerConverter(new YearMonthConverter(), PRIORITY_NORMAL);
         registerConverter(new ZonedDateTimeConverter(), PRIORITY_NORMAL);
         registerConverter(new ZoneIdConverter(), PRIORITY_NORMAL);
+        registerConverter(new OptionalConverter(mapper), PRIORITY_NORMAL);
+        registerConverter((Converter)new OptionalDoubleConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new OptionalIntConverter(), PRIORITY_NORMAL);
+        registerConverter((Converter)new OptionalLongConverter(), PRIORITY_NORMAL);
         registerConverter(new DynamicProxyConverter(mapper, classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaClassConverter(classLoaderReference), PRIORITY_NORMAL);
         registerConverter(new JavaMethodConverter(classLoaderReference), PRIORITY_NORMAL);
@@ -1115,6 +1158,9 @@ public class XStream {
         addImmutableTypeDynamically("java.time.temporal.IsoFields$Field", false);
         addImmutableTypeDynamically("java.time.temporal.IsoFields$Unit", false);
         addImmutableTypeDynamically("java.time.temporal.JulianFields$Field", false);
+        addImmutableType(OptionalDouble.class, false);
+        addImmutableType(OptionalInt.class, false);
+        addImmutableType(OptionalLong.class, false);
     }
 
     private void addImmutableTypeDynamically(final String className, final boolean isReferenceable) {
@@ -1132,6 +1178,23 @@ public class XStream {
      */
     public void setMarshallingStrategy(final MarshallingStrategy marshallingStrategy) {
         this.marshallingStrategy = marshallingStrategy;
+    }
+
+    /**
+     * Set time limit for adding elements to collections or maps.
+     * 
+     * Manipulated content may be used to create recursive hash code calculations or sort operations. An
+     * {@link InputManipulationException} is thrown, if the summed up time to add elements to collections or maps
+     * exceeds the provided limit.
+     * 
+     * Note, that the time to add an individual element is calculated in seconds, not milliseconds. However, attacks
+     * typically use objects with exponential growing calculation times.
+     * 
+     * @param maxSeconds limit in seconds or 0 to disable check
+     * @since 1.4.19
+     */
+    public void setCollectionUpdateLimit(final int maxSeconds) {
+        collectionUpdateLimit = maxSeconds;
     }
 
     /**
@@ -1343,12 +1406,21 @@ public class XStream {
      *            XStream shall create one lazily as needed.
      * @throws XStreamException if the object cannot be deserialized
      */
-    public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, final DataHolder dataHolder) {
+    public <T> T unmarshal(final HierarchicalStreamReader reader, final T root, DataHolder dataHolder) {
         try {
+            if (collectionUpdateLimit > 0) {
+                if (dataHolder == null) {
+                    dataHolder = new MapBackedDataHolder();
+                }
+                dataHolder.put(COLLECTION_UPDATE_LIMIT, Integer.valueOf(collectionUpdateLimit));
+                dataHolder.put(COLLECTION_UPDATE_SECONDS, Integer.valueOf(0));
+            }
+
             @SuppressWarnings("unchecked")
             final T t = (T)marshallingStrategy.unmarshal(root, reader, dataHolder, converterLookup, mapper);
             return t;
-
+        } catch (final StackOverflowError e) {
+            throw new InputManipulationException("Possible Denial of Service attack by Stack Overflow");
         } catch (final ConversionException e) {
             final Package pkg = getClass().getPackage();
             final String version = pkg != null ? pkg.getImplementationVersion() : null;
@@ -2032,8 +2104,16 @@ public class XStream {
      * @see #createObjectInputStream(com.thoughtworks.xstream.io.HierarchicalStreamReader)
      * @since 1.4.10
      */
-    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, final DataHolder dataHolder)
+    public ObjectInputStream createObjectInputStream(final HierarchicalStreamReader reader, DataHolder dataHolder)
             throws IOException {
+        if (collectionUpdateLimit > 0) {
+            if (dataHolder == null) {
+                dataHolder = new MapBackedDataHolder();
+            }
+            dataHolder.put(COLLECTION_UPDATE_LIMIT, Integer.valueOf(collectionUpdateLimit));
+            dataHolder.put(COLLECTION_UPDATE_SECONDS, Integer.valueOf(0));
+        }
+        final DataHolder dh = dataHolder;
         return new CustomObjectInputStream(new CustomObjectInputStream.StreamCallback() {
             @Override
             public Object readFromStream() throws EOFException {
@@ -2041,7 +2121,7 @@ public class XStream {
                     throw new EOFException();
                 }
                 reader.moveDown();
-                final Object result = unmarshal(reader, null, dataHolder);
+                final Object result = unmarshal(reader, null, dh);
                 reader.moveUp();
                 return result;
             }

@@ -24,18 +24,9 @@
 
   <profiles>
     <profile>
-      <id>jdk17-ge</id>
+      <id>jdk17</id>
       <activation>
-        <jdk>[17,)</jdk>
-      </activation>
-      <properties>
-        <surefire.argline>--add-opens java.base/java.lang=ALL-UNNAMED</surefire.argline>
-      </properties>
-    </profile>
-    <profile>
-      <id>jdk16</id>
-      <activation>
-        <jdk>16</jdk>
+        <jdk>17</jdk>
       </activation>
       <build>
         <plugins>
@@ -45,15 +36,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-    <profile>
-      <id>jdk9-ge-jdk16</id>
-      <activation>
-        <jdk>[9,17)</jdk>
-      </activation>
-      <properties>
-        <surefire.argline>--illegal-access=${surefire.illegal.access}</surefire.argline>
-      </properties>
     </profile>
   </profiles>
 
@@ -151,5 +133,6 @@
   <properties>
     <bundle.export.package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</bundle.export.package>
     <jar.module.name>xstream.hibernate</jar.module.name>
+    <surefire.argline>--add-opens java.base/java.lang=ALL-UNNAMED</surefire.argline>
   </properties>
 </project>

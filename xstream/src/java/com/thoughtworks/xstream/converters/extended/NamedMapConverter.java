@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013, 2014, 2016, 2018 XStream Committers.
+ * Copyright (C) 2013, 2014, 2016, 2018, 2021 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,6 +19,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
+import com.thoughtworks.xstream.core.JVM;
+import com.thoughtworks.xstream.core.SecurityUtils;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -327,7 +329,9 @@ public class NamedMapConverter extends MapConverter {
 
             @SuppressWarnings("unchecked")
             final Map<Object, Object> targetMap = (Map<Object, Object>)target;
+            final long now = System.currentTimeMillis();
             targetMap.put(key, value);
+            SecurityUtils.checkForCollectionDoSAttack(context, now);
 
             if (entryName != null) {
                 reader.moveUp();
