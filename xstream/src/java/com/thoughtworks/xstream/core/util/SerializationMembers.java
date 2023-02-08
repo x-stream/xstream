@@ -38,12 +38,14 @@ import com.thoughtworks.xstream.core.Caching;
  * @author J&ouml;rg Schaible
  */
 public class SerializationMembers implements Caching {
-
-    private static final Method NO_METHOD = new Object() {
+    
+    private static class EmptyClass {
         @SuppressWarnings("unused")
         private void noMethod() {
         }
-    }.getClass().getDeclaredMethods()[0];
+    }
+
+    private static final Method NO_METHOD = EmptyClass.getDeclaredMethods()[0];
     private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
     private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {
