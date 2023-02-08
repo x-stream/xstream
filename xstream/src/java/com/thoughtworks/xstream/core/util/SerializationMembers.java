@@ -45,7 +45,7 @@ public class SerializationMembers implements Caching {
         }
     }
 
-    private static final Method NO_METHOD = EmptyClass.getDeclaredMethods()[0];
+    private static final Method NO_METHOD = EmptyClass.class.getDeclaredMethods()[0];
     private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
     private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {
