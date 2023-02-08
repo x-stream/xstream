@@ -38,7 +38,7 @@ import com.thoughtworks.xstream.core.Caching;
  * @author J&ouml;rg Schaible
  */
 public class SerializationMembers implements Caching {
-    
+
     private static class EmptyClass {
         @SuppressWarnings("unused")
         private void noMethod() {
