@@ -39,13 +39,11 @@ import com.thoughtworks.xstream.core.Caching;
  */
 public class SerializationMembers implements Caching {
 
-    private static class EmptyClass {
+    private static final Method NO_METHOD = new Object() {
         @SuppressWarnings("unused")
         private void noMethod() {
         }
-    }
-
-    private static final Method NO_METHOD = EmptyClass.class.getDeclaredMethods()[0];
+    }.getClass().getDeclaredMethods()[0];
     private static final Map<String, ObjectStreamField> NO_FIELDS = Collections.emptyMap();
     private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
     private static final FastField[] OBJECT_TYPE_FIELDS = {

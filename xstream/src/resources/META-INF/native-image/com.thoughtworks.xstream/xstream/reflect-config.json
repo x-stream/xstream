@@ -1,0 +1,84 @@
+[
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.core.util.SerializationMembers$1"
+    },
+    "name": "com.thoughtworks.xstream.core.util.SerializationMembers$1",
+    "queriedMethods": [
+      {
+        "name": "noMethod",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider"
+    },
+    "name": "com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider"
+    },
+    "name": "com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": []
+      }
+    ]
+  },
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.mapper.EnumMapper"
+    },
+    "name": "com.thoughtworks.xstream.mapper.EnumMapper",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+          "com.thoughtworks.xstream.mapper.Mapper"
+        ]
+      }
+    ]
+  },
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.mapper.LambdaMapper"
+    },
+    "name": "com.thoughtworks.xstream.mapper.LambdaMapper",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+          "com.thoughtworks.xstream.mapper.Mapper"
+        ]
+      }
+    ]
+  },
+  {
+    "condition": {
+      "typeReachable": "com.thoughtworks.xstream.mapper.AnnotationMapper"
+    },
+    "name": "com.thoughtworks.xstream.mapper.AnnotationMapper",
+    "methods": [
+      {
+        "name": "<init>",
+        "parameterTypes": [
+          "com.thoughtworks.xstream.mapper.Mapper",
+          "com.thoughtworks.xstream.converters.ConverterRegistry",
+          "com.thoughtworks.xstream.converters.ConverterLookup",
+          "com.thoughtworks.xstream.core.ClassLoaderReference",
+          "com.thoughtworks.xstream.converters.reflection.ReflectionProvider"
+        ]
+      }
+    ]
+  }
+]
