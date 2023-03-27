@@ -110,6 +110,11 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             + "</atomic-reference>").replace('\'', '"'));
     }
 
+    public void testEmptyAtomicReference() {
+        final AtomicReference atomicRef = new AtomicReference();
+        assertBothWays(atomicRef, "<atomic-reference/>");
+    }
+
     public void testAtomicReferenceWithOldFormat() {
         assertEquals(new AtomicReference("test").get(), ((AtomicReference<String>)xstream.fromXML("" //
             + "<java.util.concurrent.atomic.AtomicReference>\n" //
