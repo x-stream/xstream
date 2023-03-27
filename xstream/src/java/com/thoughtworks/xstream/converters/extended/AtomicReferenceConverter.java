@@ -43,23 +43,29 @@ public class AtomicReferenceConverter implements Converter {
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final AtomicReference<?> ref = (AtomicReference<?>)source;
-        writer.startNode(mapper.serializedMember(AtomicReference.class, "value"));
-
         final Object object = ref.get();
-        final String name = mapper.serializedClass(object != null ? object.getClass() : null);
-        writer.addAttribute(mapper.aliasForSystemAttribute("class"), name);
-        context.convertAnother(ref.get());
-        writer.endNode();
+        if (object != null) {
+            writer.startNode(mapper.serializedMember(AtomicReference.class, "value"));
+
+            final String name = mapper.serializedClass(object.getClass());
+            writer.addAttribute(mapper.aliasForSystemAttribute("class"), name);
+            context.convertAnother(object);
+            writer.endNode();
+        }
     }
 
     @Override
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        reader.moveDown();
+        if (reader.hasMoreChildren()) {
+            reader.moveDown();
 
-        final Class<?> type = HierarchicalStreams.readClassType(reader, mapper);
-        final Object value = context.convertAnother(context, type);
-        reader.moveUp();
-        return new AtomicReference<>(value);
+            final Class<?> type = HierarchicalStreams.readClassType(reader, mapper);
+            final Object value = context.convertAnother(context, type);
+            reader.moveUp();
+            return new AtomicReference<>(value);
+        } else {
+            return new AtomicReference<>();
+        }
     }
 
 }
