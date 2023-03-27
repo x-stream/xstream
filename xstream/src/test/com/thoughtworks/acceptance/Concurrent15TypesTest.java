@@ -117,6 +117,11 @@ public class Concurrent15TypesTest extends AbstractAcceptanceTest {
             + "</java.util.concurrent.atomic.AtomicReference>")).get());
     }
 
+    public void testEmptyAtomicReference() {
+        final AtomicReference atomicRef = new AtomicReference();
+        assertBothWays(atomicRef, "<atomic-reference/>");
+    }
+
     public void testAtomicReferenceWithAlias() {
         xstream.aliasField("junit", AtomicReference.class, "value");
         final AtomicReference atomicRef = new AtomicReference("test");
