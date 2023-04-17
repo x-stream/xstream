@@ -31,4 +31,42 @@ public class QuickWriterTest extends TestCase {
             assertEquals(stringWriter.toString(), "Joe Walnes");
         }
     }
+
+    public void testBufferingChar() {
+        final StringWriter stringWriter = new StringWriter();
+        try (QuickWriter writer = new QuickWriter(stringWriter, 1024)) {
+            char[] filler = new char[1023];
+            writer.write(filler);
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            writer.write(' ');
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            writer.write(' ');
+            assertEquals("flushed", 1024, stringWriter.getBuffer().length());
+        }
+    }
+    public void testBufferingCharArray() {
+        final StringWriter stringWriter = new StringWriter();
+        try (QuickWriter writer = new QuickWriter(stringWriter, 1024)) {
+            char[] filler = new char[1023];
+            writer.write(filler);
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            char[] one = {' '};
+            writer.write(one);
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            writer.write(one);
+            assertEquals("flushed", 1024, stringWriter.getBuffer().length());
+        }
+    }
+    public void testBufferingString() {
+        final StringWriter stringWriter = new StringWriter();
+        try (QuickWriter writer = new QuickWriter(stringWriter, 1024)) {
+            char[] filler = new char[1023];
+            writer.write(filler);
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            writer.write(" ");
+            assertEquals("not flushed yet", 0, stringWriter.getBuffer().length());
+            writer.write(" ");
+            assertEquals("flushed", 1024, stringWriter.getBuffer().length());
+        }
+    }
 }

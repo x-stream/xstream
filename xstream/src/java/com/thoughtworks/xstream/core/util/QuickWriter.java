@@ -35,7 +35,7 @@ public class QuickWriter implements Closeable {
 
     public void write(final String str) {
         final int len = str.length();
-        if (pointer + len >= buffer.length) {
+        if (pointer + len > buffer.length) {
             flush();
             if (len > buffer.length) {
                 raw(str.toCharArray());
@@ -47,7 +47,7 @@ public class QuickWriter implements Closeable {
     }
 
     public void write(final char c) {
-        if (pointer + 1 >= buffer.length) {
+        if (pointer + 1 > buffer.length) {
             flush();
             if (buffer.length == 0) {
                 raw(c);
@@ -59,7 +59,7 @@ public class QuickWriter implements Closeable {
 
     public void write(final char[] c) {
         final int len = c.length;
-        if (pointer + len >= buffer.length) {
+        if (pointer + len > buffer.length) {
             flush();
             if (len > buffer.length) {
                 raw(c);
