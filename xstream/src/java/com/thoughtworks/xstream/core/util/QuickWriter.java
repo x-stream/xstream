@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2023 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.core.util;
@@ -33,7 +33,7 @@ public class QuickWriter {
 
     public void write(String str) {
         int len = str.length();
-        if (pointer + len >= buffer.length) {
+        if (pointer + len > buffer.length) {
             flush();
             if (len > buffer.length) {
                 raw(str.toCharArray());
@@ -45,7 +45,7 @@ public class QuickWriter {
     }
 
     public void write(char c) {
-        if (pointer + 1 >= buffer.length) {
+        if (pointer + 1 > buffer.length) {
             flush();
             if (buffer.length == 0) {
                 raw(c);
@@ -57,7 +57,7 @@ public class QuickWriter {
 
     public void write(char[] c) {
         int len = c.length;
-        if (pointer + len >= buffer.length) {
+        if (pointer + len > buffer.length) {
             flush();
             if (len > buffer.length) {
                 raw(c);
