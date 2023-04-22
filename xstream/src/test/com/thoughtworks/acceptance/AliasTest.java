@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018, 2019, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2018, 2019, 2020, 2023 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ import java.util.List;
 import com.thoughtworks.acceptance.objects.Category;
 import com.thoughtworks.acceptance.objects.Product;
 import com.thoughtworks.acceptance.objects.Software;
+import com.thoughtworks.acceptance.someobjects.Protocol;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
 import com.thoughtworks.xstream.XStream;
@@ -283,12 +284,7 @@ public class AliasTest extends AbstractAcceptanceTest {
         xstream.aliasField("c", TypeC.class, "attrC");
         xstream.aliasField("y", TypeC.class, "attrA");
         final TypeC object = new TypeC();
-        final String xml = ""
-            + "<test>\n"
-            + "  <y>testA</y>\n"
-            + "  <b>testB</b>\n"
-            + "  <c>testC</c>\n"
-            + "</test>";
+        final String xml = "" + "<test>\n" + "  <y>testA</y>\n" + "  <b>testB</b>\n" + "  <c>testC</c>\n" + "</test>";
         assertBothWays(object, xml);
     }
 
@@ -392,10 +388,11 @@ public class AliasTest extends AbstractAcceptanceTest {
 
         assertBothWays(withList, xml);
     }
-    
+
     @SuppressWarnings("unused")
-    private void takingDoubles(Double d1, double d2) {}
-    
+    private void takingDoubles(final Double d1, final double d2) {
+    }
+
     public void testCanCreateAliasingJavaTypeConverter() throws NoSuchFieldException, NoSuchMethodException {
         final Mapper mapper = new MapperWrapper(xstream.getMapper().lookupMapperOfType(ArrayMapper.class)) {
             @Override
@@ -418,8 +415,8 @@ public class AliasTest extends AbstractAcceptanceTest {
         list.add(int[][][].class);
         list.add(Integer[][][].class);
         list.add(TypeA.class.getDeclaredField("attrA"));
-        list.add(Product.class.getConstructor(new Class[]{String.class, String.class, double.class}));
-        list.add(getClass().getDeclaredMethod("takingDoubles", new Class[]{Double.class, double.class}));
+        list.add(Product.class.getConstructor(String.class, String.class, double.class));
+        list.add(getClass().getDeclaredMethod("takingDoubles", Double.class, double.class));
         list.add(ArrayList.class);
 
         final String xml = ""
@@ -451,5 +448,53 @@ public class AliasTest extends AbstractAcceptanceTest {
             + "</list>";
 
         assertBothWays(list, xml);
+    }
+
+    public static class Protocols {
+        static class HTTP extends Protocol {
+            public HTTP() {
+                super("http");
+            }
+        }
+
+        static class TCP extends Protocol {
+            public TCP() {
+                super("tcp");
+            }
+        }
+
+        static class UDP extends Protocol {
+            public UDP() {
+                super("udp");
+            }
+        }
+
+        Object http;
+        TCP tcp;
+        Protocol udp;
+    }
+
+    public void testErasesSystemAttribute() {
+        xstream.alias("protocols", Protocols.class);
+        xstream.aliasSystemAttribute(null, "class");
+
+        final Protocols exceptions = new Protocols();
+        exceptions.http = new Protocols.HTTP();
+        exceptions.tcp = new Protocols.TCP();
+        exceptions.udp = new Protocols.UDP();
+
+        final String expected = ""
+            + "<protocols>\n"
+            + "  <http>\n"
+            + "    <id>http</id>\n"
+            + "  </http>\n"
+            + "  <tcp>\n"
+            + "    <id>tcp</id>\n"
+            + "  </tcp>\n"
+            + "  <udp>\n"
+            + "    <id>udp</id>\n"
+            + "  </udp>\n"
+            + "</protocols>";
+        assertEquals(expected, xstream.toXML(exceptions));
     }
 }
