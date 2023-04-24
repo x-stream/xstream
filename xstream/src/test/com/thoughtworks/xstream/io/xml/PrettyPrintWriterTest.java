@@ -168,6 +168,24 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         }
     }
 
+    public void testReplacesNullInXml1_0ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0_REPLACEMENT);
+        writer.startNode("tag");
+        writer.setValue("\u0000");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>&#xfffd;</tag>");
+    }
+
+    public void testReplacesNullInXml1_1ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1_REPLACEMENT);
+        writer.startNode("tag");
+        writer.setValue("\u0000");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>&#xfffd;</tag>");
+    }
+
     public void testSupportsOnlyValidControlCharactersInXml1_0Mode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0);
         writer.startNode("tag");
@@ -237,6 +255,65 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
             + "&#x98;&#x99;&#x9a;&#x9b;&#x9c;&#x9d;&#x9e;&#x9f;</tag>");
     }
 
+    public void testReplacesInvalidControlCharactersInXml1_0ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0_REPLACEMENT);
+        writer.startNode("tag");
+        final String ctrl = ""
+                + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
+                + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
+                + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
+                + "\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f"
+                + "\u007f"
+                + "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087"
+                + "\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f"
+                + "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097"
+                + "\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f"
+                + "";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
+            writer.setValue(new Character(c).toString());
+        }
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;"
+                + "&#xfffd;\t\n&#xfffd;&#xfffd;&#xd;&#xfffd;&#xfffd;"
+                + "&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;"
+                + "&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;&#xfffd;"
+                + "&#x7f;"
+                + "&#x80;&#x81;&#x82;&#x83;&#x84;&#x85;&#x86;&#x87;"
+                + "&#x88;&#x89;&#x8a;&#x8b;&#x8c;&#x8d;&#x8e;&#x8f;"
+                + "&#x90;&#x91;&#x92;&#x93;&#x94;&#x95;&#x96;&#x97;"
+                + "&#x98;&#x99;&#x9a;&#x9b;&#x9c;&#x9d;&#x9e;&#x9f;</tag>");    }
+
+    public void testReplacesInvalidControlCharactersInXml1_1ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1_REPLACEMENT);
+        writer.startNode("tag");
+        final String ctrl = ""
+                + "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007"
+                + "\u0008\u0009\n\u000b\u000c\r\u000e\u000f"
+                + "\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017"
+                + "\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f"
+                + "\u007f"
+                + "\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087"
+                + "\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f"
+                + "\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097"
+                + "\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f"
+                + "";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
+            writer.setValue(new Character(c).toString());
+        }
+        writer.endNode();
+        assertXmlProducedIs("<tag>&#xfffd;&#x1;&#x2;&#x3;&#x4;&#x5;&#x6;&#x7;"
+                + "&#x8;\t\n&#xb;&#xc;&#xd;&#xe;&#xf;"
+                + "&#x10;&#x11;&#x12;&#x13;&#x14;&#x15;&#x16;&#x17;"
+                + "&#x18;&#x19;&#x1a;&#x1b;&#x1c;&#x1d;&#x1e;&#x1f;&#x7f;"
+                + "&#x80;&#x81;&#x82;&#x83;&#x84;&#x85;&#x86;&#x87;"
+                + "&#x88;&#x89;&#x8a;&#x8b;&#x8c;&#x8d;&#x8e;&#x8f;"
+                + "&#x90;&#x91;&#x92;&#x93;&#x94;&#x95;&#x96;&#x97;"
+                + "&#x98;&#x99;&#x9a;&#x9b;&#x9c;&#x9d;&#x9e;&#x9f;</tag>");
+    }
+
     public void testSupportsInvalidUnicodeCharacterslInQuirksMode() {
         writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_QUIRKS);
         writer.startNode("tag");
@@ -293,6 +370,30 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         }
         writer.endNode();
         assertXmlProducedIs("<tag>&#xd7ff;\ue000\ufffd</tag>");
+    }
+
+    public void testReplacesInvalidUnicodeCharactersInXml1_0ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0_REPLACEMENT);
+        writer.startNode("tag");
+        final String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
+            writer.setValue(new Character(c).toString());
+        }
+        writer.endNode();
+        assertXmlProducedIs("<tag>&#xd7ff;&#xfffd;&#xfffd;\ue000\ufffd&#xfffd;&#xfffd;</tag>");
+    }
+
+    public void testReplacesInvalidUnicodeCharactersInXml1_1ReplacementMode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1_REPLACEMENT);
+        writer.startNode("tag");
+        final String ctrl = "\ud7ff\ud800\udfff\ue000\ufffd\ufffe\uffff";
+        for (int i = 0; i < ctrl.length(); i++) {
+            final char c = ctrl.charAt(i);
+            writer.setValue(new Character(c).toString());
+        }
+        writer.endNode();
+        assertXmlProducedIs("<tag>&#xd7ff;&#xfffd;&#xfffd;\ue000\ufffd&#xfffd;&#xfffd;</tag>");
     }
 
     private String replace(final String in, final char what, final String with) {
