@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2023 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -42,6 +42,8 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is not supported, a
  * {@link StreamException} is thrown. Select a proper parser implementation that respects the version in the XML header
  * (the Xpp3 parser will also read character entities of normally invalid characters).
+ * You may also switch to XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters
+ * with a U+FFFD replacement character.
  * </p>
  * 
  * @author Joe Walnes
@@ -52,6 +54,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     public static int XML_QUIRKS = -1;
     public static int XML_1_0 = 0;
     public static int XML_1_1 = 1;
+    public static int XML_1_0_REPLACEMENT = 2;
+    public static int XML_1_1_REPLACEMENT = 3;
 
     private final QuickWriter writer;
     private final FastStack<String> elementStack = new FastStack<>(16);
@@ -71,6 +75,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] QUOT = "&quot;".toCharArray();
     private static final char[] APOS = "&apos;".toCharArray();
     private static final char[] CLOSE = "</".toCharArray();
+    private static final char[] REPLACEMENT = "&#xfffd;".toCharArray();
 
     /**
      * @since 1.4
@@ -80,8 +85,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
         this.mode = mode;
-        if (mode < XML_QUIRKS || mode > XML_1_1) {
-            throw new IllegalArgumentException("Not a valid XML mode");
+        if (mode < XML_QUIRKS || mode > XML_1_1_REPLACEMENT) {
+            throw new IllegalArgumentException("Not a valid XML mode: " + mode);
         }
     }
 
@@ -213,6 +218,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
             case '\0':
                 if (mode == XML_QUIRKS) {
                     writer.write(NULL);
+                } else if (mode == XML_1_0_REPLACEMENT || mode == XML_1_1_REPLACEMENT) {
+                    writer.write(REPLACEMENT);
                 } else {
                     throw new StreamException("Invalid character 0x0 in XML stream");
                 }
@@ -244,32 +251,53 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 //$FALL-THROUGH$
             default:
                 if (Character.isDefined(c) && !Character.isISOControl(c)) {
+                    boolean replaced = false;
                     if (mode != XML_QUIRKS) {
                         if (c > '\ud7ff' && c < '\ue000') {
-                            throw new StreamException("Invalid character 0x"
-                                + Integer.toHexString(c)
-                                + " in XML stream");
+                            if (mode == XML_1_0_REPLACEMENT || mode == XML_1_1_REPLACEMENT) {
+                                writer.write(REPLACEMENT);
+                                replaced = true;
+                            } else {
+                                throw new StreamException("Invalid character 0x"
+                                        + Integer.toHexString(c)
+                                        + " in XML stream");
+                            }
                         }
                     }
-                    writer.write(c);
+                    if (!replaced) {
+                        writer.write(c);
+                    }
                 } else {
-                    if (mode == XML_1_0) {
+                    boolean replaced = false;
+                    if (mode == XML_1_0 || mode == XML_1_0_REPLACEMENT) {
                         if (c < 9 || c == '\u000b' || c == '\u000c' || c == '\u000e' || c >= '\u000f' && c <= '\u001f') {
-                            throw new StreamException("Invalid character 0x"
-                                + Integer.toHexString(c)
-                                + " in XML 1.0 stream");
+                            if (mode == XML_1_0_REPLACEMENT) {
+                                writer.write(REPLACEMENT);
+                                replaced = true;
+                            } else {
+                                throw new StreamException("Invalid character 0x"
+                                        + Integer.toHexString(c)
+                                        + " in XML 1.0 stream");
+                            }
                         }
                     }
                     if (mode != XML_QUIRKS) {
                         if (c == '\ufffe' || c == '\uffff') {
-                            throw new StreamException("Invalid character 0x"
-                                + Integer.toHexString(c)
-                                + " in XML stream");
+                            if (mode == XML_1_0_REPLACEMENT || mode == XML_1_1_REPLACEMENT) {
+                                writer.write(REPLACEMENT);
+                                replaced = true;
+                            } else {
+                                throw new StreamException("Invalid character 0x"
+                                        + Integer.toHexString(c)
+                                        + " in XML stream");
+                            }
                         }
                     }
-                    writer.write("&#x");
-                    writer.write(Integer.toHexString(c));
-                    writer.write(';');
+                    if (!replaced) {
+                        writer.write("&#x");
+                        writer.write(Integer.toHexString(c));
+                        writer.write(';');
+                    }
                 }
             }
         }
