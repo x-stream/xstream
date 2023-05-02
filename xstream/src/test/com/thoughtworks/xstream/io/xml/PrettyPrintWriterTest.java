@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2013, 2018, 2023 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2013, 2018, 2023, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -395,6 +395,33 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         }
         writer.endNode();
         assertXmlProducedIs("<tag>&#xd7ff;&#xfffd;&#xfffd;\ue000\ufffd&#xfffd;&#xfffd;</tag>");
+    }
+
+    public void testSupportsSupplementaryMultilingualPlaneInQuirks_Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_QUIRKS);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
+    }
+
+    public void testSupportsSupplementaryMultilingualPlaneInXml1_0Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
+    }
+
+    public void testSupportsSupplementaryMultilingualPlaneInXml1_1Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
     }
 
     private String replace(final String in, final char what, final String with) {
