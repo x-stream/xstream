@@ -206,9 +206,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     private void writeText(final String text, final boolean isAttribute) {
-        final int length = text.length();
-        for (int i = 0; i < length; i++) {
-            final char c = text.charAt(i);
+        text.codePoints().forEach(c -> {
             switch (c) {
             case '\0':
                 if (mode == XML_QUIRKS) {
@@ -238,7 +236,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
             case '\t':
             case '\n':
                 if (!isAttribute) {
-                    writer.write(c);
+                    writer.write(Character.toChars(c));
                     break;
                 }
                 //$FALL-THROUGH$
@@ -251,7 +249,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                                 + " in XML stream");
                         }
                     }
-                    writer.write(c);
+                    writer.write(Character.toChars(c));
                 } else {
                     if (mode == XML_1_0) {
                         if (c < 9 || c == '\u000b' || c == '\u000c' || c == '\u000e' || c >= '\u000f' && c <= '\u001f') {
@@ -272,7 +270,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                     writer.write(';');
                 }
             }
-        }
+        });
     }
 
     @Override
