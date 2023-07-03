@@ -41,13 +41,13 @@ public class AtomicReferenceConverter implements Converter {
 
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
         final AtomicReference ref = (AtomicReference)source;
-        if (ref.get() != null) {
+        final Object object = ref.get();
+        if (object != null) {
             writer.startNode(mapper.serializedMember(AtomicReference.class, "value"));
 
-            final Object object = ref.get();
-            final String name = mapper.serializedClass(object != null ? object.getClass() : null);
+            final String name = mapper.serializedClass(object.getClass());
             writer.addAttribute(mapper.aliasForSystemAttribute("class"), name);
-            context.convertAnother(ref.get());
+            context.convertAnother(object);
             writer.endNode();
         }
     }
