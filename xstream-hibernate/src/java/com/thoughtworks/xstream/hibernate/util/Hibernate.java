@@ -8,8 +8,6 @@ package com.thoughtworks.xstream.hibernate.util;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Optional;
-
 
 /**
  * Utility class for Hibernate support.
