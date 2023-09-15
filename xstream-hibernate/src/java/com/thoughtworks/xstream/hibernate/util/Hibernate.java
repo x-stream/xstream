@@ -8,6 +8,8 @@ package com.thoughtworks.xstream.hibernate.util;
 
 import org.hibernate.proxy.HibernateProxy;
 
+import java.util.Optional;
+
 
 /**
  * Utility class for Hibernate support.
@@ -40,17 +42,22 @@ public class Hibernate {
     public final static Class<?> EnversSortedSet = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedSetProxy");
 
     private static Class<?> loadHibernateType(final String name) {
-        Class<?> type = null;
-        try {
-            try {
-                type = HibernateProxy.class.getClassLoader().loadClass(name);
-            } catch (final ClassNotFoundException e) {
-                type = HibernateProxy.class.getClassLoader().loadClass(name.replaceFirst("\\.internal\\.", "."));
-            }
-        } catch (final ClassNotFoundException e) {
-            // not available
+        Class<?> result = tryToLoadClass(name);
+        if( result == null ){
+            result = tryToLoadClass(name.replaceFirst("\\.internal\\.", "."));
         }
-        return type;
+        if( result == null){
+            result = tryToLoadClass(name.replaceFirst("\\.internal\\.", ".spi."));
+        }
+        return result;
+    }
+
+    private static Class<?> tryToLoadClass(String name) {
+        try {
+            return HibernateProxy.class.getClassLoader().loadClass(name);
+        } catch (final ClassNotFoundException e) {
+            return null;
+        }
     }
 
     private static Class<?> loadHibernateEnversType(final String name) {
