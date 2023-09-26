@@ -1,12 +1,12 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2014, 2015, 2023 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -21,6 +21,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 
@@ -29,6 +30,7 @@ public class DomReader extends AbstractDocumentReader {
     private Element currentElement;
     private final StringBuilder textBuffer;
     private List<Element> childElements;
+    private final FastStack<List<Element>> childrenStack;
 
     public DomReader(final Element rootElement) {
         this(rootElement, new XmlFriendlyNameCoder());
@@ -44,6 +46,8 @@ public class DomReader extends AbstractDocumentReader {
     public DomReader(final Element rootElement, final NameCoder nameCoder) {
         super(rootElement, nameCoder);
         textBuffer = new StringBuilder();
+        childrenStack = new FastStack<>(16);
+        collectChildElements();
     }
 
     /**
@@ -130,6 +134,9 @@ public class DomReader extends AbstractDocumentReader {
     @Override
     protected void reassignCurrentElement(final Object current) {
         currentElement = (Element)current;
+    }
+
+    private void collectChildElements() {
         final NodeList childNodes = currentElement.getChildNodes();
         childElements = new ArrayList<>();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -138,6 +145,19 @@ public class DomReader extends AbstractDocumentReader {
                 childElements.add((Element)node);
             }
         }
+    }
+
+    @Override
+    public void moveDown() {
+        super.moveDown();
+        childrenStack.push(childElements);
+        collectChildElements();
+    }
+
+    @Override
+    public void moveUp() {
+        childElements = childrenStack.pop();
+        super.moveUp();
     }
 
     @Override
