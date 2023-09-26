@@ -1,16 +1,17 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2011, 2023 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
 
+import com.thoughtworks.xstream.core.util.FastStack;
 import com.thoughtworks.xstream.io.naming.NameCoder;
 
 import org.w3c.dom.Attr;
@@ -23,11 +24,13 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class DomReader extends AbstractDocumentReader {
 
     private Element currentElement;
     private StringBuffer textBuffer;
     private List childElements;
+    private final FastStack childrenStack;
 
     public DomReader(Element rootElement) {
         this(rootElement, new XmlFriendlyNameCoder());
@@ -43,6 +46,8 @@ public class DomReader extends AbstractDocumentReader {
     public DomReader(Element rootElement, NameCoder nameCoder) {
         super(rootElement, nameCoder);
         textBuffer = new StringBuffer();
+        childrenStack = new FastStack(16);
+        collectChildElements();
     }
 
     /**
@@ -117,6 +122,9 @@ public class DomReader extends AbstractDocumentReader {
 
     protected void reassignCurrentElement(Object current) {
         currentElement = (Element) current;
+    }
+
+    private void collectChildElements() {
         NodeList childNodes = currentElement.getChildNodes();
         childElements = new ArrayList();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -125,6 +133,17 @@ public class DomReader extends AbstractDocumentReader {
                 childElements.add(node);
             }
         }
+    }
+
+    public void moveDown() {
+        super.moveDown();
+        childrenStack.push(childElements);
+        collectChildElements();
+    }
+
+    public void moveUp() {
+        childElements = (List) childrenStack.pop();
+        super.moveUp();
     }
 
     public String peekNextChild() {
