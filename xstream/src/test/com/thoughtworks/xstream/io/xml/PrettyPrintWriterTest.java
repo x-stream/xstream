@@ -295,6 +295,33 @@ public class PrettyPrintWriterTest extends AbstractXMLWriterTest {
         assertXmlProducedIs("<tag>&#xd7ff;\ue000\ufffd</tag>");
     }
 
+    public void testSupportsSupplementaryMultilingualPlaneInQuirks_Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_QUIRKS);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
+    }
+
+    public void testSupportsSupplementaryMultilingualPlaneInXml1_0Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_0);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
+    }
+
+    public void testSupportsSupplementaryMultilingualPlaneInXml1_1Mode() {
+        writer = new PrettyPrintWriter(buffer, PrettyPrintWriter.XML_1_1);
+        writer.startNode("tag");
+        writer.setValue("\uD83E\uDD8A");
+        writer.endNode();
+
+        assertXmlProducedIs("<tag>\uD83E\uDD8A</tag>");
+    }
+
     private String replace(final String in, final char what, final String with) {
         final int pos = in.indexOf(what);
         if (pos == -1) {
