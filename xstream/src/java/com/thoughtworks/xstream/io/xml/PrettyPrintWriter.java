@@ -51,10 +51,21 @@ import java.io.Writer;
  */
 public class PrettyPrintWriter extends AbstractXmlWriter {
 
+    /** Quirks mode: Writes any character into data stream incl. U+0000. */
     public static int XML_QUIRKS = -1;
+    /** XML 1.0 mode: Writes characters according XML 1.0 specification, throws {@link StreamException} for invalid characters. */
     public static int XML_1_0 = 0;
+    /** XML 1.1 mode: Writes characters according XML 1.1 specification, throws {@link StreamException} for invalid characters. */
     public static int XML_1_1 = 1;
+    /**
+     * XML 1.0 mode: Writes characters according XML 1.0 specification, writes character U+FFFFD as replacement  for invalid ones.
+     * @since upcoming
+     */
     public static int XML_1_0_REPLACEMENT = 2;
+    /**
+     * XML 1.1 mode: Writes characters according XML 1.1 specification, writes character U+FFFFD as replacement  for invalid ones.
+     * @since upcoming
+     */
     public static int XML_1_1_REPLACEMENT = 3;
 
     private final QuickWriter writer;
