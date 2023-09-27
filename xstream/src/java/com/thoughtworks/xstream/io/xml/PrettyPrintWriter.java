@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -38,14 +38,14 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * neither directly nor as entity nor within CDATA. However, this writer works by default in a quirks mode, where it
  * will write any character at least as character entity (even a null character). You may switch into XML_1_1 mode
  * (which supports most characters) or XML_1_0 that does only support a very limited number of control characters. See
- * XML specification for version <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or <a
- * href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is not supported, a
+ * XML specification for version <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or
+ * <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is not supported, a
  * {@link StreamException} is thrown. Select a proper parser implementation that respects the version in the XML header
- * (the Xpp3 parser will also read character entities of normally invalid characters).
- * You may also switch to XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters
- * with a U+FFFD replacement character.
+ * (the Xpp3 or MX parsers will also read character entities of normally invalid characters). You may also switch to
+ * XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters with a U+FFFD replacement
+ * character.
  * </p>
- * 
+ *
  * @author Joe Walnes
  * @author J&ouml;rg Schaible
  */
@@ -80,7 +80,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     /**
      * @since 1.4
      */
-    public PrettyPrintWriter(final Writer writer, final int mode, final char[] lineIndenter, final NameCoder nameCoder) {
+    public PrettyPrintWriter(
+            final Writer writer, final int mode, final char[] lineIndenter, final NameCoder nameCoder) {
         super(nameCoder);
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
@@ -259,8 +260,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML stream");
                             }
                         }
                     }
@@ -270,14 +271,18 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 } else {
                     boolean replaced = false;
                     if (mode == XML_1_0 || mode == XML_1_0_REPLACEMENT) {
-                        if (c < 9 || c == '\u000b' || c == '\u000c' || c == '\u000e' || c >= '\u000f' && c <= '\u001f') {
+                        if (c < 9
+                            || c == '\u000b'
+                            || c == '\u000c'
+                            || c == '\u000e'
+                            || c >= '\u000f' && c <= '\u001f') {
                             if (mode == XML_1_0_REPLACEMENT) {
                                 writer.write(REPLACEMENT);
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML 1.0 stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML 1.0 stream");
                             }
                         }
                     }
@@ -288,8 +293,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML stream");
                             }
                         }
                     }
@@ -355,7 +360,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     /**
      * Retrieve the line terminator. This method returns always a line feed, since according the XML specification any
      * parser must ignore a carriage return. Overload this method, if you need different behavior.
-     * 
+     *
      * @return the line terminator
      * @since 1.3
      */
