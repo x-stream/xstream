@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018, 2024 XStream Committers.
  * All rights reserved.
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
@@ -11,10 +11,11 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.thoughtworks.xstream.core.Caching;
@@ -123,36 +124,46 @@ public class FieldDictionary implements Caching {
 
         Class cls = type;
 
-        DictionaryEntry lastDictionaryEntry = null;
-        final LinkedList superClasses = new LinkedList();
-        while (lastDictionaryEntry == null) {
-            if (Object.class.equals(cls) || cls == null) {
-                lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
-            } else {
-                lastDictionaryEntry = getDictionaryEntry(cls);
-            }
-            if (lastDictionaryEntry == null) {
-                superClasses.addFirst(cls);
-                cls = cls.getSuperclass();
-            }
+        DictionaryEntry lastDictionaryEntry;
+        if (Object.class.equals(cls) || cls == null) {
+            lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+        } else {
+            lastDictionaryEntry = getDictionaryEntry(type);
         }
 
-        for (final Iterator iter = superClasses.iterator(); iter.hasNext();) {
-            cls = (Class)iter.next();
-            DictionaryEntry newDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
-            synchronized (this) {
-                final DictionaryEntry concurrentEntry = getDictionaryEntry(cls);
-                if (concurrentEntry == null) {
-                    dictionaryEntries.put(cls, newDictionaryEntry);
+        if (lastDictionaryEntry == null) {
+            final List superClasses = new ArrayList();
+            superClasses.add(cls);
+            cls = cls.getSuperclass();
+
+            while (lastDictionaryEntry == null) {
+                if (Object.class.equals(cls) || cls == null) {
+                    lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
                 } else {
-                    newDictionaryEntry = concurrentEntry;
+                    lastDictionaryEntry = getDictionaryEntry(cls);
+                }
+                if (lastDictionaryEntry == null) {
+                    superClasses.add(cls);
+                    cls = cls.getSuperclass();
                 }
             }
-            lastDictionaryEntry = newDictionaryEntry;
+
+            for (int i = superClasses.size(); i-- > 0;) {
+                cls = (Class)superClasses.get(i);
+                DictionaryEntry newDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
+                synchronized (this) {
+                    final DictionaryEntry concurrentEntry = getDictionaryEntry(cls);
+                    if (concurrentEntry == null) {
+                        dictionaryEntries.put(cls, newDictionaryEntry);
+                    } else {
+                        newDictionaryEntry = concurrentEntry;
+                    }
+                }
+                lastDictionaryEntry = newDictionaryEntry;
+            }
         }
 
         return tupleKeyed ? lastDictionaryEntry.getKeyedByFieldKey() : lastDictionaryEntry.getKeyedByFieldName();
-
     }
 
     private DictionaryEntry buildDictionaryEntryForClass(final Class cls, final DictionaryEntry lastDictionaryEntry) {
