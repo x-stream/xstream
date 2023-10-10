@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2018, 2021, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.xstream.converters.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,30 +113,41 @@ public class FieldDictionary implements Caching {
 
     private DictionaryEntry buildCache(final Class<?> type) {
         Class<?> cls = type;
-        DictionaryEntry lastDictionaryEntry = null;
-        final List<Class<?>> superClasses = new ArrayList<>();
-        while (lastDictionaryEntry == null) {
-            if (Object.class.equals(cls) || cls == null) {
-                lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
-            } else {
-                lastDictionaryEntry = dictionaryEntries.get(cls);
-            }
-            if (lastDictionaryEntry == null) {
-                superClasses.add(cls);
-                cls = cls.getSuperclass();
-            }
+        DictionaryEntry lastDictionaryEntry;
+        if (Object.class.equals(cls) || cls == null) {
+            lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+        } else {
+            lastDictionaryEntry = dictionaryEntries.get(cls);
         }
-        for (int i = superClasses.size(); i-- > 0;) {
-            cls = superClasses.get(i);
-            DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
-            if (currentDictionaryEntry == null) {
-                currentDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
-                final DictionaryEntry existingValue = dictionaryEntries.putIfAbsent(cls, currentDictionaryEntry);
-                if (existingValue != null) {
-                    currentDictionaryEntry = existingValue;
+
+        if (lastDictionaryEntry == null) {
+            final List<Class<?>> superClasses = new ArrayList<>();
+            superClasses.add(cls);
+            cls = cls.getSuperclass();
+
+            while (lastDictionaryEntry == null) {
+                if (Object.class.equals(cls) || cls == null) {
+                    lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+                } else {
+                    lastDictionaryEntry = dictionaryEntries.get(cls);
+                }
+                if (lastDictionaryEntry == null) {
+                    superClasses.add(cls);
+                    cls = cls.getSuperclass();
                 }
             }
-            lastDictionaryEntry = currentDictionaryEntry;
+            for (int i = superClasses.size(); i-- > 0;) {
+                cls = superClasses.get(i);
+                DictionaryEntry currentDictionaryEntry = dictionaryEntries.get(cls);
+                if (currentDictionaryEntry == null) {
+                    currentDictionaryEntry = buildDictionaryEntryForClass(cls, lastDictionaryEntry);
+                    final DictionaryEntry existingValue = dictionaryEntries.putIfAbsent(cls, currentDictionaryEntry);
+                    if (existingValue != null) {
+                        currentDictionaryEntry = existingValue;
+                    }
+                }
+                lastDictionaryEntry = currentDictionaryEntry;
+            }
         }
         return lastDictionaryEntry;
     }
