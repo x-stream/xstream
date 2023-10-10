@@ -10,13 +10,13 @@
  */
 package com.thoughtworks.xstream.mapper;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import com.thoughtworks.xstream.core.util.FastField;
 
 /**
  * Mapper that allows an field of a specific class to be omitted entirely.
@@ -25,8 +25,8 @@ import com.thoughtworks.xstream.core.util.FastField;
  */
 public class ElementIgnoringMapper extends MapperWrapper {
 
-    protected final Set fieldsToOmit = new HashSet();
-    protected final Set unknownElementsToIgnore = new LinkedHashSet();
+    protected final Map/*<String, Set<String>>*/ fieldsToOmit = new HashMap();
+    protected final Set/*<Pattern>*/ unknownElementsToIgnore = new LinkedHashSet();
 
     public ElementIgnoringMapper(Mapper wrapped) {
         super(wrapped);
@@ -37,11 +37,19 @@ public class ElementIgnoringMapper extends MapperWrapper {
     }
 
     public void omitField(Class definedIn, String fieldName) {
-        fieldsToOmit.add(key(definedIn, fieldName));
+        String definedInName = definedIn == null ? null : definedIn.getName();
+        Set omitFields = (Set) fieldsToOmit.get(definedInName);
+        if (omitFields == null) {
+            omitFields = new HashSet();
+            fieldsToOmit.put(definedInName, omitFields);
+        }
+        omitFields.add(fieldName);
     }
 
     public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-        if (fieldsToOmit.contains(key(definedIn, fieldName))) {
+        String definedInName = definedIn == null ? null : definedIn.getName();
+        Set omitFields = (Set) fieldsToOmit.get(definedInName);
+        if (omitFields != null && omitFields.contains(fieldName)) {
             return false;
         } else if (definedIn == Object.class && isIgnoredElement(fieldName)) {
             return false;
@@ -59,9 +67,5 @@ public class ElementIgnoringMapper extends MapperWrapper {
             }
         }
         return super.isIgnoredElement(name);
-    }
-
-    private Object key(Class type, String name) {
-        return new FastField(type, name);
     }
 }

@@ -12,7 +12,6 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.core.util.FastField;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  */
 public class LocalConversionMapper extends MapperWrapper {
 
-    private final Map localConverters = new HashMap();
+    private final Map/*<String, Map<String, Converter>>*/ localConverters = new HashMap();
     private transient AttributeMapper attributeMapper;
 
     /**
@@ -41,11 +40,20 @@ public class LocalConversionMapper extends MapperWrapper {
     }
 
     public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
-        localConverters.put(new FastField(definedIn, fieldName), converter);
+        String definedInName = definedIn == null ? null : definedIn.getName();
+        Map fieldConverterMap = (Map) localConverters.get(definedInName);
+        if (fieldConverterMap == null) {
+            fieldConverterMap = new HashMap();
+            localConverters.put(definedInName, fieldConverterMap);
+        }
+        fieldConverterMap.put(fieldName, converter);
     }
 
     public Converter getLocalConverter(Class definedIn, String fieldName) {
-        return (Converter)localConverters.get(new FastField(definedIn, fieldName));
+        String definedInName = definedIn == null ? null : definedIn.getName();
+        Map fieldConverterMap = (Map) localConverters.get(definedInName);
+        if (fieldConverterMap == null) return null;
+        return (Converter) fieldConverterMap.get(fieldName);
     }
 
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute,
