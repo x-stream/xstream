@@ -123,7 +123,16 @@ public class FieldDictionary implements Caching {
 
         Class cls = type;
 
-        DictionaryEntry lastDictionaryEntry = null;
+        DictionaryEntry lastDictionaryEntry;
+        if (Object.class.equals(cls) || cls == null) {
+            lastDictionaryEntry = OBJECT_DICTIONARY_ENTRY;
+        } else {
+            lastDictionaryEntry = getDictionaryEntry(type);
+        }
+        if (lastDictionaryEntry != null) {
+            return tupleKeyed ? lastDictionaryEntry.getKeyedByFieldKey() : lastDictionaryEntry.getKeyedByFieldName();
+        }
+
         final LinkedList superClasses = new LinkedList();
         while (lastDictionaryEntry == null) {
             if (Object.class.equals(cls) || cls == null) {
