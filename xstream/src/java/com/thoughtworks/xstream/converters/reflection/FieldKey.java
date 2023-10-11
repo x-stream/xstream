@@ -19,7 +19,7 @@ package com.thoughtworks.xstream.converters.reflection;
 public class FieldKey {
     final private String fieldName;
     final private Class declaringClass;
-    final private int depth;
+    private int depth = -1;
     final private int order;
 
     public FieldKey(String fieldName, Class declaringClass, int order) {
@@ -29,13 +29,6 @@ public class FieldKey {
         this.fieldName = fieldName;
         this.declaringClass = declaringClass;
         this.order = order;
-        Class c = declaringClass;
-        int i = 0;
-        while (c.getSuperclass() != null) {
-            i++;
-            c = c.getSuperclass();
-        }
-        depth = i;
     }
 
     public String getFieldName() {
@@ -47,6 +40,15 @@ public class FieldKey {
     }
 
     public int getDepth() {
+        if (this.depth == -1) {
+            Class c = declaringClass;
+            int i = 0;
+            while (c.getSuperclass() != null) {
+                i++;
+                c = c.getSuperclass();
+            }
+            this.depth = i;
+        }
         return this.depth;
     }
 
@@ -80,7 +82,7 @@ public class FieldKey {
             + "order="
             + order
             + ", writer="
-            + depth
+            + getDepth()
             + ", declaringClass="
             + declaringClass
             + ", fieldName='"
