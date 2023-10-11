@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2014 XStream Committers.
+ * Copyright (C) 2007, 2014, 2014 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,8 +19,8 @@ package com.thoughtworks.xstream.converters.reflection;
 public class FieldKey {
     final private String fieldName;
     final private Class<?> declaringClass;
-    final private int depth;
     final private int order;
+    private int depth = -1;
 
     public FieldKey(final String fieldName, final Class<?> declaringClass, final int order) {
         if (fieldName == null || declaringClass == null) {
@@ -29,13 +29,6 @@ public class FieldKey {
         this.fieldName = fieldName;
         this.declaringClass = declaringClass;
         this.order = order;
-        Class<?> c = declaringClass;
-        int i = 0;
-        while (c.getSuperclass() != null) {
-            i++;
-            c = c.getSuperclass();
-        }
-        depth = i;
     }
 
     public String getFieldName() {
@@ -47,7 +40,16 @@ public class FieldKey {
     }
 
     public int getDepth() {
-        return depth;
+        if (this.depth == -1) {
+            Class<?> c = declaringClass;
+            int i = 0;
+            while (c.getSuperclass() != null) {
+                i++;
+                c = c.getSuperclass();
+            }
+            depth = i;
+        }
+        return this.depth;
     }
 
     public int getOrder() {
@@ -89,7 +91,7 @@ public class FieldKey {
             + "order="
             + order
             + ", writer="
-            + depth
+            + getDepth()
             + ", declaringClass="
             + declaringClass
             + ", fieldName='"
