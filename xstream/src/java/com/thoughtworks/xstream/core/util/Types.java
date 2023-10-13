@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 XStream Committers.
+ * Copyright (C) 2015, 2024 XStream Committers.
  * All rights reserved.
  *
  * Created on 17. January 2015 by Joerg Schaible
@@ -16,10 +16,13 @@ import java.util.regex.Pattern;
  * @since 1.4.8
  */
 public class Types {
-    private static final Pattern lambdaPattern = Pattern.compile(".*\\$\\$Lambda\\$[0-9]+/.*");
+    private static final Pattern lambdaPattern = Pattern.compile(".*\\$\\$Lambda(?:\\$[0-9]+|)/.*");
 
     public static final boolean isLambdaType(final Class<?> type) {
-        return type != null && type.isSynthetic() && lambdaPattern.matcher(type.getSimpleName()).matches();
+        if (type != null && type.isSynthetic()) {
+            final String typeName = type.getSimpleName();
+            return lambdaPattern.matcher(typeName).matches();
+        }
+        return false;
     }
-
 }
