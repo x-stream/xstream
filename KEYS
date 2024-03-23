@@ -1,0 +1,70 @@
+This file contains the PGP keys of various developers.
+
+Users: pgp < KEYS
+       gpg --import KEYS
+Developers: 
+        pgp -kxa <your name> and append it to this file.
+        (pgpk -ll <your name> && pgpk -xa <your name>) >> this file.
+        (gpg --list-sigs <your name>
+             && gpg --armor --export <your name>) >> this file.
+
+Type Bits/KeyID    Date       User ID
+pub   rsa4096 2010-10-01 [SC] [expires: 2060-09-18]
+      050A37A2E0577F4BAA095B52602EC18D20C4661C
+uid           [ultimate] Jörg Schaible (Codehaus) <joerg.schaible@gmx.de>
+sig 3        602EC18D20C4661C 2010-10-01  [self-signature]
+sub   rsa4096 2010-10-01 [E] [expires: 2060-09-18]
+sig          602EC18D20C4661C 2010-10-01  [self-signature]
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v2.0.16 (GNU/Linux)
+
+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
+cjGxjhSoUOHjrhTUh2pisnpCh4koWiAkdmmYKg==
+=Mb40
+-----END PGP PUBLIC KEY BLOCK-----
