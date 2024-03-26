@@ -64,6 +64,11 @@ public class DefaultMapper implements Mapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
+
+    @Override
     public Class<?> realClass(final String elementName) {
         final Class<?> resultingClass = Primitives.primitiveType(elementName);
         if (resultingClass != null) {

@@ -122,6 +122,11 @@ public abstract class MapperWrapper implements Mapper {
     }
 
     @Override
+    public String serializedClass(Object item) {
+        return serializedClassMapper.serializedClass(item);
+    }
+    
+    @Override
     public Class<?> realClass(final String elementName) {
         return realClassMapper.realClass(elementName);
     }
