@@ -159,6 +159,11 @@ public class DefaultMapper implements Mapper {
         return serialized;
     }
 
+    @Override
+    public String realMember(final Class<?> type, final String serialized, boolean attributeOrNot) {
+        return serialized;
+    }
+
     /**
      * @deprecated As of 1.3, use {@link #getConverterFromAttribute(Class, String, Class)}
      */
