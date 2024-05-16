@@ -199,8 +199,10 @@ public class LambdaTest extends AbstractAcceptanceTest {
     }
 
     private String normalizeLambda(final String xml) {
-        // unify compiler specific name for implMethodName, Eclipse uses always "lambda$0"
-        return xml.replaceAll(">lambda\\$[^<]+<", ">lambda\\$0<");
+        // unify compiler specific name for implMethodName (Eclipse uses always "lambda$0")
+        // and implMethodKind (varies between at least JDK17 and JDK21 in some cases)
+        return xml.replaceAll( ">lambda\\$[^<]+<", ">lambda\\$0<" )
+            .replaceAll( "<implMethodKind>\\d+</implMethodKind>", "<implMethodKind>5</implMethodKind>" );
     }
 
     public void testTreeSetWithLambda() {
