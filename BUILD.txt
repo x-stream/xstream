@@ -1,5 +1,6 @@
-For Java 7, 8, or 9 build with Maven 3.3.9 or higher
-For Java 6 or higher build with Maven 3.2.5
+For Java 8 or higher build with Maven 3.9 to lower than 4.0
+For Java 7 build with Maven from 3.2.5 to lower than 3.9.
+For Java 6 build with Maven 3.2.5
 For Java 5 build with Maven 3.0.5
 For Java 1.4 build with Maven 2.0.11
 
