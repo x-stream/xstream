@@ -19,7 +19,6 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.ArrayIterator;
-import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
 import com.thoughtworks.xstream.core.util.Primitives;
@@ -278,17 +277,23 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         return serializationMembers.callReadResolve(result);
     }
 
+    private static void checkSeenField(Map/*<String, Set<String>>*/ seenFields, Class owner, String fieldName) {
+        String className = owner == null ? null : owner.getName();
+        Set set = (Set) seenFields.get(className);
+        if (set == null) {
+            set = new HashSet();
+            seenFields.put(className, set);
+        }
+        boolean added = set.add(fieldName);
+        if (!added) {
+            throw new DuplicateFieldException(fieldName);
+        }
+    }
+
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader,
         final UnmarshallingContext context) {
         final Class resultType = result.getClass();
-        final Set seenFields = new HashSet() {
-            public boolean add(Object e) {
-                if (!super.add(e)) {
-                    throw new DuplicateFieldException(((FastField)e).getName());
-                }
-                return true;
-            }
-        };
+        final Map/*<String, Set<String>>*/ seenFields = new HashMap();
 
         // process attributes before recursing into child elements.
         Iterator it = reader.getAttributeNames();
@@ -303,7 +308,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                 if (!mapper.shouldSerializeMember(classDefiningField, attrName)) {
                     continue;
                 }
-                
+
                 // we need a converter that produces a string representation only
                 SingleValueConverter converter = mapper.getConverterFromAttribute(
                     classDefiningField, attrName, field.getType());
@@ -319,7 +324,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         exception.add("target-type", type.getName());
                         throw exception;
                     }
-                    seenFields.add(new FastField(classDefiningField, attrName));
+                    checkSeenField(seenFields, classDefiningField, attrName);
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
                 }
             }
@@ -370,7 +375,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                             // belong to an implicit field
                             handleUnknownField(
                                 explicitDeclaringClass, fieldName, fieldDeclaringClass, originalNodeName);
-                            
+
                             // element is unknown in declaring class, ignore it now
                             type = null;
                         }
@@ -381,7 +386,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     } else {
                         if (Map.Entry.class.equals(type)) {
                             // it is an element of an implicit map with two elements now for
-                            // key and value 
+                            // key and value
                             reader.moveDown();
                             final Object key = context.convertAnother(
                                 result, HierarchicalStreams.readClassType(reader, mapper));
@@ -399,7 +404,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                     }
                 } else {
                     boolean fieldAlreadyChecked = false;
-                    
+
                     // we have a field, but do we have to address a hidden one?
                     if (explicitDeclaringClass == null) {
                         while (field != null
@@ -454,12 +459,12 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
             if (field != null) {
                 reflectionProvider.writeField(result, fieldName, value, field.getDeclaringClass());
-                seenFields.add(new FastField(field.getDeclaringClass(), fieldName));
+                checkSeenField(seenFields, field.getDeclaringClass(), fieldName);
             } else if (type != null) {
                 if (implicitFieldName == null) {
                     // look for implicit field
                     implicitFieldName = mapper.getFieldNameForItemTypeAndName(
-                        fieldDeclaringClass, 
+                        fieldDeclaringClass,
                         value != null ? value.getClass() : Mapper.Null.class,
                         originalNodeName);
                 }

@@ -11,8 +11,6 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.core.util.FastField;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -24,8 +22,8 @@ import java.util.regex.Pattern;
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map fieldToAliasMap = new HashMap();
-    protected final Map aliasToFieldMap = new HashMap();
+    protected final Map/*<String, Map<String, String>>*/ fieldToAliasMap = new HashMap();
+    protected final Map/*<String, Map<String, String>>*/ aliasToFieldMap = new HashMap();
     private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(Mapper wrapped) {
@@ -35,10 +33,20 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public void addFieldAlias(String alias, Class type, String fieldName) {
-        fieldToAliasMap.put(key(type, fieldName), alias);
-        aliasToFieldMap.put(key(type, alias), fieldName);
+        String name = type == null ? null : type.getName();
+        put(fieldToAliasMap, name, fieldName, alias);
+        put(aliasToFieldMap, name, alias, fieldName);
     }
-    
+
+    private void put(Map map1, String k1, String k2, String v) {
+        Map map2 = (Map) map1.get(k1);
+        if (map2 == null) {
+            map2 = new HashMap();
+            map1.put(k1, map2);
+        }
+        map2.put(k2, v);
+    }
+
     /**
      * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#addElementsToIgnore(Pattern)}.
      */
@@ -55,10 +63,6 @@ public class FieldAliasingMapper extends MapperWrapper {
         if (elementIgnoringMapper != null) {
             elementIgnoringMapper.omitField(definedIn, fieldName);
         }
-    }
-
-    private Object key(Class type, String name) {
-        return new FastField(type, name);
     }
 
     public String serializedMember(Class type, String memberName) {
@@ -80,12 +84,17 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     private String getMember(Class type, String name, Map map) {
-        String member = null;
-        for (Class declaringType = type; 
-                member == null && declaringType != Object.class && declaringType != null; 
+        for (Class declaringType = type;
+             declaringType != Object.class && declaringType != null;
                 declaringType = declaringType.getSuperclass()) {
-            member = (String) map.get(key(declaringType, name));
+            Map classMap = (Map) map.get(declaringType.getName());
+            if (classMap != null) {
+                String member = (String) classMap.get(name);
+                if (member != null) {
+                    return member;
+                }
+            }
         }
-        return member;
+        return null;
     }
 }
