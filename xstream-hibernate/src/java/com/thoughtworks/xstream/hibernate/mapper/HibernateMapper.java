@@ -75,4 +75,9 @@ public class HibernateMapper extends MapperWrapper {
         }
         return super.serializedClass(clazz);
     }
+
+    @Override
+    public String serializedClass(Object item) {
+        return serializedClass(item.getClass());
+    }
 }

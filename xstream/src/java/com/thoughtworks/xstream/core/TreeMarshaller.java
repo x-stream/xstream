@@ -77,7 +77,7 @@ public class TreeMarshaller implements MarshallingContext {
             writer.startNode(mapper.serializedClass(null));
             writer.endNode();
         } else {
-            writer.startNode(mapper.serializedClass(item.getClass()), item.getClass());
+            writer.startNode(mapper.serializedClass(item), item.getClass());
             convertAnother(item);
             writer.endNode();
         }
