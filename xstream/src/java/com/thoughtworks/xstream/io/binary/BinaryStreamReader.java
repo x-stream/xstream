@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2013 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2013, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.security.InputManipulationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -150,15 +151,20 @@ public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
     private Token readToken() {
         if (pushback == null) {
             try {
-                Token token = tokenFormatter.read(in);
-                switch (token.getType()) {
+                boolean mapping = false;
+                do {
+                    final Token token = tokenFormatter.read(in);
+                    switch (token.getType()) {
                     case Token.TYPE_MAP_ID_TO_VALUE:
                         idRegistry.put(token.getId(), token.getValue());
-                        return readToken(); // Next one please.
+                        mapping ^= true;
+                        continue; // Next one please.
                     default:
                         return token;
-                }
-            } catch (IOException e) {
+                    }
+                } while (mapping);
+                throw new InputManipulationException("Binary stream will never have two mapping tokens in sequence");
+            } catch (final IOException e) {
                 throw new StreamException(e);
             }
         } else {
