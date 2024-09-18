@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2015, 2016, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2015, 2016, 2021, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,10 +17,12 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.copy.HierarchicalStreamCopier;
 import com.thoughtworks.xstream.io.xml.AbstractXMLReaderTest;
 import com.thoughtworks.xstream.io.xml.MXParserDriver;
+import com.thoughtworks.xstream.security.InputManipulationException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.StringReader;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 public class BinaryStreamTest extends AbstractXMLReaderTest {
 
@@ -89,4 +91,17 @@ public class BinaryStreamTest extends AbstractXMLReaderTest {
         }
     }
 
+    public void testHandleMaliciousInputsOfIdMappingTokens() {
+        // Insert two successive id mapping tokens into the stream
+        final byte[] byteArray = new byte[8];
+        byteArray[0] = byteArray[4] = 10;
+        byteArray[1] = byteArray[5] = -127;
+
+        final InputStream in = new ByteArrayInputStream(byteArray);
+        try {
+            new BinaryStreamReader(in);
+            fail("Thrown " + InputManipulationException.class.getName() + " expected");
+        } catch (final InputManipulationException e) {
+        }
+    }
 }
