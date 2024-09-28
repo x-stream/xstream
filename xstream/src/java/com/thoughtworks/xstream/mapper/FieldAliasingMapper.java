@@ -34,9 +34,9 @@ public class FieldAliasingMapper extends MapperWrapper {
         elementIgnoringMapper = lookupMapperOfType(ElementIgnoringMapper.class);
     }
 
-    public void addFieldAlias(final String alias, final Class<?> type, final String fieldName) {
+    public void addFieldAlias(final String alias, boolean isAttr, final Class<?> type, final String fieldName) {
         fieldToAliasMap.put(key(type, fieldName), alias);
-        aliasToFieldMap.put(key(type, alias), fieldName);
+        aliasToFieldMap.put(new FastField(type.getName(), alias, isAttr), fieldName);
     }
 
     /**

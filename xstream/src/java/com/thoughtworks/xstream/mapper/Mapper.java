@@ -40,10 +40,18 @@ public interface Mapper {
      */
     String serializedMember(Class<?> type, String memberName);
 
+    
     /**
      * How a serialized member representation should be mapped back to a real member.
      */
     String realMember(Class<?> type, String serialized);
+    
+    /**
+     * How a serialized member representation should be mapped back to a real member.
+     * @param attributeOrNot: is attribute or child element
+     */
+    String realMember(Class<?> type, String serialized, boolean attributeOrNot);
+    
 
     /**
      * Whether this type is a simple immutable value (int, boolean, String, URL, etc). Immutable types will be

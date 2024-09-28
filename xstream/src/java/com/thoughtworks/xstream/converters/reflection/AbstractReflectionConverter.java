@@ -277,8 +277,10 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     }
 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader,
-            final UnmarshallingContext context) {
+            final UnmarshallingContext context) { 	
+    	
         final Class<?> resultType = result.getClass();
+        
         @SuppressWarnings("serial")
         final Set<FastField> seenFields = new HashSet<FastField>() {
             @Override
@@ -295,7 +297,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         while (it.hasNext()) {
             final String attrAlias = it.next();
             // TODO: realMember should return FastField
-            final String attrName = mapper.realMember(resultType, mapper.attributeForAlias(attrAlias));
+            String attr1 = mapper.attributeForAlias(attrAlias);
+            final String attrName = mapper.realMember(resultType, attr1, true);
             final Field field = reflectionProvider.getFieldOrNull(resultType, attrName);
             if (field != null && shouldUnmarshalField(field)) {
                 final Class<?> classDefiningField = field.getDeclaringClass();

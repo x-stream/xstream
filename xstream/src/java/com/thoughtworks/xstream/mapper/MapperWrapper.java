@@ -135,6 +135,11 @@ public abstract class MapperWrapper implements Mapper {
     public String realMember(final Class<?> type, final String serialized) {
         return realMemberMapper.realMember(type, serialized);
     }
+    
+    @Override
+    public String realMember(final Class<?> type, final String serialized, boolean attrOrNot) {
+        return realMemberMapper.realMember(type, serialized, attrOrNot);
+    }
 
     @Override
     public boolean isImmutableValueType(final Class<?> type) {
