@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017, 2018, 2019 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -26,6 +26,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.SimpleStaxDriver;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
@@ -50,6 +51,9 @@ public class SecurityManagerTest extends TestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        if (JVM.isVersion(18))
+            return;
+
         System.setSecurityManager(null);
         source = new CodeSource(new File("target").toURI().toURL(), (Certificate[])null);
 
@@ -71,15 +75,19 @@ public class SecurityManagerTest extends TestCase {
             if (element.endsWith(".jar")) {
                 sm.addPermission(source, new FilePermission(element, "read"));
             } else {
-                sm.addPermission(source, new FilePermission(element + "/META-INF/services/java.time.chrono.AbstractChronology", "read"));
-                sm.addPermission(source, new FilePermission(element + "/META-INF/services/java.time.chrono.Chronology", "read"));
+                sm.addPermission(source, new FilePermission(element
+                    + "/META-INF/services/java.time.chrono.AbstractChronology", "read"));
+                sm.addPermission(source, new FilePermission(element + "/META-INF/services/java.time.chrono.Chronology",
+                    "read"));
             }
         }
     }
 
     @Override
     protected void tearDown() throws Exception {
-        System.setSecurityManager(null);
+        if (!JVM.isVersion(18)) {
+            System.setSecurityManager(null);
+        }
         super.tearDown();
     }
 
@@ -96,6 +104,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithSimpleStaxDriverAndSunUnsafeReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.com.sun.xml.internal.stream"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
@@ -118,6 +129,7 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("javax.xml.parsers.SAXParserFactory", "read"));
         sm.addPermission(source, new PropertyPermission("javax.xml.useCatalog", "read"));
         sm.addPermission(source, new PropertyPermission("jaxp.debug", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.calendar.japanese.supplemental.era", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.internal.lambda.dumpProxyClasses", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.cdataChunkSize", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.elementAttributeLimit", "read"));
@@ -150,6 +162,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithXppDriverAndSunUnsafeReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
@@ -193,6 +208,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
@@ -234,6 +252,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
@@ -245,14 +266,12 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new RuntimePermission("loadLibrary.nio"));
         sm.addPermission(source, new RuntimePermission("modifyThreadGroup"));
         sm.addPermission(source, new RuntimePermission("reflectionFactoryAccess"));
-        sm
-            .addPermission(source, new PropertyPermission(
-                "com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
+        sm.addPermission(source, new PropertyPermission(
+            "com.sun.org.apache.xerces.internal.xni.parser.XMLParserConfiguration", "read"));
         sm.addPermission(source, new PropertyPermission("elementAttributeLimit", "read"));
         sm.addPermission(source, new PropertyPermission("entityExpansionLimit", "read"));
-        sm
-            .addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check",
-                "read"));
+        sm.addPermission(source, new PropertyPermission("http://java.sun.com/xml/dom/properties/ancestor-check",
+            "read"));
         sm.addPermission(source, new PropertyPermission("ibm.dst.compatibility", "read"));
         sm.addPermission(source, new PropertyPermission("java.home", "read"));
         sm.addPermission(source, new PropertyPermission("java.locale.providers", "read"));
