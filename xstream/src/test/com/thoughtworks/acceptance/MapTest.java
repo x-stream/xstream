@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class MapTest extends AbstractAcceptanceTest {
 
@@ -105,6 +106,15 @@ public class MapTest extends AbstractAcceptanceTest {
                 "    <string>world</string>\n" +
                 "  </entry>\n" +
                 "</hashtable>";
+
+        assertBothWays(hashtable, expected);
+    }
+
+    public void testSupportsWeakHashMap() {
+        final WeakHashMap hashtable = new WeakHashMap();
+        hashtable.put("hello", "world");
+
+        final String expected = "<weak-hash-map/>";
 
         assertBothWays(hashtable, expected);
     }
@@ -197,7 +207,7 @@ public class MapTest extends AbstractAcceptanceTest {
     
     public void testSynchronizedMap() {
         final String expected;
-        if (JVM.is15()) {
+        if (JVM.isVersion(5)) {
             expected = "" +
                 "<java.util.Collections_-SynchronizedMap serialization=\"custom\">\n" +
                 "  <java.util.Collections_-SynchronizedMap>\n" +
