@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -58,6 +58,7 @@ import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 
 import com.thoughtworks.xstream.converters.ConversionException;
@@ -93,6 +94,7 @@ import com.thoughtworks.xstream.converters.collections.SingletonCollectionConver
 import com.thoughtworks.xstream.converters.collections.SingletonMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.collections.WeakHashMapConverter;
 import com.thoughtworks.xstream.converters.extended.ColorConverter;
 import com.thoughtworks.xstream.converters.extended.DynamicProxyConverter;
 import com.thoughtworks.xstream.converters.extended.EncodedByteArrayConverter;
@@ -795,6 +797,7 @@ public class XStream {
         alias("tree-map", TreeMap.class);
         alias("tree-set", TreeSet.class);
         alias("hashtable", Hashtable.class);
+        alias("weak-hash-map", WeakHashMap.class);
 
         alias("empty-list", Collections.EMPTY_LIST.getClass());
         alias("empty-map", Collections.EMPTY_MAP.getClass());
@@ -954,6 +957,7 @@ public class XStream {
         registerConverter(new SingletonMapConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new PropertiesConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new EncodedByteArrayConverter(), PRIORITY_NORMAL);
+        registerConverter(new WeakHashMapConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (JVM.isSQLAvailable()) {

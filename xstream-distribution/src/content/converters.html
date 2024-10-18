@@ -298,6 +298,17 @@
                 <td>normal</td>
             </tr>
             <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/WeakHashMapConverter.html">WeakHashMapConverter</a></td>
+                <td>java.util.WeakHashMap</td>
+                <td class="example">
+                    &lt;weak-hash-map/&gt;
+                </td>
+                <td>A WeakHashMap is supposed to release its elements when they are no longer referenced. Therefore is at unmarshalling time no guarantee that
+                an entry is still available when it is referenced later in the stream.  As consequence the converter will marshal no elements at all, it
+                will create an empty WeakHashMap at unmarshalling time.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/SingletonCollectionConverter.html">SingletonCollectionConverter</a></td>
                 <td>java.util.Collections.singletonList().getClass()<br/>java.util.Collections.singleton().getClass()</td>
                 <td class="example">
