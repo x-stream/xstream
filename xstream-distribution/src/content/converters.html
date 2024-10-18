@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022, 2024 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -166,7 +166,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/StringBuildererConverter.html">StringBuilderConverter</a></td>
                 <td>java.lang.StringBuilder</td>
                 <td class="example">&lt;string-builder&gt;hello world&lt;/string-builder&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -183,7 +183,7 @@
                     &nbsp;&nbsp;&lt;/stack-trace&gt;<br/>
                     &lt;/java.io.IOException&gt;
                 </td>
-                <td>This is only available with Java 1.4 or greater. It retains the full stack trace, including that of any
+                <td>This is only available with Java 1.4 or higher. It retains the full stack trace, including that of any
                 nested exceptions. The stack trace elements are handled by the
                 <a href="javadoc/com/thoughtworks/xstream/converters/extended/StackTraceElementConverter.html">StackTraceElementConverter</a>.</td>
                 <td>normal</td>
@@ -192,7 +192,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/enums/EnumConverter.html">EnumConverter</a></td>
                 <td>java.lang.Enum</td>
                 <td class="example">&lt;java.lang.annotation.RetentionPolicy&gt;<br/>CLASS<br/>&lt;/java.lang.annotation.RetentionPolicy&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -200,7 +200,7 @@
                 <td>java.lang.Enum</td>
                 <td>The Converter must be initialized with an Enum type and an optional mapping between strings and enum values. By default
                 it will use the Enum's string representation as value.</td>
-                <td>Available with Java 1.5 or greater. Must be registered explicitly for the Enum type or locally.</td>
+                <td>Available with Java 1.5 or higher. Must be registered explicitly for the Enum type or locally.</td>
                 <td>&nbsp;</td>
             </tr>
 
@@ -411,14 +411,14 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CurrencyConverter.html">CurrencyConverter</a></td>
                 <td>java.util.Currency</td>
                 <td class="example">&lt;currency&gt;USD&lt;/currency&gt;</td>
-                <td>Available with Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/basic/UUIDConverter.html">UUIDConverter</a></td>
                 <td>java.util.UUID</td>
                 <td class="example">&lt;uuid&gt;ca05f023-e07f-4956-a6ef-14ddd23df47b&lt;/uuid&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -429,28 +429,28 @@
                 &nbsp;&nbsp;&lt;value&nbsp;&nbsp;class=&quot;string&quot;&gt;test&lt;/value&gt;<br/>
                 &lt;/optional&gt;
                 </td>
-                <td>Available with Java 1.8 or greater.</td>
+                <td>Available with Java 1.8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalDoubleConverter.html">OptionalDoubleConverter</a></td>
                 <td>java.util.OptionalDouble</td>
                 <td class="example">&lt;optional-double&gt;1.8&lt;/optional-double&gt;</td>
-                <td>Available with Java 1.8 or greater.</td>
+                <td>Available with Java 1.8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalIntConverter.html">OptionalIntConverter</a></td>
                 <td>java.util.OptionalInt</td>
                 <td class="example">&lt;optional-int&gt;42&lt;/optional-int&gt;</td>
-                <td>Available with Java 1.8 or greater.</td>
+                <td>Available with Java 1.8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/OptionalLongConverter.html">OptionalLongConverter</a></td>
                 <td>java.util.OptionalLong</td>
                 <td class="example">&lt;optional-long&gt;2344556678888786&lt;/optional-long&gt;</td>
-                <td>Available with Java 1.8 or greater.</td>
+                <td>Available with Java 1.8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -467,7 +467,7 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&lt;string&gt;sky&lt;/string&gt;<br/>
                 &nbsp;&nbsp;&lt;/entry&gt;<br/>
                 &lt;/enum-map&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -477,7 +477,7 @@
                 &lt;enum-set enum-type=&quot;simple&quot;&gt;<br/>
                 &nbsp;&nbsp;GREEN,BLUE<br/>
                 &lt;/enum-set&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -489,7 +489,7 @@
 				&nbsp;&nbsp;&lt;flags&gt;0&lt;/flags&gt;<br/>
 				&lt;/java.util.regex.Pattern&gt;
                 </td>
-                <td>Available with Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -510,7 +510,7 @@
                 <td class="example">
                     &lt;atomic-boolean&gt;true&lt;/atomic-boolean&gt;
                 </td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -519,7 +519,7 @@
                 <td class="example">
                     &lt;atomic-integer&gt;12345678&lt;/atomic-integer&gt;
                 </td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -528,7 +528,7 @@
                 <td class="example">
                     &lt;atomic-long&gt;2344556678888786&lt;/atomic-long&gt;
                 </td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -539,7 +539,7 @@
                     &nbsp;&nbsp;&lt;value&nbsp;class=&quot;string&quot;&gt;test&lt;/value&gt;<br/>
                     &lt;/atomic-reference&gt;
                 </td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -560,7 +560,7 @@
                 <td class="example">
                 &lt;duration&gt;PT24000H&lt;/duration&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -569,7 +569,7 @@
                 <td class="example">
                 &lt;instant&gt;2017-07-30T20:40:00Z&lt;/instant&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -578,7 +578,7 @@
                 <td class="example">
                 &lt;local-date&gt;2017-10-30&lt;/local-date&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -587,7 +587,7 @@
                 <td class="example">
                 &lt;local-date-time&gt;2017-10-30T20:40:15&lt;/local-date-time&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -596,7 +596,7 @@
                 <td class="example">
                 &lt;local-time&gt;20:40:15&lt;/local-time&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -605,7 +605,7 @@
                 <td class="example">
                 &lt;month-day&gt;--01-13&lt;/month-day&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -614,7 +614,7 @@
                 <td class="example">
                 &lt;offset-date-time&gt;2017-07-30T20:40:00Z&lt;/offset-date-time&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -623,7 +623,7 @@
                 <td class="example">
                 &lt;offset-time&gt;20:40:15+01:00&lt;/offset-time&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -632,7 +632,7 @@
                 <td class="example">
                 &lt;period&gt;P1000D&lt;/period&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -643,7 +643,7 @@
                 &nbsp;&nbsp;&lt;zone&gt;Europe/Berlin&lt;/zone&gt;
                 &lt;/system-clock&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -652,7 +652,7 @@
                 <td class="example">
                 &lt;year&gt;2017&lt;/year&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -661,7 +661,7 @@
                 <td class="example">
                 &lt;year-month&gt;2017-02&lt;/year-month&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -670,7 +670,7 @@
                 <td class="example">
                 &lt;zoned-date-time&gt;2017-10-30T20:40:00Z[Europe/London]&lt;/zoned-date-time&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -679,7 +679,7 @@
                 <td class="example">
                 &lt;zone-id&gt;Z&lt;/zone-id&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -700,7 +700,7 @@
                 <td class="example">
                 &lt;chronology&gt;ISO&lt;/chronology&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -709,7 +709,7 @@
                 <td class="example">
                 &lt;hijrah-date&gt;Hijrah-umalqura AH 1438-11-07&lt;/hijrah-date&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -718,7 +718,7 @@
                 <td class="example">
                 &lt;japanese-date&gt;Japanese Heisei 29-07-30&lt;/japanese-date&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -727,7 +727,7 @@
                 <td class="example">
                 &lt;japanese-era&gt;Taisho&lt;/japanese-era&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -736,7 +736,7 @@
                 <td class="example">
                 &lt;minguo-date&gt;Minguo ROC 106-07-30&lt;/minguo-date&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -745,7 +745,7 @@
                 <td class="example">
                 &lt;thai-buddhist-date&gt;haiBuddhist BE 2560-07-30&lt;/thai-buddhist-date&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -771,7 +771,7 @@
 				&nbsp;&nbsp;&lt;minSmallest&gt;0&lt;/minSmallest&gt;<br/>
 				&lt;/temporal-value-range&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
@@ -783,7 +783,7 @@
 				&nbsp;&nbsp;&lt;firstDayOfWeek&gt;MONDAY&lt;/firstDayOfWeek&gt;<br/>
 				&lt;/week-fields&gt;
                 </td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -933,14 +933,14 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/CharsetConverter.html">CharsetConverter</a></td>
                 <td>java.nio.charset.Charset</td>
                 <td class="example">&lt;charset&gt;US-ASCII&lt;/charset&gt;</td>
-                <td>Available with Java 1.4 or greater.</td>
+                <td>Available with Java 1.4 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/PathConverter.html">PathConverter</a></td>
                 <td>java.nio.file.Path</td>
                 <td class="example">&lt;path&gt;../dir/file.txt&lt;/path&gt;</td>
-                <td>Available with Java 7 or greater.</td>
+                <td>Available with Java 7 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -1098,7 +1098,7 @@
                     &nbsp;&nbsp;&lt;representationClass&gt;java.io.InputStream&lt;/representationClass&gt;<br/>
                     &lt;/activation-data-flavor&gt;
                 </td>
-                <td>Available with Java 6, 7 and 8. Requires module <em>java.activation</em> with Java 9 or greater.<br/>
+                <td>Available with Java 6, 7 and 8. Requires module <em>java.activation</em> with Java 9 or higher.<br/>
                 <td>normal</td>
             </tr>
             
@@ -1143,7 +1143,7 @@
 				&nbsp;&nbsp;&lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
 				&lt;/auth-subject&gt;<br/>
                 </td>
-                <td>Available with Java 1.4 or greater. This converter does not serialize any credentials but only the principals.</td>
+                <td>Available with Java 1.4 or higher. This converter does not serialize any credentials but only the principals.</td>
                 <td>normal</td>
             </tr>
 
@@ -1162,7 +1162,7 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/DurationConverter.html">DurationConverter</a></td>
                 <td>javax.xml.datatype.Duration</td>
                 <td class="example">&lt;duration&gt;PT1H2M&lt;/duration&gt;</td>
-                <td>Available with Java 1.5 or greater.</td>
+                <td>Available with Java 1.5 or higher.</td>
                 <td>normal</td>
             </tr>
 
@@ -1212,7 +1212,7 @@
                 <td>Non-serializable lambda instances will be mapped to null, since they contain no information for recreation. Serializable
                 lambda types have such info, but it is specific to compiler vendor and occurrence in the code. Never assume that you can
                 deserialize such an element when you use a different version of your code or a different compiler.</td>
-                <td>Available with Java 8 or greater.</td>
+                <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
             </tr>
             <tr>
