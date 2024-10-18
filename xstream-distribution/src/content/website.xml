@@ -1,6 +1,6 @@
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2010, 2011, 2014, 2015, 2016, 2017, 2020, 2021, 2022 XStream committers.
+ Copyright (C) 2006, 2007, 2010, 2011, 2014, 2015, 2016, 2017, 2020, 2021, 2022, 2024 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -63,6 +63,7 @@
     </section>
     <section>
         <name>!Vulnerabilities</name>
+        <page>CVE-2024-47072.html</page>
         <page>CVE-2022-41966.html</page>
         <page>CVE-2022-40151.html</page>
         <page>CVE-2021-21341.html</page>
