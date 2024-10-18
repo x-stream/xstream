@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -104,6 +104,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -146,6 +147,7 @@ import com.thoughtworks.xstream.converters.collections.SingletonCollectionConver
 import com.thoughtworks.xstream.converters.collections.SingletonMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeMapConverter;
 import com.thoughtworks.xstream.converters.collections.TreeSetConverter;
+import com.thoughtworks.xstream.converters.collections.WeakHashMapConverter;
 import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import com.thoughtworks.xstream.converters.enums.EnumMapConverter;
 import com.thoughtworks.xstream.converters.enums.EnumSetConverter;
@@ -843,6 +845,7 @@ public class XStream {
         alias("hashtable", Hashtable.class);
         alias("linked-hash-map", LinkedHashMap.class);
         alias("linked-hash-set", LinkedHashSet.class);
+        alias("weak-hash-map", WeakHashMap.class);
         alias("concurrent-hash-map", ConcurrentHashMap.class);
         alias("atomic-boolean", AtomicBoolean.class);
         alias("atomic-int", AtomicInteger.class);
@@ -1001,6 +1004,7 @@ public class XStream {
         registerConverter(new EnumConverter(), PRIORITY_NORMAL);
         registerConverter(new EnumSetConverter(mapper), PRIORITY_NORMAL);
         registerConverter(new EnumMapConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new WeakHashMapConverter(), PRIORITY_NORMAL);
 
         registerConverter(new FileConverter(), PRIORITY_NORMAL);
         if (JVM.isSQLAvailable()) {

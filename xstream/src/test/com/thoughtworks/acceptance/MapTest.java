@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2021, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import com.thoughtworks.acceptance.objects.Hardware;
 import com.thoughtworks.acceptance.objects.Software;
@@ -105,6 +106,15 @@ public class MapTest extends AbstractAcceptanceTest {
             + "    <string>world</string>\n"
             + "  </entry>\n"
             + "</hashtable>";
+
+        assertBothWays(hashtable, expected);
+    }
+
+    public void testSupportsWeakHashMap() {
+        final WeakHashMap<String, String> hashtable = new WeakHashMap<>();
+        hashtable.put("hello", "world");
+
+        final String expected = "<weak-hash-map/>";
 
         assertBothWays(hashtable, expected);
     }

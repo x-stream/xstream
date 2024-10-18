@@ -108,6 +108,13 @@
 
 	<p>Not yet released.</p>
 
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>Add a converter for the WeakHashMap which does not write any elements of the map.  Avoids also access to the
+		ReentrantLock contained in the WeakHashMap since Java 19.</li>
+	</ul>
+
 	<h2>Minor changes</h2>
 
 	<ul>
@@ -125,6 +132,13 @@
 	<ul>
 		<li>Added constant c.t.x.io.xml.PrettyPrintWriter.XML_1_0_REPLACEMENT.</li>
 		<li>Added constant c.t.x.io.xml.PrettyPrintWriter.XML_1_1_REPLACEMENT.</li>
+		<li>Added c.t.x.converters.collections.WeakHashMapConverter.</li>
+	</ul>
+
+	<h2>Stream compatibility</h2>
+
+	<ul>
+		<li>The WeakHashMaps, that have been written with previous versions of XStream, can still be deserialized.</li>
 	</ul>
 
 	<h1 id="1.4.20">1.4.20</h1>
