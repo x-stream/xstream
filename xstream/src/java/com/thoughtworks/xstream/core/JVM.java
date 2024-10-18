@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -503,7 +503,7 @@ public class JVM implements Caching {
     }
 
     /**
-     * Checks for running in the unnamed module for Java 9 or greater.
+     * Checks for running in the unnamed module for Java 9 or higher.
      *
      * @return true for Java 8 or later or when XStream is running as part of the unnamed module in Java 9 or higher
      * @since upcoming
