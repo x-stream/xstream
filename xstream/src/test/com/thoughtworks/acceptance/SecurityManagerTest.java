@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016, 2017 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016, 2017, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,6 +13,7 @@ package com.thoughtworks.acceptance;
 import com.thoughtworks.acceptance.objects.Software;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
@@ -47,6 +48,9 @@ public class SecurityManagerTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        if (JVM.isVersion(18))
+            return;
+
         System.setSecurityManager(null);
         source = new CodeSource(new File("target").toURI().toURL(), (Certificate[])null);
 
@@ -72,7 +76,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        System.setSecurityManager(null);
+        if (!JVM.isVersion(18)) {
+            System.setSecurityManager(null);
+        }
         super.tearDown();
     }
 
@@ -89,6 +95,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithXppDriverAndSun14ReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.reflect"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
@@ -123,6 +132,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithXppDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.misc"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
@@ -156,6 +168,9 @@ public class SecurityManagerTest extends TestCase {
     }
 
     public void testSerializeWithDomDriverAndPureJavaReflectionProviderAndActiveSecurityManager() {
+        if (JVM.isVersion(18))
+            return;
+
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.text.resources"));
         sm.addPermission(source, new RuntimePermission("accessClassInPackage.sun.util.resources"));
         sm.addPermission(source, new RuntimePermission("accessDeclaredMembers"));
