@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007 XStream Committers.
+ * Copyright (C) 2006, 2007, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,7 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.testutil.TimeZoneChanger;
 
 import junit.framework.TestCase;
@@ -28,7 +29,7 @@ public class ISO8601DateConverterTest extends TestCase {
         super.setUp();
         converter = new ISO8601DateConverter();
         
-        // Ensure that this test always run as if it were in the EST timezone.
+        // Ensure that this test always run as if it were in the EST (Eastern Standard) timezone (UTC-05:00).
         // This prevents failures when running the tests in different zones.
         // Note: 'EST' has no relevance - it was just a randomly chosen zone.
         TimeZoneChanger.change("EST");
@@ -61,7 +62,7 @@ public class ISO8601DateConverterTest extends TestCase {
         Date out = (Date) converter.fromString(isoFormat);
         Date control = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(simpleFormat);
         // verify for EST
-        assertEquals("Sun Feb 14 13:10:30 EST 1993", out.toString());
+        assertEquals("Sun Feb 14 13:10:30 " + (JVM.isVersion(23) ? "GMT-05:00" : "EST") + " 1993", out.toString());
         assertEquals(control, out);
     }
 
