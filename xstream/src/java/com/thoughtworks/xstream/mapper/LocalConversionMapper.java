@@ -1,37 +1,34 @@
 /*
- * Copyright (C) 2007, 2008, 2014, 2015 XStream Committers.
+ * Copyright (C) 2007, 2008, 2014, 2015, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 06. November 2007 by Joerg Schaible
  */
 package com.thoughtworks.xstream.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.core.util.MemberStore;
 
 
 /**
  * A Mapper for locally defined converters for a member field.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.3
  */
 public class LocalConversionMapper extends MapperWrapper {
 
-    private final Map<FastField, Converter> localConverters = new HashMap<>();
+    private final MemberStore<Converter> localConverters = MemberStore.newInstance();
     private transient AttributeMapper attributeMapper;
 
     /**
      * Constructs a LocalConversionMapper.
-     * 
+     *
      * @param wrapped
      * @since 1.3
      */
@@ -41,12 +38,12 @@ public class LocalConversionMapper extends MapperWrapper {
     }
 
     public void registerLocalConverter(final Class<?> definedIn, final String fieldName, final Converter converter) {
-        localConverters.put(new FastField(definedIn, fieldName), converter);
+        localConverters.put(definedIn, fieldName, converter);
     }
 
     @Override
     public Converter getLocalConverter(final Class<?> definedIn, final String fieldName) {
-        return localConverters.get(new FastField(definedIn, fieldName));
+        return localConverters.get(definedIn, fieldName);
     }
 
     @Override

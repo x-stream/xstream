@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2015, 2016, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,9 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.core.util.MemberStore;
 
 
 /**
@@ -25,8 +23,8 @@ import com.thoughtworks.xstream.core.util.FastField;
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map<FastField, String> fieldToAliasMap = new HashMap<>();
-    protected final Map<FastField, String> aliasToFieldMap = new HashMap<>();
+    private final MemberStore<String> fieldToAliasMap = MemberStore.newInstance();
+    private final MemberStore<String> aliasToFieldMap = MemberStore.newInstance();
     private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(final Mapper wrapped) {
@@ -35,8 +33,8 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public void addFieldAlias(final String alias, final Class<?> type, final String fieldName) {
-        fieldToAliasMap.put(key(type, fieldName), alias);
-        aliasToFieldMap.put(key(type, alias), fieldName);
+        fieldToAliasMap.put(type, fieldName, alias);
+        aliasToFieldMap.put(type, alias, fieldName);
     }
 
     /**
@@ -47,10 +45,6 @@ public class FieldAliasingMapper extends MapperWrapper {
         if (elementIgnoringMapper != null) {
             elementIgnoringMapper.addElementsToIgnore(pattern);
         }
-    }
-
-    private FastField key(final Class<?> type, final String name) {
-        return new FastField(type, name);
     }
 
     /**
@@ -83,13 +77,14 @@ public class FieldAliasingMapper extends MapperWrapper {
         }
     }
 
-    private String getMember(final Class<?> type, final String name, final Map<FastField, String> map) {
-        String member = null;
-        for (Class<?> declaringType = type; member == null
-            && declaringType != Object.class
-            && declaringType != null; declaringType = declaringType.getSuperclass()) {
-            member = map.get(key(declaringType, name));
+    private String getMember(final Class<?> type, final String name, final MemberStore<String> store) {
+        for (Class<?> declaringType = type; declaringType != Object.class && declaringType != null; declaringType =
+                declaringType.getSuperclass()) {
+            final String member = store.get(declaringType, name);
+            if (member != null) {
+                return member;
+            }
         }
-        return member;
+        return null;
     }
 }

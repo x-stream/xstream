@@ -1,8 +1,8 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2022 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2022, 2024 XStream Committers.
  * All rights reserved.
- *
+         *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
@@ -33,9 +33,9 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
 import com.thoughtworks.xstream.core.util.ArrayIterator;
-import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
+import com.thoughtworks.xstream.core.util.MemberDictionary;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.core.util.SerializationMembers;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
@@ -190,8 +190,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             }
         };
 
-        final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers =
-                new HashMap<>();
+        final Map<String, Set<Mapper.ImplicitCollectionMapping>> hiddenMappers = new HashMap<>();
         for (final FieldInfo info : fields) {
             if (info.value != null) {
                 final boolean isCollection = info.value instanceof Collection;
@@ -279,16 +278,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
     public Object doUnmarshal(final Object result, final HierarchicalStreamReader reader,
             final UnmarshallingContext context) {
         final Class<?> resultType = result.getClass();
-        @SuppressWarnings("serial")
-        final Set<FastField> seenFields = new HashSet<FastField>() {
-            @Override
-            public boolean add(final FastField e) {
-                if (!super.add(e)) {
-                    throw new DuplicateFieldException(e.getName());
-                }
-                return true;
-            }
-        };
+        final MemberDictionary seenFields = new MemberDictionary();
 
         // process attributes before recursing into child elements.
         final Iterator<String> it = reader.getAttributeNames();
@@ -318,7 +308,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                         exception.add("target-type", type.getName());
                         throw exception;
                     }
-                    seenFields.add(new FastField(classDefiningField, attrName));
+                    if (!seenFields.add(classDefiningField, attrName)) {
+                        throw new DuplicateFieldException(attrName);
+                    }
                     reflectionProvider.writeField(result, attrName, value, classDefiningField);
                 }
             }
@@ -445,10 +437,15 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
 
             if (field != null) {
                 reflectionProvider.writeField(result, fieldName, value, field.getDeclaringClass());
-                seenFields.add(new FastField(field.getDeclaringClass(), fieldName));
+                if (!seenFields.add(field.getDeclaringClass(), fieldName)) {
+                    throw new DuplicateFieldException(fieldName);
+                }
             } else if (type != null) {
                 if (implicitFieldName == null) {
                     // look for implicit field
+                    implicitFieldName = mapper.getFieldNameForItemTypeAndName(fieldDeclaringClass, value != null
+                        ? value.getClass()
+                        : Mapper.Null.class, originalNodeName);
                     implicitFieldName = mapper.getFieldNameForItemTypeAndName(fieldDeclaringClass, value != null
                         ? value.getClass()
                         : Mapper.Null.class, originalNodeName);
@@ -625,10 +622,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
             if (this == obj) {
                 return true;
             }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
+            if ((obj == null) || (getClass() != obj.getClass())) {
                 return false;
             }
             final FieldLocation other = (FieldLocation)obj;
