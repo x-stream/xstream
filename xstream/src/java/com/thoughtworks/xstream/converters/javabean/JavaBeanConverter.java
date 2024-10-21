@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,15 +11,12 @@
  */
 package com.thoughtworks.xstream.converters.javabean;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.MissingFieldException;
-import com.thoughtworks.xstream.core.util.FastField;
+import com.thoughtworks.xstream.core.util.MemberDictionary;
 import com.thoughtworks.xstream.io.ExtendedHierarchicalStreamWriterHelper;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -121,14 +118,7 @@ public class JavaBeanConverter implements Converter {
 
     public Object unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
         final Object result = instantiateNewInstance(context);
-        final Set seenProperties = new HashSet() {
-            public boolean add(Object e) {
-                if (!super.add(e)) {
-                    throw new DuplicatePropertyException(((FastField)e).getName());
-                }
-                return true;
-            }
-        };
+        final MemberDictionary seenProperties = new MemberDictionary();
 
         Class resultType = result.getClass();
         while (reader.hasMoreChildren()) {
@@ -143,7 +133,9 @@ public class JavaBeanConverter implements Converter {
                     Class type = determineType(reader, result, propertyName);
                     Object value = context.convertAnother(result, type);
                     beanProvider.writeProperty(result, propertyName, value);
-                    seenProperties.add(new FastField(resultType, propertyName));
+                    if (!seenProperties.add(resultType, propertyName)) {
+                        throw new DuplicatePropertyException(propertyName);
+                    }
                 } else if (!mapper.isIgnoredElement(propertyName)) {
                     throw new MissingFieldException(resultType.getName(), propertyName);
                 }

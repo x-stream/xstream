@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2008 XStream Committers.
+ * Copyright (C) 2007, 2008, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,10 +12,7 @@ package com.thoughtworks.xstream.mapper;
 
 import com.thoughtworks.xstream.converters.Converter;
 import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.core.util.FastField;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.thoughtworks.xstream.core.util.MemberStore;
 
 
 /**
@@ -26,7 +23,7 @@ import java.util.Map;
  */
 public class LocalConversionMapper extends MapperWrapper {
 
-    private final Map localConverters = new HashMap();
+    private final MemberStore localConverters =  MemberStore.newInstance();
     private transient AttributeMapper attributeMapper;
 
     /**
@@ -41,11 +38,11 @@ public class LocalConversionMapper extends MapperWrapper {
     }
 
     public void registerLocalConverter(Class definedIn, String fieldName, Converter converter) {
-        localConverters.put(new FastField(definedIn, fieldName), converter);
+        localConverters.put(definedIn, fieldName, converter);
     }
 
     public Converter getLocalConverter(Class definedIn, String fieldName) {
-        return (Converter)localConverters.get(new FastField(definedIn, fieldName));
+        return (Converter) localConverters.get(definedIn, fieldName);
     }
 
     public SingleValueConverter getConverterFromAttribute(Class definedIn, String attribute,

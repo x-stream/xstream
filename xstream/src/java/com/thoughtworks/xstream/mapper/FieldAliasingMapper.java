@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2013, 2014, 2016, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,11 +11,9 @@
  */
 package com.thoughtworks.xstream.mapper;
 
-import com.thoughtworks.xstream.core.util.FastField;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
+
+import com.thoughtworks.xstream.core.util.MemberStore;
 
 /**
  * Mapper that allows a field of a specific class to be replaced with a shorter alias.
@@ -24,8 +22,8 @@ import java.util.regex.Pattern;
  */
 public class FieldAliasingMapper extends MapperWrapper {
 
-    protected final Map fieldToAliasMap = new HashMap();
-    protected final Map aliasToFieldMap = new HashMap();
+    private final MemberStore fieldToAliasMap = MemberStore.newInstance();
+    private final MemberStore aliasToFieldMap = MemberStore.newInstance();
     private final ElementIgnoringMapper elementIgnoringMapper;
 
     public FieldAliasingMapper(Mapper wrapped) {
@@ -35,10 +33,10 @@ public class FieldAliasingMapper extends MapperWrapper {
     }
 
     public void addFieldAlias(String alias, Class type, String fieldName) {
-        fieldToAliasMap.put(key(type, fieldName), alias);
-        aliasToFieldMap.put(key(type, alias), fieldName);
+        fieldToAliasMap.put(type, fieldName, alias);
+        aliasToFieldMap.put(type, alias, fieldName);
     }
-    
+
     /**
      * @deprecated As of 1.4.9 use {@link ElementIgnoringMapper#addElementsToIgnore(Pattern)}.
      */
@@ -55,10 +53,6 @@ public class FieldAliasingMapper extends MapperWrapper {
         if (elementIgnoringMapper != null) {
             elementIgnoringMapper.omitField(definedIn, fieldName);
         }
-    }
-
-    private Object key(Class type, String name) {
-        return new FastField(type, name);
     }
 
     public String serializedMember(Class type, String memberName) {
@@ -79,13 +73,15 @@ public class FieldAliasingMapper extends MapperWrapper {
         }
     }
 
-    private String getMember(Class type, String name, Map map) {
-        String member = null;
-        for (Class declaringType = type; 
-                member == null && declaringType != Object.class && declaringType != null; 
+    private String getMember(Class type, String name, MemberStore store) {
+        for (Class declaringType = type;
+                declaringType != Object.class && declaringType != null;
                 declaringType = declaringType.getSuperclass()) {
-            member = (String) map.get(key(declaringType, name));
+            String member = (String)store.get(declaringType, name);
+            if (member != null) {
+                return member;
+            }
         }
-        return member;
+        return null;
     }
 }
