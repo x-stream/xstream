@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2013, 2016, 2018 XStream Committers.
+ * Copyright (C) 2011, 2013, 2016, 2018, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,8 +29,8 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.converters.reflection.AbstractReflectionConverter.DuplicateFieldException;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
-import com.thoughtworks.xstream.core.util.FastField;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
+import com.thoughtworks.xstream.core.util.MemberDictionary;
 import com.thoughtworks.xstream.core.util.Primitives;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
@@ -144,13 +144,12 @@ public class ToAttributedValueConverter implements Converter {
                     return;
                 }
 
-                final FastField field = new FastField(definedIn, fieldName);
                 final String alias = mapper.serializedMember(definedIn, fieldName);
                 if (!defaultFieldDefinition.containsKey(alias)) {
                     final Class lookupType = sourceType;
                     defaultFieldDefinition.put(
                         alias, reflectionProvider.getField(lookupType, fieldName));
-                } else if (!fieldIsEqual(field)) {
+                } else if (!fieldIsEqual(definedIn, fieldName)) {
                     final ConversionException exception = new ConversionException(
                         "Cannot write attribute twice for object");
                     exception.add("alias", alias);
@@ -166,7 +165,7 @@ public class ToAttributedValueConverter implements Converter {
                 }
 
                 if (value != null) {
-                    boolean isValueField = valueField != null && fieldIsEqual(field);
+                    boolean isValueField = valueField != null && fieldIsEqual(definedIn, fieldName);
                     if (isValueField) {
                         definingType[0] = definedIn;
                         fieldType[0] = type;
@@ -222,7 +221,7 @@ public class ToAttributedValueConverter implements Converter {
         final Object result = reflectionProvider.newInstance(context.getRequiredType());
         final Class resultType = result.getClass();
 
-        final Set seenFields = new HashSet();
+        final MemberDictionary seenFields = new MemberDictionary();
         final Iterator it = reader.getAttributeNames();
 
         final Set systemAttributes = new HashSet();
@@ -275,7 +274,7 @@ public class ToAttributedValueConverter implements Converter {
                     }
 
                     reflectionProvider.writeField(result, fieldName, value, declaringClass);
-                    if (!seenFields.add(new FastField(declaringClass, fieldName))) {
+                    if (!seenFields.add(declaringClass, fieldName)) {
                         throw new DuplicateFieldException(fieldName
                             + " ["
                             + declaringClass.getName()
@@ -328,7 +327,7 @@ public class ToAttributedValueConverter implements Converter {
             }
 
             reflectionProvider.writeField(result, fieldName, value, classDefiningField);
-            if (!seenFields.add(new FastField(classDefiningField, fieldName))) {
+            if (!seenFields.add(classDefiningField, fieldName)) {
                 throw new DuplicateFieldException(fieldName
                     + " ["
                     + classDefiningField.getName()
@@ -338,8 +337,8 @@ public class ToAttributedValueConverter implements Converter {
         return result;
     }
 
-    private boolean fieldIsEqual(FastField field) {
-        return valueField.getName().equals(field.getName())
-            && valueField.getDeclaringClass().getName().equals(field.getDeclaringClass());
+    private boolean fieldIsEqual(Class definedIn, String name) {
+        return valueField.getName().equals(name)
+            && valueField.getDeclaringClass().getName().equals(definedIn.getName());
     }
 }

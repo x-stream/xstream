@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015, 2016, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2014, 2015, 2016, 2021, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -18,10 +18,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
@@ -37,29 +37,25 @@ import com.thoughtworks.xstream.core.Caching;
  */
 public class SerializationMembers implements Caching {
 
-    private static final Method NO_METHOD = (new Object() {
+    private static final class NO_METHOD_MARKER {
         private void noMethod() {
         }
-    }).getClass().getDeclaredMethods()[0];
+    }
+    private static final Method NO_METHOD = NO_METHOD_MARKER.class.getDeclaredMethods()[0];
     private static final Object[] EMPTY_ARGS = new Object[0];
     private static final Class[] EMPTY_CLASSES = new Class[0];
-    private static final Map NO_FIELDS = Collections.EMPTY_MAP;
+    private static final ObjectStreamField[] NO_FIELDS = new ObjectStreamField[0];
     private static final int PERSISTENT_FIELDS_MODIFIER = Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL;
-    private static final FastField[] OBJECT_TYPE_FIELDS = {
-        new FastField(Object.class, "readResolve"), 
-        new FastField(Object.class, "writeReplace"), 
-        new FastField(Object.class, "readObject"), 
-        new FastField(Object.class, "writeObject")
-    };
-    private Map declaredCache = Collections.synchronizedMap(new HashMap());
-    private Map resRepCache = Collections.synchronizedMap(new HashMap());
+    private static final String[] OBJECT_TYPE_FIELDS = {"readResolve", "writeReplace", "readObject", "writeObject"};
+    private final MemberStore declaredCache = MemberStore.newSynchronizedInstance();
+    private final MemberStore resRepCache = MemberStore.newSynchronizedInstance();
     private final Map fieldCache = Collections.synchronizedMap(new HashMap());
     {
         for(int i = 0; i < OBJECT_TYPE_FIELDS.length; ++i) {
-            declaredCache.put(OBJECT_TYPE_FIELDS[i], NO_METHOD);
+            declaredCache.put(Object.class, OBJECT_TYPE_FIELDS[i], NO_METHOD);
         }
         for(int i = 0; i < 2; ++i) {
-            resRepCache.put(OBJECT_TYPE_FIELDS[i], NO_METHOD);
+            resRepCache.put(Object.class, OBJECT_TYPE_FIELDS[i], NO_METHOD);
         }
     }
 
@@ -179,8 +175,7 @@ public class SerializationMembers implements Caching {
             if (type == null) {
                 return null;
             }
-            FastField method = new FastField(type, name);
-            Method result = (Method)declaredCache.get(method);
+            Method result = (Method)declaredCache.get(type, name);
             if (result == null) {
                 try {
                     result = type.getDeclaredMethod(name, parameterTypes);
@@ -190,14 +185,13 @@ public class SerializationMembers implements Caching {
                 } catch (NoSuchMethodException e) {
                     result = getMethod(type.getSuperclass(), name, parameterTypes);
                 }
-                declaredCache.put(method, result);
+                declaredCache.put(type, name, result);
             }
             return result;
         }
 
         private Method getRRMethod(final Class type, final String name) {
-            final FastField method = new FastField(type, name);
-            Method result = (Method)resRepCache.get(method);
+            Method result = (Method)resRepCache.get(type, name);
             if (result == null) {
                 result = getMethod(type, name, EMPTY_CLASSES, true);
                 if (result != null && result.getDeclaringClass() != type) {
@@ -210,29 +204,23 @@ public class SerializationMembers implements Caching {
                 } else if (result == null) {
                     result = NO_METHOD;
                 }
-                resRepCache.put(method, result);
+                resRepCache.put(type, name, result);
             }
             return result == NO_METHOD ? null : result;
         }
 
-        public Map getSerializablePersistentFields(final Class type) {
+        public boolean hasSerializablePersistentFields(final Class type) {
             if (type == null) {
-                return null;
+                return false;
             }
-            Map result = (Map)fieldCache.get(type.getName());
+            ObjectStreamField[] result = (ObjectStreamField[])fieldCache.get(type.getName());
             if (result == null) {
                 ErrorWritingException ex = null;
                 try {
                     final Field field = type.getDeclaredField("serialPersistentFields");
                     if ((field.getModifiers() & PERSISTENT_FIELDS_MODIFIER) == PERSISTENT_FIELDS_MODIFIER) {
                         field.setAccessible(true);
-                        final ObjectStreamField[] fields = (ObjectStreamField[])field.get(null);
-                        if (fields != null) {
-                            result = new HashMap();
-                            for (int i = 0; i < fields.length; ++i) {
-                                result.put(fields[i].getName(), fields[i]);
-                            }
-                        }
+                        result = (ObjectStreamField[])field.get(null);
                     }
                 } catch (final NoSuchFieldException e) {
                 } catch (final IllegalAccessException e) {
@@ -249,11 +237,12 @@ public class SerializationMembers implements Caching {
                 }
                 fieldCache.put(type.getName(), result);
             }
-            return result == NO_FIELDS ? null : result;
+            return result != NO_FIELDS;
         }
 
     public void flushCache() {
-        declaredCache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
-        resRepCache.keySet().retainAll(Arrays.asList(OBJECT_TYPE_FIELDS));
+        final Set classNames = Collections.singleton(Object.class.getName());
+        declaredCache.keySet().retainAll(classNames);
+        resRepCache.keySet().retainAll(classNames);
     }
 }
