@@ -1,6 +1,6 @@
 <html>
 <!--
- Copyright (C) 2015, 2016, 2017, 2018, 2020, 2021, 2022 XStream committers.
+ Copyright (C) 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -33,8 +33,8 @@
 	
 	<p>All benchmark values below measure the average throughput in nanosecond per operation.  JMH provides additional
 	measurement options, see online help.  The maximum deviation for each benchmark is recorded in the reference files of the
-	distributed ZIP file.  The benchmark is executed on Linux 5.15.11 Gentoo 64-bit system with an Intel Core i7 CPU 920 of 2.67
-	GHz using OpenJDK 11.0.13.  Note again, that these values are no replacement for real profiler results and they may vary
+	distributed ZIP file.  The benchmark is executed on Linux 6.6.52 Gentoo 64-bit system with an Intel Core i7 CPU 14700K
+	using OpenJDK 17.0.13.  Note again, that these values are no replacement for real profiler results and they may vary
 	from run to run (see reference files) due to this machine's background processes. However, it can give you some idea of
 	what you can expect using different parser technologies.</p>
 	
@@ -51,82 +51,82 @@
         <th>Nested</th>
       </tr>
       <tr>
-        <th>W3C DOM (Open JDK 11.0.13)</th>
-        <td>10553104.053</td>
-        <td>58632015.971</td>
-        <td>5321471.291</td>
+        <th>W3C DOM (Open JDK 17.0.13)</th>
+        <td>2316834.389</td>
+        <td>254288.386</td>
+        <td>1207325.529</td>
       </tr>
       <tr>
         <th>JDOM (1.1.3)</th>
-        <td>6347929.561</td>
-        <td>7102275.757</td>
-        <td>16861677.394</td>
+        <td>1429464.817</td>
+        <td>1054291.413</td>
+        <td>3136911.743</td>
       </tr>
       <tr>
         <th>JDOM 2 (2.0.5)</th>
-        <td>5843003.401</td>
-        <td>9827411.961</td>
-        <td>12085612.224</td>
+        <td>1324056.096</td>
+        <td>2259612.310</td>
+        <td>2779012.689</td>
       </tr>
       <tr>
         <th>DOM4J (1.6.1)</th>
-        <td>8344385.552</td>
-        <td>78757514.580</td>
-        <td>5711026.345</td>
+        <td>2281134.406</td>
+        <td>43258468.546</td>
+        <td>1356678.442</td>
       </tr>
       <tr>
         <th>XOM (1.1)</th>
-        <td>7986743.807</td>
-        <td>33930673.083</td>
-        <td>5788240.908</td>
+        <td>1867044.534</td>
+        <td>5679751.225</td>
+        <td>1308598.865</td>
       </tr>
       <tr>
         <th>StAX (BEA 1.2.0)</th>
-        <td>3229409.245</td>
-        <td>713536.588</td>
-        <td>648266.777</td>
+        <td>632376.873</td>
+        <td>128796.847</td>
+        <td>140502.528</td>
       </tr>
       <tr>
-        <th>StAX (Woodstox 3.2.7)</th>
-        <td>2048393.986</td>
-        <td>592419.675</td>
-        <td>725660.904</td>
+        <th>StAX (Woodstox 5.0.4)</th>
+        <td>419207.440</td>
+        <td>129315.380</td>
+        <td>126914.212</td>
       </tr>
       <tr>
-        <th>StAX (Open JDK 11.0.13)</th>
-        <td>8377577.926</td>
-        <td>700802.493</td>
-        <td>1074253.465</td>
+        <th>StAX (Open JDK 17.0.13)</th>
+        <td>1859924.150</td>
+        <td>141843.352</td>
+        <td>145046.544</td>
       </tr>
       <tr>
         <th>XPP (MXParser 1.2.2)</th>
-        <td>2090782.658</td>
-        <td>687905.727</td>
+        <td>433709.439</td>
+        <td>140599.267</td>
         <td>12616894.304</td>
       </tr>
       <tr>
         <th>XPP (Xpp3 min 1.1.4c)</th>
-        <td>2112720.726</td>
-        <td>701583.341</td>
-        <td>13007586.291</td>
+        <td>478171.526</td>
+        <td>154366.191</td>
+        <td>2123961.431</td>
       </tr>
       <tr>
         <th>XPP (kXML2 min 2.3.0)</th>
-        <td>3524809.724</td>
-        <td>902275.516</td>
-        <td>35970087.264</td>
+        <td>730153.987</td>
+        <td>180229.565</td>
+        <td>7118388.750</td>
       </tr>
       <tr>
-        <th>Binary (XStream 1.4.16)</th>
-        <td>1111084.176</td>
-        <td>402398.155</td>
-        <td>315810.980</td>
+        <th>Binary (XStream 1.4.21)</th>
+        <td>284528.119</td>
+        <td>138862.326</td>
+        <td>101430.955</td>
       </tr>
       <tr>
-        <th>Jettison (1.2)</th>
-        <td>3617569.912</td>
-        <td>670870.406</td>
-        <td>735876.170</td>
+        <th>Jettison (1.5.4)</th>
+        <td>685921.130</td>
+        <td>121462.883</td>
+        <td>153003.086</td>
       </tr>
     </table>
   
@@ -152,15 +152,15 @@
       </tr>
       <tr>
         <th>Custom</th>
-        <td>9666231.183</td>
+        <td>1701927.802</td>
       </tr>
       <tr>
         <th>Java Bean</th>
-        <td>18907234.350</td>
+        <td>3776166.839</td>
       </tr>
       <tr>
         <th>Reflection</th>
-        <td>20777749.230</td>
+        <td>4212308.005</td>
       </tr>
     </table>
   
@@ -186,27 +186,27 @@
       </tr>
       <tr>
         <th>No Cache</th>
-        <td>11982049.168</td>
+        <td>2417842.610</td>
       </tr>
       <tr>
         <th>Intern</th>
-        <td>15280597.717</td>
+        <td>3148497.871</td>
       </tr>
       <tr>
         <th>ConcurrentMap (length limit)</th>
-        <td>10812523.401</td>
+        <td>2911799.476</td>
       </tr>
       <tr>
         <th>ConcurrentMap (unlimited)</th>
-        <td>12196204.773</td>
+        <td>3117778.159</td>
       </tr>
       <tr>
         <th>Sync'd WeakCache (length limit)</th>
-        <td>11476639.041</td>
+        <td>2886518.868</td>
       </tr>
       <tr>
         <th>Sync'd WeakCache (unlimited)</th>
-        <td>11346761.846</td>
+        <td>3287897.285</td>
       </tr>
     </table>
   
@@ -247,23 +247,23 @@
       </tr>
       <tr>
         <th>No Coding</th>
-        <td>4212316.966</td>
+        <td>1678462.527</td>
       </tr>
       <tr>
         <th>Dollar Coding</th>
-        <td>4843325.489</td>
+        <td>1267352.602</td>
       </tr>
       <tr>
         <th>Escaped Underscore Coding</th>
-        <td>6496347.261</td>
+        <td>1486767.570</td>
       </tr>
       <tr>
         <th>Cached Escaped Underscore Coding</th>
-        <td>4708590.172</td>
+        <td>1363975.538</td>
       </tr>
       <tr>
         <th>XML Friendly Coding</th>
-        <td>5122809.546</td>
+        <td>1404702.393</td>
       </tr>
     </table>
   
