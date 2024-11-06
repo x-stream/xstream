@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -18,18 +18,18 @@
 
     <p><a href="versioning.html">About XStream version numbers...</a></p>
 
-    <h1 id="stable">Stable Version: <span class="version">1.4.20</span></h1>
+    <h1 id="stable">Stable Version: <span class="version">1.4.21</span></h1>
 
     <ul>
-      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.20/xstream-distribution-1.4.20-bin.zip">Binary distribution:</a></b>
+      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.21/xstream-distribution-1.4.21-bin.zip">Binary distribution:</a></b>
       Contains the XStream jar files, the Hibernate and Benchmark modules and all the dependencies.</li>
-      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.20/xstream-distribution-1.4.20-src.zip">Source distribution:</a></b>
+      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-distribution/1.4.21/xstream-distribution-1.4.21-src.zip">Source distribution:</a></b>
       Contains the complete XStream project as if checked out from the Subversion version tag.</li>
-      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream/1.4.20/xstream-1.4.20.jar">XStream Core only:</a>
+      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream/1.4.21/xstream-1.4.21.jar">XStream Core only:</a>
       The xstream.jar only as it is downloaded automatically when it is referenced as Maven dependency.</b></li>
-      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-hibernate/1.4.20/xstream-hibernate-1.4.20.jar">XStream Hibernate module:</a></b>
+      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-hibernate/1.4.21/xstream-hibernate-1.4.21.jar">XStream Hibernate module:</a></b>
       The xstream-hibernate.jar as it is downloaded automatically when it is referenced as Maven dependency.</li>
-      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-jmh/1.4.20/xstream-jmh-1.4.20-app.zip">XStream JMH module:</a></b>
+      <li><b><a href="https://repo1.maven.org/maven2/com/thoughtworks/xstream/xstream-jmh/1.4.21/xstream-jmh-1.4.21-app.zip">XStream JMH module:</a></b>
       The xstream-jmh-app.zip as standalone application with start scripts and all required libraries.</li>
     </ul>
 
@@ -41,7 +41,7 @@
     <div class="Source XML"><pre>&lt;dependency&gt;
   &lt;groupId&gt;com.thoughtworks.xstream&lt;/groupId&gt;
   &lt;artifactId&gt;xstream&lt;/artifactId&gt;
-  &lt;version&gt;1.4.20&lt;/version&gt;
+  &lt;version&gt;1.4.21&lt;/version&gt;
 &lt;/dependency&gt;</pre></div>
 
     <h1 id="previous-releases">Previous Releases</h1>
@@ -82,9 +82,8 @@
         <li>Other optional 3rd party dependencies:
         <ul>
       	  <li><a href="https://repo1.maven.org/maven2/javax/activation/jaxax.activation-api/1.2.0/jaxax.activation-api-1.2.0.jar">Java Activation module</a> for the ActivationDataFlavorConverter. The dependency is required for the Java 11 runtime.</li>
-      	  <li><a href="https://github.com/JodaOrg/joda-time/releases/download/v2.10.1/joda-time-2.10.1-dist.zip">Joda Time</a> for optional ISO8601 date/time converters in JDK 1.7 or below.</li>
       	  <li><a href="http://downloads.sourceforge.net/cglib/cglib-nodep-2.2.jar">CGLIB</a> for optional support of some proxies generated with the CGLIB Enhancer.</li>
-      	  <li><a href="https://repo1.maven.org/maven2/org/codehaus/jettison/jettison/1.4.1/jettison-1.4.1.jar">Jettison</a> for serialization and deserialization support with JSON. Note, except Jettison 1.2 no lower version is compatible.</li>
+		  <li><a href="https://repo1.maven.org/maven2/org/codehaus/jettison/jettison/1.5.4/jettison-1.5.4.jar">Jettison 1.5.4</a> for serialization and deserialization support with JSON. Note, that some versions from 1.3.x and up are not compatible with XStream.</li>
         </ul>
       </li>
     </ul>
