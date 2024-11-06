@@ -24,8 +24,8 @@ import com.thoughtworks.xstream.core.util.MemberDictionary;
  */
 public class ElementIgnoringMapper extends MapperWrapper {
 
-    protected final MemberDictionary fieldsToOmit = new MemberDictionary();
-    protected final Map unknownElementsToIgnore = new LinkedHashMap();
+    private final MemberDictionary fieldsToOmit = new MemberDictionary();
+    private final Map unknownElementsToIgnore = new LinkedHashMap();
 
     public ElementIgnoringMapper(Mapper wrapped) {
         super(wrapped);
