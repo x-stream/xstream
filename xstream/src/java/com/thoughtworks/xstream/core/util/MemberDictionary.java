@@ -20,7 +20,7 @@ import java.util.Set;
  * A dictionary for member information of types.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.21
  */
 public class MemberDictionary {
 
@@ -29,7 +29,7 @@ public class MemberDictionary {
     /**
      * Constructs an instance.
      *
-     * @since upcoming
+     * @since 1.4.21
      */
     public MemberDictionary() {
         types = new HashMap<>();
@@ -41,7 +41,7 @@ public class MemberDictionary {
      * @param definedIn the type owning the member or null
      * @param member the member name
      * @return true if the member has been added to the dictionary
-     * @since upcoming
+     * @since 1.4.21
      */
     public boolean add(final Class<?> definedIn, final String member) {
         final String className = definedIn == null ? null : definedIn.getName();
@@ -59,7 +59,7 @@ public class MemberDictionary {
      * @param definedIn the type owning the member or null
      * @param member the member name
      * @return true if the member is in the dictionary
-     * @since upcoming
+     * @since 1.4.21
      */
     public boolean contains(final Class<?> definedIn, final String member) {
         final String className = definedIn == null ? null : definedIn.getName();

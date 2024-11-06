@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * A store for member information of types.
  *
  * @author J&ouml;rg Schaible
- * @since upcoming
+ * @since 1.4.21
  */
 public class MemberStore<T> {
 
@@ -30,7 +30,7 @@ public class MemberStore<T> {
     /**
      * Creates a new instance of a MemberStore.
      *
-     * @since upcoming
+     * @since 1.4.21
      */
     public static <T> MemberStore<T> newInstance() {
         return new MemberStore<>(false);
@@ -39,7 +39,7 @@ public class MemberStore<T> {
     /**
      * Creates a new synchronized instance of a MemberStore.
      *
-     * @since upcoming
+     * @since 1.4.21
      */
     public static <T> MemberStore<T> newSynchronizedInstance() {
         return new MemberStore<>(true);
@@ -57,7 +57,7 @@ public class MemberStore<T> {
      * @param member the member name
      * @param value the value to store
      * @return the old stored value for the member or null
-     * @since upcoming
+     * @since 1.4.21
      */
     public Object put(final Class<?> definedIn, final String member, final T value) {
         final String className = definedIn == null ? null : definedIn.getName();
@@ -75,7 +75,7 @@ public class MemberStore<T> {
      * @param definedIn the type owning the member or null
      * @param member the member name
      * @return the stored value for the member or null
-     * @since upcoming
+     * @since 1.4.21
      */
     public T get(final Class<?> definedIn, final String member) {
         final String className = definedIn == null ? null : definedIn.getName();
@@ -90,7 +90,7 @@ public class MemberStore<T> {
      * Get the set of types in the store.
      *
      * @return the set of type names
-     * @since upcoming
+     * @since 1.4.21
      */
     public Set<String> keySet() {
         return types.keySet();
