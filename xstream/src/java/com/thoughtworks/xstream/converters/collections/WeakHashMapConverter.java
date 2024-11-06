@@ -26,7 +26,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * unmarshalling time.
  *
  * @author Joerg Schaible
- * @since upcoming
+ * @since 1.4.21
  */
 public class WeakHashMapConverter implements Converter {
 

@@ -20,7 +20,7 @@ import java.util.Set;
  * 
  * @author J&ouml;rg Schaible
  *
- * @since upcoming
+ * @since 1.4.21
  */
 public class MemberStore {
 
@@ -30,7 +30,7 @@ public class MemberStore {
     /**
      * Creates a new instance of a MemberStore.
      * 
-     * @since upcoming
+     * @since 1.4.21
      */
     public static MemberStore newInstance() {
         return new MemberStore(false);
@@ -39,7 +39,7 @@ public class MemberStore {
     /**
      * Creates a new synchronized instance of a MemberStore.
      * 
-     * @since upcoming
+     * @since 1.4.21
      */
     public static MemberStore newSynchronizedInstance() {
         return new MemberStore(true);
@@ -57,7 +57,7 @@ public class MemberStore {
      * @param member the member name
      * @param value the value to store
      * @return the old stored value for the member or null
-     * @since upcoming
+     * @since 1.4.21
      */
     public Object put(final Class definedIn, final String member, final Object value) {
         final String className = definedIn == null ? null : definedIn.getName();
@@ -78,7 +78,7 @@ public class MemberStore {
      * @param definedIn the type owning the member or null
      * @param member the member name
      * @return the stored value for the member or null
-     * @since upcoming
+     * @since 1.4.21
      */
     public Object get(final Class definedIn, final String member) {
         final String className = definedIn == null ? null : definedIn.getName();
@@ -92,7 +92,7 @@ public class MemberStore {
      * Get the set of types in the store.
      * 
      * @return the set of type names
-     * @since upcoming
+     * @since 1.4.21
      */
     public Set keySet() {
         return types.keySet();

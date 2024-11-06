@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006, 2013 XStream Committers.
+ * Copyright (C) 2004, 2005, 2006, 2023, 2024 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -59,12 +59,12 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     public static int XML_1_1 = 1;
     /**
      * XML 1.0 mode: Writes characters according XML 1.0 specification, writes character U+FFFFD as replacement  for invalid ones.
-     * @since upcoming
+     * @since 1.4.21
      */
     public static int XML_1_0_REPLACEMENT = 2;
     /**
      * XML 1.1 mode: Writes characters according XML 1.1 specification, writes character U+FFFFD as replacement  for invalid ones.
-     * @since upcoming
+     * @since 1.4.21
      */
     public static int XML_1_1_REPLACEMENT = 3;
 
