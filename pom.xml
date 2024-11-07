@@ -37,9 +37,21 @@
 
   <profiles>
     <profile>
-      <id>jdk12-ge</id>
+      <id>jdk20-ge</id>
       <activation>
-        <jdk>[12,)</jdk>
+        <jdk>[20,)</jdk>
+      </activation>
+      <properties>
+        <version.java.5>1.8</version.java.5>
+        <version.java.6>1.8</version.java.6>
+        <version.java.source>1.8</version.java.source>
+        <version.java.target>1.8</version.java.target>
+      </properties>
+    </profile>
+    <profile>
+      <id>jdk12-ge-jdk20</id>
+      <activation>
+        <jdk>[12,20)</jdk>
       </activation>
       <properties>
         <version.java.5>1.7</version.java.5>
