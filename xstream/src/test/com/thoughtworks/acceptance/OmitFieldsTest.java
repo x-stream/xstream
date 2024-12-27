@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2017, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2012, 2013, 2014, 2017, 2021, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -520,5 +520,36 @@ public class OmitFieldsTest extends AbstractAcceptanceTest {
 
         final Wrapper out = (Wrapper)xstream.fromXML(expectedXml);
         assertEquals("junit", out.member.name);
+    }
+
+    public void testOmitFormerOuterClass() {
+        final Thing in = new Thing();
+        in.alwaysIgnore = "a";
+        in.sometimesIgnore = "b";
+        in.neverIgnore = "c";
+
+        final String expectedXml = ""
+            + "<thing>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        xstream.alias("thing", Thing.class);
+        xstream.aliasField("outer-class", Thing.class, "alwaysIgnore");
+
+        final String actualXml = xstream.toXML(in);
+        assertEquals(expectedXml, actualXml);
+
+        final String legacyXml = ""
+            + "<thing>\n"
+            + "  <outer-class>\n"
+            + "    <member>some value</member>"
+            + "  </outer-class>\n"
+            + "  <sometimesIgnore>b</sometimesIgnore>\n"
+            + "  <neverIgnore>c</neverIgnore>\n"
+            + "</thing>";
+
+        final Thing out = (Thing)xstream.fromXML(legacyXml);
+        assertEquals(in, out);
     }
 }
