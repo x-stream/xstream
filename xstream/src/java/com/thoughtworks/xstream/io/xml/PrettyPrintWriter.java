@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004, 2005, 2006, 2023, 2024 XStream Committers.
+ * Copyright (C) 2004, 2005, 2006, 2023, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -21,29 +21,28 @@ import java.io.Writer;
 /**
  * A simple writer that outputs XML in a pretty-printed indented stream.
  * <p>
- * By default, the chars <br><code>&amp; &lt; &gt; &quot; ' \r</code><br> are escaped
- * and replaced with a suitable XML entity. To alter this behavior, override
- * the {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)} and
- * {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.
+ * By default, the chars <br>
+ * <code>&amp; &lt; &gt; &quot; ' \r</code><br>
+ * are escaped and replaced with a suitable XML entity. To alter this behavior, override the
+ * {@link #writeText(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.RawWriter, String)} and
+ * {@link #writeAttributeValue(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.RawWriter, String)} methods.
  * </p>
  * <p>
- * The XML specification requires XML parsers to drop CR characters completely. This implementation
- * will therefore use only a LF for line endings, never the platform encoding. You can overwrite the
- * {@link #getNewLine()} method for a different behavior. 
+ * The XML specification requires XML parsers to drop CR characters completely. This implementation will therefore use
+ * only a LF for line endings, never the platform encoding. You can overwrite the {@link #getNewLine()} method for a
+ * different behavior.
  * </p>
  * <p>
- * Note: Depending on the XML version some characters cannot be written. Especially a 0
- * character is never valid in XML, neither directly nor as entity nor within CDATA. However, this writer
- * works by default in a quirks mode, where it will write any character at least as character entity (even
- * a null character). You may switch into XML_1_1 mode (which supports most characters) or XML_1_0
- * that does only support a very limited number of control characters. See XML specification for version
- * <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or
- * <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is 
- * not supported, a {@link StreamException} is thrown. Select a proper parser implementation that
- * respects the version in the XML header (the Xpp3 and MX parsers will also read character entities of normally
- * invalid characters).
- * You may also switch to XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters
- * with a U+FFFD replacement character.
+ * Note: Depending on the XML version some characters cannot be written. Especially a 0 character is never valid in XML,
+ * neither directly nor as entity nor within CDATA. However, this writer works by default in a quirks mode, where it
+ * will write any character at least as character entity (even a null character). You may switch into XML_1_1 mode
+ * (which supports most characters) or XML_1_0 that does only support a very limited number of control characters. See
+ * XML specification for version <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or
+ * <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is not supported, a
+ * {@link StreamException} is thrown. Select a proper parser implementation that respects the version in the XML header
+ * (the Xpp3 and MX parsers will also read character entities of normally invalid characters). You may also switch to
+ * XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters with a U+FFFD replacement
+ * character.
  * </p>
  * 
  * @author Joe Walnes
@@ -53,20 +52,47 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     /** Quirks mode: Writes any character into data stream incl. U+0000. */
     public static int XML_QUIRKS = -1;
-    /** XML 1.0 mode: Writes characters according XML 1.0 specification, throws {@link StreamException} for invalid characters. */
+    /**
+     * XML 1.0 mode: Writes characters according XML 1.0 specification, throws {@link StreamException} for invalid
+     * characters.
+     */
     public static int XML_1_0 = 0;
-    /** XML 1.1 mode: Writes characters according XML 1.1 specification, throws {@link StreamException} for invalid characters. */
+    /**
+     * XML 1.1 mode: Writes characters according XML 1.1 specification, throws {@link StreamException} for invalid
+     * characters.
+     */
     public static int XML_1_1 = 1;
     /**
-     * XML 1.0 mode: Writes characters according XML 1.0 specification, writes character U+FFFFD as replacement  for invalid ones.
+     * XML 1.0 mode: Writes characters according XML 1.0 specification, writes character U+FFFFD as replacement for
+     * invalid ones.
+     * 
      * @since 1.4.21
      */
     public static int XML_1_0_REPLACEMENT = 2;
     /**
-     * XML 1.1 mode: Writes characters according XML 1.1 specification, writes character U+FFFFD as replacement  for invalid ones.
+     * XML 1.1 mode: Writes characters according XML 1.1 specification, writes character U+FFFFD as replacement for
+     * invalid ones.
+     * 
      * @since 1.4.21
      */
     public static int XML_1_1_REPLACEMENT = 3;
+
+    /**
+     * Interface to separate internal writer implementation from API.
+     *
+     * @since upcoming
+     */
+    public interface RawWriter {
+        public void write(String str);
+
+        public void write(char ch);
+
+        public void write(char[] chars);
+
+        public void flush();
+
+        public void close();
+    }
 
     private final QuickWriter writer;
     private final FastStack elementStack = new FastStack(16);
@@ -89,9 +115,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     private static final char[] CLOSE = "</".toCharArray();
     private static final char[] REPLACEMENT = "&#xfffd;".toCharArray();
 
-    private PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder,
-        String newLine) {
+    private PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder, String newLine) {
         super(nameCoder);
         this.writer = new QuickWriter(writer);
         this.lineIndenter = lineIndenter;
@@ -106,16 +130,14 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.2
      * @deprecated As of 1.3
      */
-    public PrettyPrintWriter(
-        Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
+    public PrettyPrintWriter(Writer writer, char[] lineIndenter, String newLine, XmlFriendlyReplacer replacer) {
         this(writer, XML_QUIRKS, lineIndenter, replacer, newLine);
     }
 
     /**
      * @since 1.4
      */
-    public PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder) {
+    public PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter, NameCoder nameCoder) {
         this(writer, mode, lineIndenter, nameCoder, "\n");
     }
 
@@ -123,8 +145,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.3
      * @deprecated As of 1.4 use {@link PrettyPrintWriter#PrettyPrintWriter(Writer, int, char[], NameCoder)} instead
      */
-    public PrettyPrintWriter(
-        Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
+    public PrettyPrintWriter(Writer writer, int mode, char[] lineIndenter, XmlFriendlyReplacer replacer) {
         this(writer, mode, lineIndenter, replacer, "\n");
     }
 
@@ -212,7 +233,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         writer.write(escapedName);
         elementStack.push(escapedName);
         tagInProgress = true;
-        depth++ ;
+        depth++;
         readyForNewLine = true;
         tagIsEmpty = true;
     }
@@ -238,17 +259,47 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         writer.write('\"');
     }
 
-    protected void writeAttributeValue(QuickWriter writer, String text) {
+    /**
+     * Write the attribute value into the writer. The implementation will escape all characters, the method can be
+     * overloaded to write CDATA sections instead.
+     * 
+     * @param writer the target writer
+     * @param text the attribute's value
+     * @since upcoming
+     */
+    protected void writeAttributeValue(RawWriter writer, String text) {
         writeText(text, true);
     }
 
-    protected void writeText(QuickWriter writer, String text) {
+    /**
+     * Write the value of a text node into the writer. The implementation will escape all characters, the method can be
+     * overloaded to write CDATA sections instead.
+     * 
+     * @param writer the target writer
+     * @param text the text node's value
+     * @since upcoming
+     */
+    protected void writeText(RawWriter writer, String text) {
         writeText(text, false);
+    }
+
+    /**
+     * @deprecated as of upcoming, use {@link #writeAttributeValue(RawWriter, String)} instead
+     */
+    protected void writeAttributeValue(QuickWriter writer, String text) {
+        writeAttributeValue((RawWriter)writer, text);
+    }
+
+    /**
+     * @deprecated as of upcoming, use {@link #writeText(RawWriter, String)} instead
+     */
+    protected void writeText(QuickWriter writer, String text) {
+        writeText((RawWriter)writer, text);
     }
 
     private void writeText(String text, boolean isAttribute) {
         int length = text.length();
-        for (int i = 0; i < length; i++ ) {
+        for (int i = 0; i < length; i++) {
             char c = text.charAt(i);
             switch (c) {
             case '\0':
@@ -294,8 +345,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML stream");
                             }
                         }
                     }
@@ -305,14 +356,18 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                 } else {
                     boolean replaced = false;
                     if (mode == XML_1_0 || mode == XML_1_0_REPLACEMENT) {
-                        if (c < 9 || c == '\u000b' || c == '\u000c' || c == '\u000e' || c >= '\u000f' && c <= '\u001f') {
+                        if (c < 9
+                            || c == '\u000b'
+                            || c == '\u000c'
+                            || c == '\u000e'
+                            || c >= '\u000f' && c <= '\u001f') {
                             if (mode == XML_1_0_REPLACEMENT) {
                                 writer.write(REPLACEMENT);
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML 1.0 stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML 1.0 stream");
                             }
                         }
                     }
@@ -323,8 +378,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
                                 replaced = true;
                             } else {
                                 throw new StreamException("Invalid character 0x"
-                                        + Integer.toHexString(c)
-                                        + " in XML stream");
+                                    + Integer.toHexString(c)
+                                    + " in XML stream");
                             }
                         }
                     }
@@ -339,7 +394,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     public void endNode() {
-        depth-- ;
+        depth--;
         if (tagIsEmpty) {
             writer.write('/');
             readyForNewLine = false;
@@ -371,7 +426,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
 
     protected void endOfLine() {
         writer.write(getNewLine());
-        for (int i = 0; i < depth; i++ ) {
+        for (int i = 0; i < depth; i++) {
             writer.write(lineIndenter);
         }
     }
@@ -385,10 +440,8 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     /**
-     * Retrieve the line terminator.
-     * 
-     * This method returns always a line feed, since according the XML specification any parser
-     * must ignore a carriage return. Overload this method, if you need different behavior. 
+     * Retrieve the line terminator. This method returns always a line feed, since according the XML specification any
+     * parser must ignore a carriage return. Overload this method, if you need different behavior.
      * 
      * @return the line terminator
      * @since 1.3

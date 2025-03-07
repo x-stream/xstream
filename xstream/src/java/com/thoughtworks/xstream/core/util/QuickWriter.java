@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2009, 2023 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2023, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,11 +12,12 @@
 package com.thoughtworks.xstream.core.util;
 
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
 import java.io.IOException;
 import java.io.Writer;
 
-public class QuickWriter {
+public class QuickWriter implements PrettyPrintWriter.RawWriter {
 
     private final Writer writer;
     private char[] buffer;
