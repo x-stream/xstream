@@ -11,9 +11,8 @@ The 1.4.x version is actively maintained.
 
 ## Reporting a Vulnerability
 
-If you have identified a security issue, ask on the [XStream mailing list](https://groups.google.com/group/xstream-user)
-for access to the XStream Security list and you will receive an invitation. Send a security report there with details to
-reproduce the problem with the latest XStream version.
+If you have identified a security issue, please open a [new private security advisory](https://github.com/x-stream/xstream/security/advisories/new).
+Provide there all details to reproduce the problem with the latest XStream version.
 
 Note, that XStream cares about security issues with XStream itself or in combination with the Java runtime, but not with
 3rd party libraries. It is in the resposibility of each developer who brings those libraries together to setup the
