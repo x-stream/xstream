@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2023, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2023, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,8 +25,8 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * By default, the chars <br>
  * <code>&amp; &lt; &gt; &quot; ' \r</code><br>
  * are escaped and replaced with a suitable XML entity. To alter this behavior, override the
- * {@link #writeText(com.thoughtworks.xstream.core.util.QuickWriter, String)} and
- * {@link #writeAttributeValue(com.thoughtworks.xstream.core.util.QuickWriter, String)} methods.
+ * {@link #writeText(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.PureWriter, String)} and
+ * {@link #writeAttributeValue(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.PureWriter, String)} methods.
  * </p>
  * <p>
  * The XML specification requires XML parsers to drop CR characters completely. This implementation will therefore use
@@ -41,7 +41,7 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * XML specification for version <a href="http://www.w3.org/TR/2006/REC-xml-20060816/#charsets">1.0</a> or
  * <a href="http://www.w3.org/TR/2006/REC-xml11-20060816/#charsets">1.1</a>. If a character is not supported, a
  * {@link StreamException} is thrown. Select a proper parser implementation that respects the version in the XML header
- * (the Xpp3 or MX parsers will also read character entities of normally invalid characters). You may also switch to
+ * (the Xpp3 and MX parsers will also read character entities of normally invalid characters). You may also switch to
  * XML_1_0_REPLACEMENT or XML_1_1_REPLACEMENT mode, which will replace the invalid characters with a U+FFFD replacement
  * character.
  * </p>
@@ -77,6 +77,23 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @since 1.4.21
      */
     public static int XML_1_1_REPLACEMENT = 3;
+
+    /**
+     * Interface to separate internal writer implementation from API.
+     *
+     * @since upcoming
+     */
+    public interface PureWriter {
+        void write(String str);
+
+        void write(char ch);
+
+        void write(char[] chars);
+
+        void flush();
+
+        void close();
+    }
 
     private final QuickWriter writer;
     private final FastStack<String> elementStack = new FastStack<>(16);
@@ -201,11 +218,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
     }
 
     @Override
-    public void startNode(final String name, final Class<?> clazz) {
-        startNode(name);
-    }
-
-    @Override
     public void setValue(final String text) {
         readyForNewLine = false;
         tagIsEmpty = false;
@@ -224,12 +236,44 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         writer.write('\"');
     }
 
-    protected void writeAttributeValue(final QuickWriter writer, final String text) {
+    /**
+     * Write the attribute value into the writer. The implementation will escape all characters, the method can be
+     * overloaded to write CDATA sections instead.
+     *
+     * @param writer the target writer
+     * @param text the attribute's value
+     * @since upcoming
+     */
+    protected void writeAttributeValue(final PureWriter writer, final String text) {
         writeText(text, true);
     }
 
-    protected void writeText(final QuickWriter writer, final String text) {
+    /**
+     * Write the value of a text node into the writer. The implementation will escape all characters, the method can be
+     * overloaded to write CDATA sections instead.
+     *
+     * @param writer the target writer
+     * @param text the text node's value
+     * @since upcoming
+     */
+    protected void writeText(final PureWriter writer, final String text) {
         writeText(text, false);
+    }
+
+    /**
+     * @deprecated as of upcoming, use {@link #writeAttributeValue(PureWriter, String)} instead
+     */
+    @Deprecated
+    protected void writeAttributeValue(final QuickWriter writer, final String text) {
+        writeAttributeValue((PureWriter)writer, text);
+    }
+
+    /**
+     * @deprecated as of upcoming, use {@link #writeText(PureWriter, String)} instead
+     */
+    @Deprecated
+    protected void writeText(final QuickWriter writer, final String text) {
+        writeText((PureWriter)writer, text);
     }
 
     private void writeText(final String text, final boolean isAttribute) {
