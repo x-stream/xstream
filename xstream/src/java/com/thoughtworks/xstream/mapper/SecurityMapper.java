@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014, 2015, 2022 XStream Committers.
+ * Copyright (C) 2014, 2015, 2022, 2025 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible
@@ -19,7 +19,7 @@ import com.thoughtworks.xstream.security.TypePermission;
 /**
  * A Mapper implementation injecting a security layer based on permission rules for any type required in the
  * unmarshalling process.
- * 
+ *
  * @author J&ouml;rg Schaible
  * @since 1.4.7
  */
@@ -29,7 +29,7 @@ public class SecurityMapper extends MapperWrapper {
 
     /**
      * Construct a SecurityMapper.
-     * 
+     *
      * @param wrapped the mapper chain
      * @since 1.4.7
      */
@@ -39,7 +39,7 @@ public class SecurityMapper extends MapperWrapper {
 
     /**
      * Construct a SecurityMapper.
-     * 
+     *
      * @param wrapped the mapper chain
      * @param permissions the predefined permissions
      * @since 1.4.7
@@ -57,7 +57,7 @@ public class SecurityMapper extends MapperWrapper {
      * Permissions are evaluated in the added sequence. An instance of {@link NoTypePermission} or
      * {@link AnyTypePermission} will implicitly wipe any existing permission.
      * </p>
-     * 
+     *
      * @param permission the permission to add.
      * @since 1.4.7
      */
@@ -70,7 +70,10 @@ public class SecurityMapper extends MapperWrapper {
 
     @Override
     public Class<?> realClass(final String elementName) {
-        final Class<?> type = super.realClass(elementName);
+        return checkPermissions(super.realClass(elementName));
+    }
+
+    private Class<?> checkPermissions(final Class<?> type) {
         for (final TypePermission permission : permissions) {
             if (permission.allows(type)) {
                 return type;
