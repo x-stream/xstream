@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 XStream Committers.
+ * Copyright (C) 2014, 2025 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible
@@ -68,7 +68,10 @@ public class SecurityMapper extends MapperWrapper {
     }
 
     public Class realClass(final String elementName) {
-        final Class type = super.realClass(elementName);
+        return checkPermissions(super.realClass(elementName));
+    }
+
+    private Class checkPermissions(final Class type) {
         for (int i = 0; i < permissions.size(); ++i) {
             final TypePermission permission = (TypePermission)permissions.get(i);
             if (permission.allows(type))
