@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2020, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -40,8 +40,9 @@ public class CachingMapper extends MapperWrapper implements Caching {
         if (cached != null) {
             if (cached instanceof Class) {
                 return (Class<?>)cached;
+            } else if (cached instanceof XStreamException) {
+                throw (XStreamException)cached;
             }
-            throw (XStreamException)cached;
         }
 
         try {
@@ -50,6 +51,24 @@ public class CachingMapper extends MapperWrapper implements Caching {
         } catch (final ForbiddenClassException | CannotResolveClassException e) {
             realClassCache.putIfAbsent(elementName, e);
             throw e;
+        }
+    }
+
+    @Override
+    public void checkPermissions(final Class<?> type) {
+        final Object cached = realClassCache.get(type.getName());
+        if (cached != null) {
+            if (cached instanceof ForbiddenClassException) {
+                throw (XStreamException)cached;
+            }
+        } else {
+            try {
+                super.checkPermissions(type);
+            } catch (final ForbiddenClassException e) {
+                realClassCache.put(type.getName(), e);
+                throw e;
+            }
+            realClassCache.put(type.getName(), this);
         }
     }
 

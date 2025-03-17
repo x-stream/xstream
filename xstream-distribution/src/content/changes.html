@@ -116,6 +116,13 @@
 
 	<p>Not yet released.</p>
 
+	<h2>Major changes</h2>
+
+	<ul>
+		<li>Add new Mapper method checkPermissions to explicitly check the security framework against a type from a
+		custom converter.</li>
+	</ul>
+
 	<h2>Minor changes</h2>
 
 	<ul>
@@ -129,6 +136,11 @@
 		<li>Added method c.t.x.io.xml.PrettyPrintWriter.writeText(c.t.x.io.xml.PrettyPrintWriter.PureWriter, String).</li>
 		<li>Deprecated method c.t.x.io.xml.PrettyPrintWriter.writeAttributeValue(QuickWriter,String).</li>
 		<li>Deprecated method c.t.x.io.xml.PrettyPrintWriter.writeText(QuickWriter,String).</li>
+		<li>Added method c.t.x.mapper.CachingMapper.checkPermissions(Class).</li>
+		<li>Added method c.t.x.mapper.DefaultMapper.checkPermissions(Class).</li>
+		<li>Added method c.t.x.mapper.Mapper.checkPermissions(Class).</li>
+		<li>Added method c.t.x.mapper.MapperWrapper.checkPermissions(Class).</li>
+		<li>Added method c.t.x.mapper.SecurityMapper.checkPermissions(Class).</li>
 	</ul>
 
 	<h1 id="1.4.21">1.4.21</h1>

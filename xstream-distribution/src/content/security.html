@@ -321,9 +321,11 @@
 	before 1.4.18.  Clients who have adapted their setup and initialize the security framework are able to use newer
 	versions again as drop-in replacement.  A blacklist scenario should be avoided in general, because it provides a
 	false sense of security.</p>
-
-	<p class=highlight>Note:  If a type on a whitelist contains itself other members that are handled by XStream, you
-	will have to add those member's types to the whitelist also.  There is no automatism for indirect references.</p>
+         
+	<p class=highlight>Note:  If a type on a whitelist contains itself other members that are handled by XStream, those
+	types are only handled automatically if the member type is a concrete class.  You will have to add any types to	the
+	whitelist also if it is a derived type or the member type is an interface only.  There is no automatism for
+	indirect references.</p>
          
 	<p>Separate to the XStream security framework, it has always been possible to overwrite the setupConverter method
 	of XStream to register only the required converters.</p>
