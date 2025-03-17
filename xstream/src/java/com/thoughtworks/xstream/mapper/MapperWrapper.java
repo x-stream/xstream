@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2015, 2016 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2015, 2016, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -39,6 +39,7 @@ public abstract class MapperWrapper implements Mapper {
     private final Mapper serializedClassMapper;
     private final Mapper serializedMemberMapper;
     private final Mapper shouldSerializeMemberMapper;
+    private final Mapper checkPermissionsMapper;
 
     public MapperWrapper(Mapper wrapped) {
         this.wrapped = wrapped;
@@ -64,6 +65,7 @@ public abstract class MapperWrapper implements Mapper {
             wrapperMap.put("serializedClass", wrapper.serializedClassMapper);
             wrapperMap.put("serializedMember", wrapper.serializedMemberMapper);
             wrapperMap.put("shouldSerializeMember", wrapper.shouldSerializeMemberMapper);
+            wrapperMap.put("checkPermissions", wrapper.checkPermissionsMapper);
 
             final Method[] methods = wrapped.getClass().getMethods();
             for (int i = 0; i < methods.length; ++i) {
@@ -94,6 +96,7 @@ public abstract class MapperWrapper implements Mapper {
             serializedClassMapper = (Mapper)wrapperMap.get("serializedClass");
             serializedMemberMapper = (Mapper)wrapperMap.get("serializedMember");
             shouldSerializeMemberMapper = (Mapper)wrapperMap.get("shouldSerializeMember");
+            checkPermissionsMapper = (Mapper)wrapperMap.get("checkPermissions");
         } else {
             aliasForAttributeMapper = wrapped;
             aliasForSystemAttributeMapper = wrapped;
@@ -113,6 +116,7 @@ public abstract class MapperWrapper implements Mapper {
             serializedClassMapper = wrapped;
             serializedMemberMapper = wrapped;
             shouldSerializeMemberMapper = wrapped;
+            checkPermissionsMapper = wrapped;
         }
 
     }
@@ -237,4 +241,7 @@ public abstract class MapperWrapper implements Mapper {
         return getConverterFromAttributeMapper.getConverterFromAttribute(definedIn, attribute, type);
     }
 
+    public void checkPermissions(Class type) {
+        checkPermissionsMapper.checkPermissions(type);
+    }
 }

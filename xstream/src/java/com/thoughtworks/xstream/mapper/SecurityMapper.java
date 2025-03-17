@@ -68,14 +68,22 @@ public class SecurityMapper extends MapperWrapper {
     }
 
     public Class realClass(final String elementName) {
-        return checkPermissions(super.realClass(elementName));
+        Class type = super.realClass(elementName);
+        checkPermissions(type);
+        return type;
     }
 
-    private Class checkPermissions(final Class type) {
+    /**
+     * Check the permission of a type.
+     *
+     * @param type the type to check
+     * @since upcoming
+     */
+    public void checkPermissions(final Class type) {
         for (int i = 0; i < permissions.size(); ++i) {
             final TypePermission permission = (TypePermission)permissions.get(i);
             if (permission.allows(type))
-                return type;
+                return;
         }
         throw new ForbiddenClassException(type);
     }
