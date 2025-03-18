@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.thoughtworks.xstream.core.SecurityUtils;
 
 
 public abstract class AbstractReflectionConverter implements Converter, Caching {
@@ -62,7 +63,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         serializationMethodInvoker = new SerializationMethodInvoker();
         serializationMembers = serializationMethodInvoker.serializationMembers;
     }
-    
+
     protected boolean canAccess(Class type) {
         try {
             reflectionProvider.getFieldOrNull(type, "%");
@@ -282,6 +283,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final UnmarshallingContext context) {
         final Class resultType = result.getClass();
         final MemberDictionary seenFields = new MemberDictionary();
+
+        SecurityUtils.checkDepthLimit(context,  reader);
+        SecurityUtils.checkFieldLimit(context, resultType.getDeclaredFields().length);
 
         // process attributes before recursing into child elements.
         Iterator it = reader.getAttributeNames();

@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 24. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -29,7 +29,7 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
 
     /**
     * @since 1.4
-    */ 
+    */
     protected AbstractDocumentReader(Object rootElement, NameCoder nameCoder) {
         super(nameCoder);
         this.current = rootElement;
@@ -40,11 +40,11 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
     /**
     * @since 1.2
     * @deprecated As of 1.4, use {@link AbstractDocumentReader#AbstractDocumentReader(Object, NameCoder)} instead.
-    */ 
+    */
     protected AbstractDocumentReader(Object rootElement, XmlFriendlyReplacer replacer) {
         this(rootElement, (NameCoder)replacer);
     }
-    
+
     protected abstract void reassignCurrentElement(Object current);
     protected abstract Object getParent();
     protected abstract Object getChild(int index);
@@ -84,9 +84,13 @@ public abstract class AbstractDocumentReader extends AbstractXmlReader implement
         return new AttributeNameIterator(this);
     }
 
+    public int getLevel() {
+        return pointers.size();
+    }
+
     public void appendErrors(ErrorWriter errorWriter) {
     }
-    
+
     public Object getCurrent() {
         return this.current;
     }

@@ -3,11 +3,11 @@
      Copyright (C) 2006 Joe Walnes.
      Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024 XStream committers.
      All rights reserved.
-     
+
      The software in this package is published under the terms of the BSD
      style license a copy of which has been included with this distribution in
      the LICENSE.txt file.
-     
+
      Created on 29. July 2006 by Mauro Talevi
      -->
   <modelVersion>4.0.0</modelVersion>
@@ -469,7 +469,7 @@
         <classifier>javadoc</classifier>
         <scope>provided</scope>
       </dependency>
-            
+
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
@@ -1119,7 +1119,7 @@
     <connection>scm:git:ssh://git@github.com/x-stream/xstream.git</connection>
     <tag>v-1.4.x</tag>
   </scm>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 

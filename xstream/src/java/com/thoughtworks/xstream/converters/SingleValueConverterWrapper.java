@@ -5,11 +5,12 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 20. February 2006 by Mauro Talevi
  */
 package com.thoughtworks.xstream.converters;
 
+import com.thoughtworks.xstream.core.SecurityUtils;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
@@ -46,6 +47,7 @@ public class SingleValueConverterWrapper implements Converter, SingleValueConver
     }
 
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+        SecurityUtils.checkFieldValueLimit(context, reader.getValue());
         return fromString(reader.getValue());
     }
 
