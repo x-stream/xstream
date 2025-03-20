@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 26. September 2003 by Joe Walnes
  */
 package com.thoughtworks.xstream;
@@ -16,7 +16,9 @@ import com.thoughtworks.acceptance.objects.StandardObject;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
 import com.thoughtworks.acceptance.someobjects.HandlerManager;
+import com.thoughtworks.acceptance.someobjects.PhoneNumber;
 import com.thoughtworks.acceptance.someobjects.Protocol;
+import com.thoughtworks.acceptance.someobjects.TestPerson;
 import com.thoughtworks.acceptance.someobjects.U;
 import com.thoughtworks.acceptance.someobjects.WithList;
 import com.thoughtworks.acceptance.someobjects.X;
@@ -63,6 +65,103 @@ public class XStreamTest extends TestCase {
         xstream.alias("with-list", WithList.class);
     }
 
+    public void testUnmarshalObjectsWithDefaultLimits() {
+        String xml = "<P1>\n" +
+                "  <firstname>John</firstname>\n" +
+                "  <lastname>Doe</lastname>\n" +
+                "  <phone>\n" +
+                "    <code>123</code>\n" +
+                "    <number>6789</number>\n" +
+                "  </phone>\n" +
+                "</P1>";
+
+        XStream xstreamLimit = new XStream();
+        xstreamLimit.allowTypes(new Class[]{TestPerson.class, PhoneNumber.class});
+        xstreamLimit.alias("P1", TestPerson.class);
+
+        try {
+            Object retrievedObject = xstreamLimit.fromXML(xml);
+            assertEquals(TestPerson.class, retrievedObject.getClass());
+        } catch (Exception e) {
+
+            fail("Expected XStream to unmarshall");
+        }
+    }
+
+    public void testUnmarshalObjectsWithDepthLimits() {
+        String xml = "<P1>\n" +
+                "  <firstname>John</firstname>\n" +
+                "  <lastname>Doe</lastname>\n" +
+                "  <phone>\n" +
+                "    <code>123</code>\n" +
+                "    <number>6789</number>\n" +
+                "  </phone>\n" +
+                "</P1>";
+
+        XStream xstreamLimit = new XStream();
+        xstreamLimit.allowTypes(new Class[]{TestPerson.class, PhoneNumber.class});
+        xstreamLimit.alias("P1", TestPerson.class);
+
+        xstreamLimit.setMaxAllowedLimits(1, 5, 5);
+        try {
+            xstreamLimit.fromXML(xml);
+            fail("Expected XStreamException to be thrown");
+        } catch (Exception e) {
+            assertEquals(XStreamException.class, e.getCause().getClass());
+            assertEquals("XML depth exceeds maximum allowed depth of 1", e.getCause().getMessage());
+        }
+    }
+
+    public void testUnmarshalObjectsWithFieldsLimits() {
+        String xml = "<P1>\n" +
+                "  <firstname>John</firstname>\n" +
+                "  <lastname>Doe</lastname>\n" +
+                "  <phone>\n" +
+                "    <code>123</code>\n" +
+                "    <number>6789</number>\n" +
+                "  </phone>\n" +
+                "</P1>";
+
+        XStream xstreamLimit = new XStream();
+        xstreamLimit.allowTypes(new Class[]{TestPerson.class, PhoneNumber.class});
+        xstreamLimit.alias("P1", TestPerson.class);
+
+        xstreamLimit.setMaxAllowedLimits(5, 2, 5);
+
+        try {
+            xstreamLimit.fromXML(xml);
+            fail("Expected XStreamException to be thrown");
+        } catch (Exception e) {
+            assertEquals(XStreamException.class, e.getCause().getClass());
+            assertEquals("Encountered more fields than the maximum allowed size of 2", e.getCause().getMessage());
+        }
+    }
+
+    public void testUnmarshalObjectsWithValueLimits() {
+        String xml = "<P1>\n" +
+                "  <firstname>John</firstname>\n" +
+                "  <lastname>Doe</lastname>\n" +
+                "  <phone>\n" +
+                "    <code>123</code>\n" +
+                "    <number>67890</number>\n" +
+                "  </phone>\n" +
+                "</P1>";
+
+        XStream xstreamLimit = new XStream();
+        xstreamLimit.allowTypes(new Class[]{TestPerson.class, PhoneNumber.class});
+        xstreamLimit.alias("P1", TestPerson.class);
+
+        xstreamLimit.setMaxAllowedLimits(5, 5, 4);
+
+        try {
+            xstreamLimit.fromXML(xml);
+            fail("Expected XStreamException to be thrown");
+        } catch (Exception e) {
+            assertEquals(XStreamException.class, e.getCause().getClass());
+            assertEquals("Size of value longer than the maximum allowed size of 4", e.getCause().getMessage());
+        }
+    }
+
     public void testUnmarshalsObjectFromXmlWithUnderscores() {
         String xml =
                 "<u-u>" +
@@ -103,7 +202,7 @@ public class XStreamTest extends TestCase {
 
         assertEquals("custom value", u.a_Str);
     }
-    
+
     public static class U_U {
     	String aStr;
     }
@@ -316,7 +415,7 @@ public class XStreamTest extends TestCase {
 
     public void testPopulationOfThisAsRootObject()
             throws Exception {
-        
+
         String xml =""
                 + "<component>\n"
                 + "  <host>host</host>\n"
@@ -334,7 +433,7 @@ public class XStreamTest extends TestCase {
         assertEquals("host", component.host);
         assertEquals(8000, component.port);
     }
-    
+
     static class SelfSerializingComponent extends Component {
         String toXML(XStream xstream) {
             return xstream.toXML(this);

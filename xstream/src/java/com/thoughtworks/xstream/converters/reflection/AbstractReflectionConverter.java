@@ -18,6 +18,7 @@ import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.core.Caching;
 import com.thoughtworks.xstream.core.ReferencingMarshallingContext;
+import com.thoughtworks.xstream.core.SecurityUtils;
 import com.thoughtworks.xstream.core.util.ArrayIterator;
 import com.thoughtworks.xstream.core.util.Fields;
 import com.thoughtworks.xstream.core.util.HierarchicalStreams;
@@ -62,7 +63,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         serializationMethodInvoker = new SerializationMethodInvoker();
         serializationMembers = serializationMethodInvoker.serializationMembers;
     }
-    
+
     protected boolean canAccess(Class type) {
         try {
             reflectionProvider.getFieldOrNull(type, "%");
@@ -282,6 +283,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final UnmarshallingContext context) {
         final Class resultType = result.getClass();
         final MemberDictionary seenFields = new MemberDictionary();
+
+        SecurityUtils.checkDepthLimit(context,  reader);
+        SecurityUtils.checkFieldLimit(context, resultType.getDeclaredFields().length);
 
         // process attributes before recursing into child elements.
         Iterator it = reader.getAttributeNames();
