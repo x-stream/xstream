@@ -300,9 +300,9 @@ public class XStream {
     // self-serialization!
     private int collectionUpdateLimit = 20;
 
-    private int maxAllowedDepth = Integer.MAX_VALUE;
-    private int maxAllowedFields = Integer.MAX_VALUE;
-    private int maxAllowedValue = Integer.MAX_VALUE;
+    private int maxAllowedDepth = 1000;
+    private int maxAllowedFields = 1000;
+    private int maxAllowedValue = 50000;
 
     private ReflectionProvider reflectionProvider;
     private HierarchicalStreamDriver hierarchicalStreamDriver;

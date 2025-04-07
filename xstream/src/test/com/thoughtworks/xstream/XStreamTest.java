@@ -13,6 +13,7 @@ package com.thoughtworks.xstream;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.acceptance.objects.StandardObject;
+import com.thoughtworks.acceptance.someobjects.Employee;
 import com.thoughtworks.acceptance.someobjects.FunnyConstructor;
 import com.thoughtworks.acceptance.someobjects.Handler;
 import com.thoughtworks.acceptance.someobjects.HandlerManager;
@@ -134,6 +135,31 @@ public class XStreamTest extends TestCase {
         } catch (Exception e) {
             assertEquals(XStreamException.class, e.getCause().getClass());
             assertEquals("Encountered more fields than the maximum allowed size of 2", e.getCause().getMessage());
+        }
+    }
+
+    public void testUnmarshalObjectsWithFieldsLimitsFromSuperClass() {
+        String xml = "<com.thoughtworks.acceptance.someobjects.Employee>\n" +
+                "  <firstname>John</firstname>\n" +
+                "  <lastname>Doe</lastname>\n" +
+                "  <phone>\n" +
+                "    <code>123</code>\n" +
+                "    <number>6789</number>\n" +
+                "  </phone>\n" +
+                "  <employeeId>E123</employeeId>\n" +
+                "  <department>gPQR</department>\n" +
+                "</com.thoughtworks.acceptance.someobjects.Employee>";
+
+        XStream xstreamLimit = new XStream();
+        xstreamLimit.allowTypes(new Class[]{TestPerson.class, PhoneNumber.class, Employee.class});
+        xstreamLimit.setMaxAllowedLimits(5, 4, 5);
+
+        try {
+            xstreamLimit.fromXML(xml);
+            fail("Expected XStreamException to be thrown");
+        } catch (Exception e) {
+            assertEquals(XStreamException.class, e.getCause().getClass());
+            assertEquals("Encountered more fields than the maximum allowed size of 4", e.getCause().getMessage());
         }
     }
 

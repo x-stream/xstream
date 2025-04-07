@@ -61,9 +61,6 @@ public class SecurityUtils {
         if(reader.getLevel() > maxAllowedDepth) {
             throw new XStreamException("XML depth exceeds maximum allowed depth of " + maxAllowedDepth);
         }
-        if(reader.getNodeName().length() > 5) {
-            throw new XStreamException("Node name is too long " + reader.getNodeName());
-        }
     }
 
     public static void checkFieldLimit(final UnmarshallingContext context, int fieldsLength) {

@@ -284,8 +284,9 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final Class resultType = result.getClass();
         final MemberDictionary seenFields = new MemberDictionary();
 
-        SecurityUtils.checkDepthLimit(context,  reader);
-        SecurityUtils.checkFieldLimit(context, resultType.getDeclaredFields().length);
+        SecurityUtils.checkDepthLimit(context, reader);
+        int currentFieldCount = resultType.getDeclaredFields().length;
+        SecurityUtils.checkFieldLimit(context, currentFieldCount);
 
         // process attributes before recursing into child elements.
         Iterator it = reader.getAttributeNames();
@@ -421,6 +422,8 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
                             type = mapper.defaultImplementationOf(field.getType());
                         }
                         // TODO the reflection provider should already return the proper field
+                        currentFieldCount += 1;
+                        SecurityUtils.checkFieldLimit(context, currentFieldCount);
                         value = unmarshallField(context, result, type, field);
                         Class definedType = field.getType();
                         if (!definedType.isPrimitive()) {
