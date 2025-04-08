@@ -58,21 +58,21 @@ public class SecurityUtils {
 
     public static void checkDepthLimit(final UnmarshallingContext context, HierarchicalStreamReader reader) {
         Integer maxAllowedDepth = (Integer)context.get(XStream.MAX_ALLOWED_DEPTH);
-        if(reader.getLevel() > maxAllowedDepth) {
+        if(maxAllowedDepth != null && reader.getLevel() > maxAllowedDepth) {
             throw new XStreamException("XML depth exceeds maximum allowed depth of " + maxAllowedDepth);
         }
     }
 
     public static void checkFieldLimit(final UnmarshallingContext context, int fieldsLength) {
         Integer maxAllowedFields = (Integer)context.get(XStream.MAX_ALLOWED_FIELDS);
-        if(fieldsLength > maxAllowedFields) {
+        if(maxAllowedFields != null &&  fieldsLength > maxAllowedFields) {
             throw new XStreamException("Encountered more fields than the maximum allowed size of " + maxAllowedFields);
         }
     }
 
     public static void checkFieldValueLimit(final UnmarshallingContext context, String value) {
         Integer maxAllowedValue = (Integer)context.get(XStream.MAX_ALLOWED_VALUE);
-        if(value.length() > maxAllowedValue) {
+        if(maxAllowedValue != null && value.length() > maxAllowedValue) {
             throw new XStreamException("Size of value longer than the maximum allowed size of " + maxAllowedValue);
         }
     }
