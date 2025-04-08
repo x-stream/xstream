@@ -234,7 +234,7 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
         ois.close();
     }
 
-    public void testFailSafeDeserialization() throws IOException, ClassNotFoundException {
+    public void testFailSafeDeserializationWithHierarchicalStreamReader() throws IOException, ClassNotFoundException {
         final String xml = ""
                 + "<object-stream>\n"
                 + "  <string>top</string>\n"

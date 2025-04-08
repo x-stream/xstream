@@ -285,8 +285,7 @@ public abstract class AbstractReflectionConverter implements Converter, Caching 
         final MemberDictionary seenFields = new MemberDictionary();
 
         SecurityUtils.checkDepthLimit(context, reader);
-        int currentFieldCount = resultType.getDeclaredFields().length;
-        SecurityUtils.checkFieldLimit(context, currentFieldCount);
+        int currentFieldCount = 0;
 
         // process attributes before recursing into child elements.
         Iterator it = reader.getAttributeNames();
