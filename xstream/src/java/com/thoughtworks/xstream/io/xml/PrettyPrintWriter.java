@@ -24,8 +24,8 @@ import java.io.Writer;
  * By default, the chars <br>
  * <code>&amp; &lt; &gt; &quot; ' \r</code><br>
  * are escaped and replaced with a suitable XML entity. To alter this behavior, override the
- * {@link #writeText(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.RawWriter, String)} and
- * {@link #writeAttributeValue(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.RawWriter, String)} methods.
+ * {@link #writeText(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.PureWriter, String)} and
+ * {@link #writeAttributeValue(com.thoughtworks.xstream.io.xml.PrettyPrintWriter.PureWriter, String)} methods.
  * </p>
  * <p>
  * The XML specification requires XML parsers to drop CR characters completely. This implementation will therefore use
@@ -82,7 +82,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      *
      * @since upcoming
      */
-    public interface RawWriter {
+    public interface PureWriter {
         public void write(String str);
 
         public void write(char ch);
@@ -238,10 +238,6 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
         tagIsEmpty = true;
     }
 
-    public void startNode(String name, Class clazz) {
-        startNode(name);
-    }
-
     public void setValue(String text) {
         readyForNewLine = false;
         tagIsEmpty = false;
@@ -267,7 +263,7 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @param text the attribute's value
      * @since upcoming
      */
-    protected void writeAttributeValue(RawWriter writer, String text) {
+    protected void writeAttributeValue(PureWriter writer, String text) {
         writeText(text, true);
     }
 
@@ -279,22 +275,22 @@ public class PrettyPrintWriter extends AbstractXmlWriter {
      * @param text the text node's value
      * @since upcoming
      */
-    protected void writeText(RawWriter writer, String text) {
+    protected void writeText(PureWriter writer, String text) {
         writeText(text, false);
     }
 
     /**
-     * @deprecated as of upcoming, use {@link #writeAttributeValue(RawWriter, String)} instead
+     * @deprecated as of upcoming, use {@link #writeAttributeValue(PureWriter, String)} instead
      */
     protected void writeAttributeValue(QuickWriter writer, String text) {
-        writeAttributeValue((RawWriter)writer, text);
+        writeAttributeValue((PureWriter)writer, text);
     }
 
     /**
-     * @deprecated as of upcoming, use {@link #writeText(RawWriter, String)} instead
+     * @deprecated as of upcoming, use {@link #writeText(PureWriter, String)} instead
      */
     protected void writeText(QuickWriter writer, String text) {
-        writeText((RawWriter)writer, text);
+        writeText((PureWriter)writer, text);
     }
 
     private void writeText(String text, boolean isAttribute) {

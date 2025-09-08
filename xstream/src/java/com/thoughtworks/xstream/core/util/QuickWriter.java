@@ -17,7 +17,7 @@ import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import java.io.IOException;
 import java.io.Writer;
 
-public class QuickWriter implements PrettyPrintWriter.RawWriter {
+public class QuickWriter implements PrettyPrintWriter.PureWriter {
 
     private final Writer writer;
     private char[] buffer;
