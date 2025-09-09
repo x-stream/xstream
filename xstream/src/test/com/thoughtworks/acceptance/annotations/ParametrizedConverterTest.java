@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015, 2016, 2018 XStream Committers.
+ * Copyright (C) 2008, 2009, 2011, 2012, 2013, 2015, 2016, 2018, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -25,6 +25,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamConverters;
 import com.thoughtworks.xstream.annotations.XStreamInclude;
+import com.thoughtworks.xstream.converters.SingleValueConverter;
 import com.thoughtworks.xstream.converters.basic.BooleanConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.extended.NamedCollectionConverter;
@@ -117,7 +118,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
      * converterCache on AnnotationMapper is functioning properly.
      */
     public void testSameConverterWithDifferentType() {
-        final Type value = new Type(new Decimal("1.5"), new Boolean(true));
+        final Type value = new Type(new Decimal("1.5"), Boolean.TRUE);
         final String expected = ""
             + "<type>\n"
             + "  <decimal>1.5</decimal>\n"
@@ -137,6 +138,18 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         }
     }
 
+    public void testDerivedTypeWithParent() {
+        final Type value = new Type(new Decimal("1.5"), Boolean.TRUE);
+        final String expected = ""
+            + "<type>\n"
+            + "  <decimal>1.5</decimal>\n"
+            + "  <boolean>true</boolean>\n"
+            + "  <agreement>yes</agreement>\n"
+            + "</type>";
+
+        assertBothWays(value, expected);
+    }
+
     public static class Type {
         @XStreamConverter(ToStringConverter.class)
         private Decimal decimal = null;
@@ -154,7 +167,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterRequiringNull() {
-        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        final Type value = new DerivedType(new Decimal("1.5"), Boolean.TRUE, DerivedType.E.FOO);
         final String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
         assertBothWays(value, expected);
     }
@@ -168,7 +181,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterWithSecondTypeParameter() {
-        final Type value = new DerivedType(new Decimal("1.5"), new Boolean(true), DerivedType.E.FOO);
+        final Type value = new DerivedType(new Decimal("1.5"), Boolean.TRUE, DerivedType.E.FOO);
         final String expected = "<dtype boolean='true' agreement='yes' enum='FOO'>1.5</dtype>".replace('\'', '"');
         assertBothWays(value, expected);
     }
@@ -178,7 +191,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     public static class DerivedType extends Type {
         public enum E {
             FOO, BAR
-        };
+        }
 
         @XStreamAlias("enum")
         private final E e;
@@ -190,7 +203,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     }
 
     public void testConverterWithAllAttributes() {
-        final Type value = new DerivedType2(new Decimal("1.5"), new Boolean(true), DerivedType2.E.FOO);
+        final Type value = new DerivedType2(new Decimal("1.5"), Boolean.TRUE, DerivedType2.E.FOO);
         final String expected = "<dtype2 decimal='1.5' boolean='true' agreement='yes' enum='FOO'/>".replace('\'', '"');
         assertBothWays(value, expected);
     }
@@ -200,7 +213,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     public static class DerivedType2 extends Type {
         public enum E {
             FOO, BAR
-        };
+        }
 
         @XStreamAlias("enum")
         private final E e;
@@ -258,7 +271,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
 
         public enum E {
             FOO, BAR
-        };
+        }
 
         @XStreamConverter(value = NamedMapConverter.class, strings = {"issue", "key", ""}, types = {
             MyEnumMap.class, E.class, String.class}, booleans = {true, false}, useImplicitType = false)
@@ -276,7 +289,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
         map.put("FOO", "foo");
         map.put("BAR", "bar");
         final ContainsMap2 value = new ContainsMap2(map);
-        final String expected = (""
+        final String expected = ""
             + "<container-map>\n"
             + "  <map>\n"
             + "    <key>FOO</key>\n"
@@ -284,7 +297,7 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
             + "    <key>BAR</key>\n"
             + "    <value>bar</value>\n"
             + "  </map>\n"
-            + "</container-map>").replace('\'', '"');
+            + "</container-map>";
         assertBothWays(value, expected);
     }
 
@@ -308,14 +321,14 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
     public void testAnnotatedNamedCollectionConverter() {
         final List<String> names = new ArrayList<>(Arrays.asList("joe", "joerg", "mauro"));
         final ContainsCollection container = new ContainsCollection(names);
-        final String expected = (""
+        final String expected = ""
             + "<CollCont>\n"
             + "  <names>\n"
             + "    <name>joe</name>\n"
             + "    <name>joerg</name>\n"
             + "    <name>mauro</name>\n"
             + "  </names>\n"
-            + "</CollCont>").replace('\'', '"');
+            + "</CollCont>";
         assertBothWays(container, expected);
     }
 
@@ -330,4 +343,52 @@ public class ParametrizedConverterTest extends AbstractAcceptanceTest {
             this.names = names;
         }
     }
+
+    public void testAnnotatedConverterFromBaseClass() {
+        xstream.processAnnotations(DerivedBase.class);
+
+        final List<Base> list = new ArrayList<>();
+        list.add(new DerivedBase());
+        final String expected = "" //
+            + "<list>\n"
+            + "  <dbase>DB</dbase>\n"
+            + "</list>";
+        assertBothWays(list, expected);
+    }
+
+    public void testAutoDetectedAnnotatedConverterFromBaseClass() {
+        xstream.autodetectAnnotations(true);
+
+        final List<Base> list = new ArrayList<>();
+        list.add(new DerivedBase());
+        final String expected = "" //
+            + "<list>\n"
+            + "  <dbase>DB</dbase>\n"
+            + "</list>";
+        assertBothWays(list, expected);
+    }
+
+    public static class BaseConverter implements SingleValueConverter {
+
+        @Override
+        public boolean canConvert(final Class<?> type) {
+            return Base.class.isAssignableFrom(type);
+        }
+
+        @Override
+        public String toString(final Object obj) {
+            return obj instanceof DerivedBase ? "DB" : "B";
+        }
+
+        @Override
+        public Object fromString(final String str) {
+            return str.equals("DB") ? new DerivedBase() : new Base();
+        }
+    }
+
+    @XStreamConverter(BaseConverter.class)
+    public static class Base {}
+
+    @XStreamAlias("dbase")
+    public static class DerivedBase extends Base {}
 }
