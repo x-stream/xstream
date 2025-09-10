@@ -123,7 +123,7 @@
       </activation>
       <properties>
         <version.hsqldb>1.8.0.10</version.hsqldb>
-        <version.org.hibernate.core>3.6.6.Final</version.org.hibernate.core>
+        <version.org.hibernate.core>3.6.10.Final</version.org.hibernate.core>
       </properties>
     </profile>
     <profile>
@@ -140,7 +140,7 @@
         <!-- repeat Hibernate version dependencies, JDK intervals in activation is not supported with M2.0.x -->
         <version.hsqldb>1.8.0.10</version.hsqldb>
         <version.org.hibernate.core>3.3.2.GA</version.org.hibernate.core>
-        <version.org.hibernate.envers>3.6.6.Final</version.org.hibernate.envers><!-- not usable with JDK 1.4 -->
+        <version.org.hibernate.envers>3.6.10.Final</version.org.hibernate.envers><!-- not usable with JDK 1.4 -->
       </properties>
     </profile>
     <profile>
