@@ -888,6 +888,10 @@
                 <name>java.awt.headless</name>
                 <value>true</value>
               </property>
+              <property>
+                <name>skipDoSAttackTests</name>
+                <value>${surefire.skipDoSAttackTests}</value>
+              </property>
             </systemProperties>
           </configuration>
         </plugin>
@@ -1136,6 +1140,7 @@
     <jar.module.name>${project.artifactId}</jar.module.name>
     <javadoc.java.release>17</javadoc.java.release>
     <javadoc.link.javase>https://docs.oracle.com/en/java/javase/${javadoc.java.release}/docs/api/</javadoc.link.javase>
+    <surefire.skipDoSAttackTests>false</surefire.skipDoSAttackTests>
 
     <argLine>${surefire.argline}</argLine>
     <javadoc.doclint>-missing</javadoc.doclint>
