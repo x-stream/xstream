@@ -1029,6 +1029,10 @@
                 <name>java.awt.headless</name>
                 <value>true</value>
               </property>
+              <property>
+                <name>skipDoSAttackTests</name>
+                <value>${surefire.skipDoSAttackTests}</value>
+              </property>
             </systemProperties>
           </configuration>
         </plugin>
@@ -1215,6 +1219,7 @@
 
     <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
     <surefire.illegal.access>permit</surefire.illegal.access>
+    <surefire.skipDoSAttackTests>false</surefire.skipDoSAttackTests>
 
     <argLine>${surefire.argline}</argLine>
     <javadoc.xdoclint />
