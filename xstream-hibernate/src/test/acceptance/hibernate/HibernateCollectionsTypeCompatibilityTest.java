@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -51,12 +51,13 @@ public class HibernateCollectionsTypeCompatibilityTest extends AbstractHibernate
     public void testPersistentSortedSet() {
         assertXmlEquals(new TreeSet(), newHibernateCollection(Hibernate.PersistentSortedSet, new TreeSet()));
     }
-    
+
     private Object newHibernateCollection(Class type, Object secondArg) {
         Object instance = null;
         Constructor[] ctors = type.getConstructors();
-        for(int i = 0; i < ctors.length; ++i) {
-            if (ctors[i].getParameterTypes().length == 2) {
+        for (int i = 0; i < ctors.length; ++i) {
+            if (ctors[i].getParameterTypes().length == 2
+                && ctors[i].getParameterTypes()[1].isAssignableFrom(secondArg.getClass())) {
                 try {
                     instance = ctors[i].newInstance(new Object[]{null, secondArg});
                 } catch (InstantiationException e) {
