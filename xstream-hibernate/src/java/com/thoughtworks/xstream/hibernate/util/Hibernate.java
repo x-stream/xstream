@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012, 2013, 2014, 2018 XStream Committers.
+ * Copyright (C) 2012, 2013, 2014, 2018, 2025 XStream Committers.
  * All rights reserved.
  *
  * Created on 08.06.2012 by Joerg Schaible
@@ -17,35 +17,49 @@ import org.hibernate.proxy.HibernateProxy;
  */
 public class Hibernate {
     /** <code>PersistentBag</code> contains Hibernate's PersistenBag class type. */
-    public final static Class<?> PersistentBag = loadHibernateType("org.hibernate.collection.internal.PersistentBag");
+    public final static Class<?> PersistentBag = loadHibernateType("org.hibernate.collection.spi.PersistentBag");
     /** <code>PersistentList</code> contains Hibernate's PersistenList class type. */
-    public final static Class<?> PersistentList = loadHibernateType("org.hibernate.collection.internal.PersistentList");
+    public final static Class<?> PersistentList = loadHibernateType("org.hibernate.collection.spi.PersistentList");
     /** <code>PersistentMap</code> contains Hibernate's PersistenMap class type. */
-    public final static Class<?> PersistentMap = loadHibernateType("org.hibernate.collection.internal.PersistentMap");
+    public final static Class<?> PersistentMap = loadHibernateType("org.hibernate.collection.spi.PersistentMap");
     /** <code>PersistentSet</code> contains Hibernate's PersistenSet class type. */
-    public final static Class<?> PersistentSet = loadHibernateType("org.hibernate.collection.internal.PersistentSet");
+    public final static Class<?> PersistentSet = loadHibernateType("org.hibernate.collection.spi.PersistentSet");
     /** <code>PersistentSortedMap</code> contains Hibernate's PersistenSortedMap class type. */
-    public final static Class<?> PersistentSortedMap = loadHibernateType("org.hibernate.collection.internal.PersistentSortedMap");
+    public final static Class<?> PersistentSortedMap = loadHibernateType(
+        "org.hibernate.collection.spi.PersistentSortedMap");
     /** <code>PersistentSortedSet</code> contains Hibernate's PersistenSortedSet class type. */
-    public final static Class<?> PersistentSortedSet = loadHibernateType("org.hibernate.collection.internal.PersistentSortedSet");
+    public final static Class<?> PersistentSortedSet = loadHibernateType(
+        "org.hibernate.collection.spi.PersistentSortedSet");
     /** <code>EnversList</code> contains the ListProxy class type for Hibernate Envers. */
-    public final static Class<?> EnversList = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.ListProxy");
+    public final static Class<?> EnversList = loadHibernateEnversType(
+        "org.hibernate.envers.entities.mapper.relation.lazy.proxy.ListProxy");
     /** <code>EnversMap</code> contains the MapProxy class type for Hibernate Envers. */
-    public final static Class<?> EnversMap = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.MapProxy");
+    public final static Class<?> EnversMap = loadHibernateEnversType(
+        "org.hibernate.envers.entities.mapper.relation.lazy.proxy.MapProxy");
     /** <code>EnversSet</code> contains the SetProxy class type for Hibernate Envers. */
-    public final static Class<?> EnversSet = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SetProxy");
+    public final static Class<?> EnversSet = loadHibernateEnversType(
+        "org.hibernate.envers.entities.mapper.relation.lazy.proxy.SetProxy");
     /** <code>EnversSortedMap</code> contains the SortedMapProxy class type for Hibernate Envers. */
-    public final static Class<?> EnversSortedMap = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedMapProxy");
+    public final static Class<?> EnversSortedMap = loadHibernateEnversType(
+        "org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedMapProxy");
     /** <code>EnversSortedSet</code> contains the SortedSetProxy class type for Hibernate Envers. */
-    public final static Class<?> EnversSortedSet = loadHibernateEnversType("org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedSetProxy");
+    public final static Class<?> EnversSortedSet = loadHibernateEnversType(
+        "org.hibernate.envers.entities.mapper.relation.lazy.proxy.SortedSetProxy");
 
     private static Class<?> loadHibernateType(final String name) {
         Class<?> type = null;
         try {
             try {
-                type = HibernateProxy.class.getClassLoader().loadClass(name);
-            } catch (final ClassNotFoundException e) {
-                type = HibernateProxy.class.getClassLoader().loadClass(name.replaceFirst("\\.internal\\.", "."));
+                try {
+                    type = HibernateProxy.class.getClassLoader().loadClass(name);
+                } catch (ClassNotFoundException e) {
+                    // test Hibernate version 5.x
+                    type = HibernateProxy.class.getClassLoader().loadClass(name.replaceFirst("\\.spi\\.",
+                        ".internal."));
+                }
+            } catch (ClassNotFoundException e) {
+                // test Hibernate version 3.x
+                type = HibernateProxy.class.getClassLoader().loadClass(name.replaceFirst("\\.spi\\.", "."));
             }
         } catch (final ClassNotFoundException e) {
             // not available

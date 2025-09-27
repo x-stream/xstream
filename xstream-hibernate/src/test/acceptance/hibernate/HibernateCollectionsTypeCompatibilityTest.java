@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2018 XStream Committers.
+ * Copyright (C) 2011, 2012, 2018, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -29,39 +29,40 @@ import com.thoughtworks.xstream.hibernate.util.Hibernate;
 public class HibernateCollectionsTypeCompatibilityTest extends AbstractHibernateAcceptanceTest {
 
     public void testPersistentBag() {
-        assertXmlEquals(new ArrayList<Object>(), newHibernateCollection(Hibernate.PersistentBag, Collections
+        assertXmlEquals(new ArrayList<>(), newHibernateCollection(Hibernate.PersistentBag, Collections
             .emptyList()));
     }
 
     public void testPersistentList() {
-        assertXmlEquals(new ArrayList<Object>(), newHibernateCollection(Hibernate.PersistentList, Collections
+        assertXmlEquals(new ArrayList<>(), newHibernateCollection(Hibernate.PersistentList, Collections
             .emptyList()));
     }
 
     public void testPersistentMap() {
-        assertXmlEquals(new HashMap<Object, Object>(), newHibernateCollection(Hibernate.PersistentMap, Collections
+        assertXmlEquals(new HashMap<>(), newHibernateCollection(Hibernate.PersistentMap, Collections
             .emptyMap()));
     }
 
     public void testPersistentSet() {
-        assertXmlEquals(new HashSet<Object>(), newHibernateCollection(Hibernate.PersistentSet, Collections.emptySet()));
+        assertXmlEquals(new HashSet<>(), newHibernateCollection(Hibernate.PersistentSet, Collections.emptySet()));
     }
 
     public void testPersistentSortedMap() {
-        assertXmlEquals(new TreeMap<Object, Object>(), newHibernateCollection(Hibernate.PersistentSortedMap,
-            new TreeMap<Object, Object>()));
+        assertXmlEquals(new TreeMap<>(), newHibernateCollection(Hibernate.PersistentSortedMap,
+            new TreeMap<>()));
     }
 
     public void testPersistentSortedSet() {
-        assertXmlEquals(new TreeSet<Object>(), newHibernateCollection(Hibernate.PersistentSortedSet,
-            new TreeSet<Object>()));
+        assertXmlEquals(new TreeSet<>(), newHibernateCollection(Hibernate.PersistentSortedSet,
+            new TreeSet<>()));
     }
 
     private Object newHibernateCollection(final Class<?> type, final Object secondArg) {
         Object instance = null;
         final Constructor<?>[] ctors = type.getConstructors();
         for (final Constructor<?> ctor : ctors) {
-            if (ctor.getParameterTypes().length == 2) {
+            if (ctor.getParameterTypes().length == 2
+                && ctor.getParameterTypes()[1].isAssignableFrom(secondArg.getClass())) {
                 try {
                     instance = ctor.newInstance(null, secondArg);
                 } catch (final InstantiationException e) {

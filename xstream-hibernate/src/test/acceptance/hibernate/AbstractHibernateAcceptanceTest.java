@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2018 XStream Committers.
+ * Copyright (C) 2011, 2018, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -12,7 +12,6 @@ package acceptance.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.internal.BootstrapServiceRegistryImpl;
 
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 import com.thoughtworks.xstream.XStream;
