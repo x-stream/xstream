@@ -24,6 +24,15 @@
 
   <profiles>
     <profile>
+      <id>jdk11-ge-jdk16</id>
+      <activation>
+        <jdk>[11,17)</jdk>
+      </activation>
+      <properties>
+        <version.org.hibernate.orm.core>6.6.28.Final</version.org.hibernate.orm.core>
+      </properties>
+    </profile>
+    <profile>
       <id>jdk11-ge</id>
       <activation>
         <jdk>[11,)</jdk>
@@ -239,7 +248,7 @@
   </dependencies>
 
   <properties>
-    <bundle.version.hibernate>[3,7)</bundle.version.hibernate>
+    <bundle.version.hibernate>[3,8)</bundle.version.hibernate>
     <bundle.export.package>!com.thoughtworks.xstream.hibernate.util,com.thoughtworks.xstream.hibernate.*;-noimport:=true</bundle.export.package>
     <bundle.import.package>
         org.hibernate.proxy;resolution:=optional;version="${bundle.version.hibernate}",

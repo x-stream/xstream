@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012 XStream Committers.
+ * Copyright (C) 2011, 2012, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -17,6 +17,8 @@ import acceptance.hibernate.reference.Division;
 import acceptance.hibernate.reference.Person;
 import acceptance.hibernate.reference.Site;
 
+import java.lang.reflect.Method;
+
 import org.hibernate.Session;
 import org.hibernate.proxy.HibernateProxy;
 
@@ -26,6 +28,38 @@ import org.hibernate.proxy.HibernateProxy;
  * @author J&ouml;rg Schaible
  */
 public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
+
+    private final static Method persist;
+    private final static Method remove;
+    static {
+        Method method;
+        try {
+            method = Session.class.getMethod("save", new Class[]{Object.class});
+        } catch (Exception e1) {
+            try {
+                // Available since Hibernate 6.0
+                method = Session.class.getMethod("persist", new Class[]{Object.class});
+            } catch (Exception e2) {
+                throw new ExceptionInInitializerError("Cannot find method in "
+                    + Session.class.getName()
+                    + " to persist/save objects");
+            }
+        }
+        persist = method;
+        try {
+            method = Session.class.getMethod("delete", new Class[]{Object.class});
+        } catch (Exception e1) {
+            try {
+                // Available since Hibernate 6.0
+                method = Session.class.getMethod("remove", new Class[]{Object.class});
+            } catch (Exception e2) {
+                throw new ExceptionInInitializerError("Cannot find method in "
+                    + Session.class.getName()
+                    + " to remove/delete objects");
+            }
+        }
+        remove = method;
+    }
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -42,14 +76,14 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
             final Session session = getSessionFactory().getCurrentSession();
             session.beginTransaction();
             final Division div = (Division)session.createQuery("from Division").uniqueResult();
-            session.delete(div);
+            remove.invoke(session, new Object[]{div});
             session.getTransaction().commit();
-        } catch (RuntimeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void testObjectGraphWithReferences() {
+    public void testObjectGraphWithReferences() throws Exception {
         final Division memory = setupNonpersistentDivision();
         final Division persisted = setupPersistentDivision();
 
@@ -66,7 +100,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         assertEquals(expectedXml, loadedXml);
     }
 
-    public void testLazyProxyWithReferences() {
+    public void testLazyProxyWithReferences() throws Exception {
         setupPersistentDivision();
 
         final Session session = getSessionFactory().getCurrentSession();
@@ -108,21 +142,18 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
     /**
      * Create the object within a Hibernate session and persist it.
      */
-    private Division setupPersistentDivision() {
+    private Division setupPersistentDivision() throws Exception {
         final Session session = getSessionFactory().getCurrentSession();
         session.beginTransaction();
         final Division div = new Division("Div1");
         final Department dep = new Department("Dep1", div);
         final Site site = new Site("Site1");
-        /*
-         * This save is necessitated by the fact that Hibernate's transitive persistence is
-         * depth-first and does not do a full graph analysis. Therefore it would be possible for
-         * Hibernate to try to save the person record before the site record, which would throw
-         * an error if the person.site FK is non-nullable.
-         */
-        session.save(site);
+        /* This save is necessitated by the fact that Hibernate's transitive persistence is depth-first and does not do
+         * a full graph analysis. Therefore it would be possible for Hibernate to try to save the person record before
+         * the site record, which would throw an error if the person.site FK is non-nullable. */
+        persist.invoke(session, new Object[]{site});
         new Person("Tom", dep, site);
-        session.save(div);
+        persist.invoke(session, new Object[]{div});
         session.flush();
         session.getTransaction().commit();
         return div;
