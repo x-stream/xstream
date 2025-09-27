@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011, 2012, 2018 XStream Committers.
+ * Copyright (C) 2011, 2012, 2018, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -44,7 +44,7 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
             final Session session = getSessionFactory().getCurrentSession();
             session.beginTransaction();
             final Division div = (Division)session.createQuery("from Division").uniqueResult();
-            session.delete(div);
+            session.remove(div);
             session.getTransaction().commit();
         } catch (final RuntimeException e) {
             e.printStackTrace();
@@ -119,9 +119,9 @@ public class HibernateReferenceTest extends AbstractHibernateAcceptanceTest {
         /* This save is necessitated by the fact that Hibernate's transitive persistence is depth-first and does not do
          * a full graph analysis. Therefore it would be possible for Hibernate to try to save the person record before
          * the site record, which would throw an error if the person.site FK is non-nullable. */
-        session.save(site);
+        session.persist(site);
         new Person("Tom", dep, site);
-        session.save(div);
+        session.persist(div);
         session.flush();
         session.getTransaction().commit();
         return div;
