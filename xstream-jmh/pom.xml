@@ -50,9 +50,9 @@
             </configuration>
             <dependencies>
               <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-                <version>${version.jakarta.annotation.api}</version>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${version.javax.annotation.api}</version>
               </dependency>
             </dependencies>
           </plugin>
@@ -168,8 +168,8 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
     </dependency>
   </dependencies>
   <properties>

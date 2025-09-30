@@ -100,13 +100,13 @@
     </dependency>
 
     <dependency>
-      <groupId>jakarta.activation</groupId>
-      <artifactId>jakarta.activation-api</artifactId>
+      <groupId>javax.activation</groupId>
+      <artifactId>javax.activation-api</artifactId>
       <optional>true</optional>
     </dependency>
     <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
+      <groupId>javax.xml.bind</groupId>
+      <artifactId>jaxb-api</artifactId>
       <scope>provided</scope><!-- only required for compilation with Java 11 or higher, but only used by Java 7 or below -->
     </dependency>
 
@@ -386,9 +386,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <dependencies>
               <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-                <version>${version.jakarta.xml.bind.api}</version>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${version.javax.xml.bind.api}</version>
               </dependency>
             </dependencies>
           </plugin>
