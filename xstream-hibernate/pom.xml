@@ -177,6 +177,9 @@
           <scope>provided</scope>
         </dependency>
       </dependencies>
+      <properties>
+        <version.plugin.maven.compiler>2.1</version.plugin.maven.compiler>
+      </properties>
     </profile>
   </profiles>
 
