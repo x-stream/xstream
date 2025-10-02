@@ -1164,7 +1164,7 @@
 
     <version.plugin.codehaus.xsite>1.3</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>2.3.7</version.plugin.felix.bundle>
-    <version.plugin.maven.antrun>1.1</version.plugin.maven.antrun>
+    <version.plugin.maven.antrun>1.6</version.plugin.maven.antrun><!-- JDK 1.4 compatible -->
     <version.plugin.maven.assembly>2.1</version.plugin.maven.assembly>
     <version.plugin.maven.clean>2.2</version.plugin.maven.clean>
     <version.plugin.maven.compiler>2.1</version.plugin.maven.compiler><!-- JDK 1.4 compatible -->
