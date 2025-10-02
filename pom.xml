@@ -542,6 +542,12 @@
         <groupId>com.sun.xml.ws</groupId>
         <artifactId>jaxws-rt</artifactId>
         <version>${version.javax.xml.ws.jaxws.rt}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
