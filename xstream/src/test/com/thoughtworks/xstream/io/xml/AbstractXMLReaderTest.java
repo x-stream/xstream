@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 07. March 2004 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -32,43 +32,52 @@ public abstract class AbstractXMLReaderTest extends TestCase {
     public void testCanNavigateDownChildTagsByIndex() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<a><b><ooh/></b><b><aah/></b></a>");
 
+        assertEquals(1, xmlReader.getLevel());
         assertEquals("a", xmlReader.getNodeName());
 
         assertTrue(xmlReader.hasMoreChildren());
 
         xmlReader.moveDown(); // /a/b
 
+        assertEquals(2, xmlReader.getLevel());
         assertEquals("b", xmlReader.getNodeName());
 
         assertTrue(xmlReader.hasMoreChildren());
 
         xmlReader.moveDown(); // a/b/ooh
+        assertEquals(3, xmlReader.getLevel());
         assertEquals("ooh", xmlReader.getNodeName());
         assertFalse(xmlReader.hasMoreChildren());
         xmlReader.moveUp(); // a/b
 
+        assertEquals(2, xmlReader.getLevel());
         assertFalse(xmlReader.hasMoreChildren());
 
         xmlReader.moveUp(); // /a
 
+        assertEquals(1, xmlReader.getLevel());
         assertTrue(xmlReader.hasMoreChildren());
 
         xmlReader.moveDown(); // /a/b[2]
 
+        assertEquals(2, xmlReader.getLevel());
         assertEquals("b", xmlReader.getNodeName());
 
         assertTrue(xmlReader.hasMoreChildren());
 
         xmlReader.moveDown(); // a/b[2]/aah
 
+        assertEquals(3, xmlReader.getLevel());
         assertEquals("aah", xmlReader.getNodeName());
         assertFalse(xmlReader.hasMoreChildren());
 
         xmlReader.moveUp(); // a/b[2]
 
+        assertEquals(2, xmlReader.getLevel());
         assertFalse(xmlReader.hasMoreChildren());
 
         xmlReader.moveUp(); // a
+        assertEquals(1, xmlReader.getLevel());
 
         assertFalse(xmlReader.hasMoreChildren());
     }
@@ -176,7 +185,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         }
         assertEquals(expected, actual);
 
-        // again, to check iteration is repeatable 
+        // again, to check iteration is repeatable
         iterator = xmlReader.getAttributeNames();
         while(iterator.hasNext()) {
             actual.add(iterator.next());
@@ -219,6 +228,8 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         assertEquals("hello", xmlReader.getValue());
         xmlReader.moveDown();
         assertEquals("FNARR", xmlReader.getValue());
+        xmlReader.moveUp();
+        xmlReader.close();
     }
 
     public void testCanReadLineFeedInString() throws Exception {
@@ -241,7 +252,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
         HierarchicalStreamReader xmlReader = createReader("<string><![CDATA[" + content + "]]></string>");
         assertEquals(content, xmlReader.getValue());
     }
-    
+
     public void testIsXXEVulnerableWithExternalGeneralEntity() throws Exception {
         HierarchicalStreamReader xmlReader = createReader(""
                 + "<?xml version=\"1.0\"?>\n"
@@ -253,7 +264,7 @@ public abstract class AbstractXMLReaderTest extends TestCase {
                 +"]><string>&content;</string>");
         assertEquals("", xmlReader.getValue());
     }
-    
+
     public void testIsXXEVulnerableWithExternalParameterEntity() throws Exception {
         HierarchicalStreamReader xmlReader = createReader(""
             + "<?xml version=\"1.0\"?>\n"
@@ -266,7 +277,37 @@ public abstract class AbstractXMLReaderTest extends TestCase {
                 +"]><string>test</string>");
         assertEquals("test", xmlReader.getValue());
     }
-    
+
+    public void testCanSkipStructures() throws Exception {
+        HierarchicalStreamReader xmlReader = createReader("<a><b1><c><string><![CDATA[skip]]></string></c></b1><b2><aah/></b2><b3>OK</b3></a>");
+        xmlReader.moveDown();
+        xmlReader.moveDown();
+        assertEquals("c", xmlReader.getNodeName());
+        assertEquals(3, xmlReader.getLevel());
+
+        xmlReader.moveUp();
+        assertEquals(2, xmlReader.getLevel());
+        xmlReader.moveUp();
+        assertEquals(1, xmlReader.getLevel());
+
+        xmlReader.moveDown();
+        assertEquals("b2", xmlReader.getNodeName());
+        assertEquals(2, xmlReader.getLevel());
+
+        xmlReader.moveUp();
+        assertEquals(1, xmlReader.getLevel());
+
+        xmlReader.moveDown();
+        assertEquals("b3", xmlReader.getNodeName());
+        assertEquals(2, xmlReader.getLevel());
+        assertEquals("OK", xmlReader.getValue());
+
+        xmlReader.moveUp();
+        assertEquals(1, xmlReader.getLevel());
+
+        xmlReader.close();
+    }
+
     // TODO: See XSTR-473
     public void todoTestCanReadNullValueInString() throws Exception {
         HierarchicalStreamReader xmlReader = createReader("<string>&#x0;</string>");
