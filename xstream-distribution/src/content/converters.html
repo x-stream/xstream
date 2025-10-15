@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022, 2024 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022, 2024, 2025 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -29,7 +29,7 @@
         and Dates.  The following table lists any converter delivered with XStream and documents, if they are
         registered by default with which priority.</p>
 
-		
+        
         <table class="examplesTable" summary="Overview over all Converters delivered with XStream">
             <!-- .................................................................................................. -->
             <tr>
@@ -496,9 +496,9 @@
                 <td>java.util.regex.Pattern</td>
                 <td class="example">
                 &lt;java.util.regex.Pattern&gt;<br/>
-				&nbsp;&nbsp;&lt;pattern&gt;.*&lt;/pattern&gt;<br/>
-				&nbsp;&nbsp;&lt;flags&gt;0&lt;/flags&gt;<br/>
-				&lt;/java.util.regex.Pattern&gt;
+                &nbsp;&nbsp;&lt;pattern&gt;.*&lt;/pattern&gt;<br/>
+                &nbsp;&nbsp;&lt;flags&gt;0&lt;/flags&gt;<br/>
+                &lt;/java.util.regex.Pattern&gt;
                 </td>
                 <td>Available with Java 1.4 or higher.</td>
                 <td>normal</td>
@@ -776,11 +776,11 @@
                 <td>java.time.temporal.ValueRange</td>
                 <td class="example">
                 &lt;temporal-value-range&gt;<br/>
-				&nbsp;&nbsp;&lt;maxLargest&gt;45&lt;/maxLargest&gt;<br/>
-				&nbsp;&nbsp;&lt;maxSmallest&gt;30&lt;/maxSmallest&gt;<br/>
-				&nbsp;&nbsp;&lt;minLargest&gt;1&lt;/minLargest&gt;<br/>
-				&nbsp;&nbsp;&lt;minSmallest&gt;0&lt;/minSmallest&gt;<br/>
-				&lt;/temporal-value-range&gt;
+                &nbsp;&nbsp;&lt;maxLargest&gt;45&lt;/maxLargest&gt;<br/>
+                &nbsp;&nbsp;&lt;maxSmallest&gt;30&lt;/maxSmallest&gt;<br/>
+                &nbsp;&nbsp;&lt;minLargest&gt;1&lt;/minLargest&gt;<br/>
+                &nbsp;&nbsp;&lt;minSmallest&gt;0&lt;/minSmallest&gt;<br/>
+                &lt;/temporal-value-range&gt;
                 </td>
                 <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
@@ -790,9 +790,9 @@
                 <td>java.time.temporal.WeekFields</td>
                 <td class="example">
                 &lt;week-fields&gt;<br/>
-				&nbsp;&nbsp;&lt;minimalDays&gt;2&lt;/minimalDays&gt;<br/>
-				&nbsp;&nbsp;&lt;firstDayOfWeek&gt;MONDAY&lt;/firstDayOfWeek&gt;<br/>
-				&lt;/week-fields&gt;
+                &nbsp;&nbsp;&lt;minimalDays&gt;2&lt;/minimalDays&gt;<br/>
+                &nbsp;&nbsp;&lt;firstDayOfWeek&gt;MONDAY&lt;/firstDayOfWeek&gt;<br/>
+                &lt;/week-fields&gt;
                 </td>
                 <td>Available with Java 8 or higher.</td>
                 <td>normal</td>
@@ -1087,6 +1087,36 @@
                 <b>Warning:</b> The AWT toolkit is definitely initialized when a TextAttribute is deserialized.</td>
                 <td>normal</td>
             </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="jakarta.activation">jakarta.activation</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/ActivationDataFlavorJakartaConverter.html">ActivationDataFlavorJakartaConverter</a></td>
+                <td>javax.activation.ActivationDataJakartaFlavor</td>
+                <td class="example">
+                    &lt;activation-data-flavor&gt;<br/>
+                    &nbsp;&nbsp;&lt;mimeType&gt;application/x-junit&lt;/mimeType&gt;<br/>
+                    &nbsp;&nbsp;&lt;humanRepresentableName&gt;JUnit&lt;/humanRepresentableName&gt;<br/>
+                    &nbsp;&nbsp;&lt;representationClass&gt;java.io.InputStream&lt;/representationClass&gt;<br/>
+                    &lt;/activation-data-flavor&gt;
+                </td>
+                <td>
+                    Available with Java 8 or higher. Requires module <em>jakarta.activation</em>.  The alias
+                    <i>activation-data-flavor</i> for <i>jakarta.activation.ActivationDataFlavorJakartaConverter</i>
+                    has precedence over the one for <i>javax.activation.ActivationDataFlavorJakartaConverter</i>,
+                    see <a href="faq.html#Serialization_ActivationDataFlavor_javax_jakarta">FAQ</a>.
+                </td>
+                <td>normal</td>
+            </tr>
             
             <!-- .................................................................................................. -->
             <tr>
@@ -1109,7 +1139,12 @@
                     &nbsp;&nbsp;&lt;representationClass&gt;java.io.InputStream&lt;/representationClass&gt;<br/>
                     &lt;/activation-data-flavor&gt;
                 </td>
-                <td>Available with Java 6, 7 and 8. Requires module <em>java.activation</em> with Java 9 or higher.<br/>
+                <td>
+                    Available with Java 6, 7 and 8. Requires module <em>java.activation</em> with Java 9 or higher. The
+                    alias <i>activation-data-flavor</i> for <i>jakarta.activation.ActivationDataFlavorJakartaConverter</i>
+                    has precedence over the one for <i>javax.activation.ActivationDataFlavorJakartaConverter</i>,
+                    see <a href="faq.html#Serialization_ActivationDataFlavor_javax_jakarta">FAQ</a>.
+                </td>
                 <td>normal</td>
             </tr>
             
@@ -1147,12 +1182,12 @@
                 <td><a href="javadoc/com/thoughtworks/xstream/converters/extended/SubjectConverter.html">SubjectConverter</a></td>
                 <td>javax.security.auth.Subject</td>
                 <td class="example">
-                &lt;auth-subject&gt;<br/>
-				&nbsp;&nbsp;&lt;principals&gt;<br/>
-				&nbsp;&nbsp;&nbsp;&nbsp;&lt;com.thoughtworks.xstream.Admin/&gt;<br/>
-				&nbsp;&nbsp;&lt;/principals&gt;<br/>
-				&nbsp;&nbsp;&lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
-				&lt;/auth-subject&gt;<br/>
+                    &lt;auth-subject&gt;<br/>
+                    &nbsp;&nbsp;&lt;principals&gt;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&lt;com.thoughtworks.xstream.Admin/&gt;<br/>
+                    &nbsp;&nbsp;&lt;/principals&gt;<br/>
+                    &nbsp;&nbsp;&lt;readOnly&gt;false&lt;/readOnly&gt;<br/>
+                    &lt;/auth-subject&gt;<br/>
                 </td>
                 <td>Available with Java 1.4 or higher. This converter does not serialize any credentials but only the principals.</td>
                 <td>normal</td>

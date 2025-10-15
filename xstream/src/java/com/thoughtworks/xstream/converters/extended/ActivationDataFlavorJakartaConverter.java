@@ -1,16 +1,16 @@
 /*
- * Copyright (C) 2015, 2025 XStream Committers.
+ * Copyright (C) 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 21. June 2015 by Joerg Schaible
+ * Created on 15. October 2025 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import javax.activation.ActivationDataFlavor;
+import jakarta.activation.ActivationDataFlavor;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -24,9 +24,9 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * Converts an {@link ActivationDataFlavor}.
  *
  * @author J&ouml;rg Schaible
- * @since 1.4.9
+ * @since upcoming
  */
-public class ActivationDataFlavorConverter implements Converter {
+public class ActivationDataFlavorJakartaConverter implements Converter {
 
     public boolean canConvert(final Class type) {
         return type == ActivationDataFlavor.class;

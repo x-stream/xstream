@@ -290,6 +290,13 @@
       <activation>
         <jdk>[1.8,)</jdk>
       </activation>
+      <dependencies>
+        <dependency>
+          <groupId>jakarta.activation</groupId>
+          <artifactId>jakarta.activation-api</artifactId>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <plugin>
@@ -417,6 +424,7 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/*JakartaConverter.java</exclude>
                 <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
                 <exclude>**/ISO8601JavaTimeConverter.java</exclude>
@@ -424,6 +432,7 @@
               </excludes>
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/*JakartaConverterTest.java</exclude>
                 <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/*18TypesTest.java</exclude>
               </testExcludes>
@@ -456,6 +465,7 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/*JakartaConverter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
@@ -465,6 +475,7 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/extended/*JakartaConverterTest.java</exclude>
                 <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
                 <exclude>**/acceptance/*18TypesTest.java</exclude>
@@ -490,6 +501,7 @@
               </compilerArgs>
               <excludes>
                 <exclude>**/Lambda**</exclude>
+                <exclude>**/extended/*JakartaConverter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
                 <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/time/**</exclude>
@@ -500,6 +512,7 @@
               <testExcludes>
                 <exclude>**/Lambda**</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/extended/*JakartaConverterTest.java</exclude>
                 <exclude>**/Base64JavaUtilCodecTest.java</exclude>
                 <exclude>**/Base64JAXBCodecTest.java</exclude>
                 <exclude>**/acceptance/Extended17TypesTest*</exclude>
@@ -590,6 +603,7 @@
                 <exclude>**/core/util/Types*</exclude>
                 <exclude>**/reflection/*15*</exclude>
                 <exclude>**/extended/*15*</exclude>
+                <exclude>**/extended/*JakartaConverter.java</exclude>
                 <exclude>**/extended/Atomic*Converter.java</exclude>
                 <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
@@ -600,6 +614,7 @@
                 <exclude>**/annotations/*</exclude>
                 <exclude>**/enums/*</exclude>
                 <exclude>**/extended/*17Test*</exclude>
+                <exclude>**/extended/*JakartaConverterTest.java</exclude>
                 <exclude>**/reflection/SunLimitedUnsafeReflectionProviderTest*</exclude>
                 <exclude>**/reflection/PureJavaReflectionProvider15Test*</exclude>
                 <exclude>**/Base64JavaUtilCodecTest.java</exclude>
@@ -667,6 +682,7 @@
         com.ctc.*;resolution:=optional,
         com.ibm.*;resolution:=optional,
         com.sun.*;resolution:=optional,
+        jakarta.*;resolution:=optional,
         javax.*;resolution:=optional,
         org.xml.*;resolution:=optional,
         sun.*;resolution:=optional,
