@@ -312,7 +312,7 @@
 	<p>Note, that it is possible to configure XStream to omit the container element <i>toys</i> using implicit collections.</p>
 
     <!-- ...................................................... -->
-    <h2 id="Serialization_reflection_types">Why do serialized types, fields or methods do not use aliasing for the names?</h2>
+    <h2 id="Serialization_reflection_types">Why do serialized types, fields or methods not use aliasing for the names?</h2>
 
 	<p>XStream normally has no to separate between a primitive and its boxed type. The complete reflection API works
 	always with the boxed types and converts to primitives types on the fly. However, for method and field type
@@ -350,6 +350,17 @@ xstream.registerConverter(new JavaFieldConverter(javaClassConverter, mapper){});
 
 	<p>Beware, that this also means that collections with additional information (e.g. a TreeSet with a Comparator)
 	cannot be restored, since the comparator was already omitted at serialization time.</p>
+
+	<!-- ...................................................... -->
+	<h2 id="Serialization_ActivationDataFlavor_javax_jakarta">ActivationDataFlavor is after deserialization suddenly from the package jakarta.activation instead of javax.activation.</h2>
+
+	<p>The alias <i>activation-data-flavor</i> is used for the type ActivationDataFlavor from the package
+	<i>javax.activation</i> and <i>jakarta.activation</i>.  At deserialization the one from <i>jakarta.activation</i>
+	takes precedence if both types are available on the class path. Register the same alias again for the type from
+	<i>javax.actication</i> to revert the behavior.</p>
+
+	<p>Note, that the types are not fully compatible, since only the one from package <i>javax.activation</i>
+	implements the interface <i>java.awt.datatransfer.DataFlavor</i>.</p>
 
     <!-- ...................................................... -->
     <h2 id="Serialization_Serializable">Do my classes have to implement Serializable if XStream is to serialize them?</h2>

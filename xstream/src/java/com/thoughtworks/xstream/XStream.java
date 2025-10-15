@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -819,6 +819,11 @@ public class XStream {
         if (type != null) {
             alias("activation-data-flavor", type);
         }
+        // Jakarta will take precedence
+        type = JVM.loadClassForName("jakarta.activation.ActivationDataFlavor");
+        if (type != null) {
+            alias("activation-data-flavor", type);
+        }
 
         if (JVM.isSQLAvailable()) {
             alias("sql-timestamp", JVM.loadClassForName("java.sql.Timestamp"));
@@ -1024,6 +1029,10 @@ public class XStream {
         }
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
+                PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.loadClassForName("jakarta.activation.ActivationDataFlavor") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorJakartaConverter",
                 PRIORITY_NORMAL, null, null);
         }
         if (JVM.isVersion(7)) {
