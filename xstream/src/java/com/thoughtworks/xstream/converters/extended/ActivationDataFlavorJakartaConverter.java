@@ -1,16 +1,14 @@
 /*
- * Copyright (C) 2015, 2020, 2025 XStream Committers.
+ * Copyright (C) 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 21. June 2015 by Joerg Schaible
+ * Created on 15. October 2025 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
-
-import javax.activation.ActivationDataFlavor;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.Converter;
@@ -19,14 +17,16 @@ import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
+import jakarta.activation.ActivationDataFlavor;
+
 
 /**
  * Converts an {@link ActivationDataFlavor}.
  *
  * @author J&ouml;rg Schaible
- * @since 1.4.9
+ * @since upcoming
  */
-public class ActivationDataFlavorConverter implements Converter {
+public class ActivationDataFlavorJakartaConverter implements Converter {
 
     @Override
     public boolean canConvert(final Class<?> type) {
@@ -35,16 +35,18 @@ public class ActivationDataFlavorConverter implements Converter {
 
     @Override
     public void marshal(final Object source, final HierarchicalStreamWriter writer, final MarshallingContext context) {
-        final ActivationDataFlavor dataFlavor = ActivationDataFlavor.class.cast(source);
+        final ActivationDataFlavor dataFlavor = (ActivationDataFlavor)source;
         final String mimeType = dataFlavor.getMimeType();
         final String name = dataFlavor.getHumanPresentableName();
         final Class<?> representationClass = dataFlavor.getRepresentationClass();
-        ActivationDataFlavorUtil.doMarshal(new ActivationDataFlavorUtil.ActivationDataFlavorInfo(mimeType, name, representationClass), writer, context);
+        ActivationDataFlavorUtil.doMarshal(new ActivationDataFlavorUtil.ActivationDataFlavorInfo(mimeType, name,
+            representationClass), writer, context);
     }
 
     @Override
     public ActivationDataFlavor unmarshal(final HierarchicalStreamReader reader, final UnmarshallingContext context) {
-        ActivationDataFlavorUtil.ActivationDataFlavorInfo info = ActivationDataFlavorUtil.doUnmarshal(reader, context);
+        final ActivationDataFlavorUtil.ActivationDataFlavorInfo info = ActivationDataFlavorUtil.doUnmarshal(reader,
+            context);
         ActivationDataFlavor dataFlavor = null;
         try {
             if (info.representationClass == null) {

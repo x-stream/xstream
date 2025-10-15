@@ -1,32 +1,25 @@
 /*
- * Copyright (C) 2015, 2025 XStream Committers.
+ * Copyright (C) 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  *
- * Created on 23. June 2015 by Joerg Schaible
+ * Created on 15. October 2025 by Joerg Schaible
  */
 package com.thoughtworks.xstream.converters.extended;
 
-import java.awt.datatransfer.DataFlavor;
-
-import javax.activation.ActivationDataFlavor;
+import jakarta.activation.ActivationDataFlavor;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.core.JVM;
 
 
-public class ActivationDataFlavorConverterTest extends AbstractActivationDataFlavorConverterTest {
+public class ActivationDataFlavorJakartaConverterTest extends AbstractActivationDataFlavorConverterTest {
 
-    @Override
     protected void setupSecurity(XStream xstream) {
         super.setupSecurity(xstream);
-        xstream.allowTypeHierarchy(DataFlavor.class);
-        if (JVM.isVersion(8)) { // Overload the alias again which defaults to the jakarta type (if present) using Java 8 or higher
-            xstream.alias("activation-data-flavor", ActivationDataFlavor.class);
-        }
+        xstream.allowTypeHierarchy(ActivationDataFlavor.class);
     }
 
     protected Object newActivationDataFlavor(String mimeType, String humanPresentableName, Class type) {

@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -870,10 +870,9 @@ public class XStream {
             alias("awt-text-attribute", JVM.loadClassForName("java.awt.font.TextAttribute"));
         }
 
-        final Class<?> type = JVM.loadClassForName("javax.activation.ActivationDataFlavor");
-        if (type != null) {
-            alias("activation-data-flavor", type);
-        }
+        // Jakarta will take precedence
+        aliasDynamically("activation-data-flavor", "javax.activation.ActivationDataFlavor");
+        aliasDynamically("activation-data-flavor", "jakarta.activation.ActivationDataFlavor");
 
         if (JVM.isSQLAvailable()) {
             alias("sql-timestamp", JVM.loadClassForName("java.sql.Timestamp"));
@@ -925,13 +924,8 @@ public class XStream {
         aliasType("charset", Charset.class);
         aliasType("path", Path.class);
 
-        if (JVM.loadClassForName("javax.security.auth.Subject") != null) {
-            aliasDynamically("auth-subject", "javax.security.auth.Subject");
-        }
-        if (JVM.loadClassForName("javax.xml.datatype.Duration") != null) {
-            aliasDynamically("xml-duration", "javax.xml.datatype.Duration");
-        }
-
+        aliasDynamically("auth-subject", "javax.security.auth.Subject");
+        aliasDynamically("xml-duration", "javax.xml.datatype.Duration");
     }
 
     private void aliasDynamically(final String alias, final String className) {
@@ -1063,6 +1057,10 @@ public class XStream {
         }
         if (JVM.loadClassForName("javax.activation.ActivationDataFlavor") != null) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorConverter",
+                PRIORITY_NORMAL, null, null);
+        }
+        if (JVM.loadClassForName("jakarta.activation.ActivationDataFlavor") != null) {
+            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorJakartaConverter",
                 PRIORITY_NORMAL, null, null);
         }
         if (JVM.isVersion(14)) {
