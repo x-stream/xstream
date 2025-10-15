@@ -49,9 +49,9 @@
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_Dependencies">Which dependencies are required to run XStream?</h2>
-    <p>All dependencies are optional, XStream uses since version 1.4.1 by default xpp3:xpp3_min and xmlpull:xmlpull.
-    However it depends on the use case. XStream will run without dependencies using the DOM driver on all Java runtimes
-    or the StAX driver in combination with Java 6 or greater. See the list of <a 
+    <p>All dependencies are optional, XStream uses since version 1.4.16 by default io.github.x-stream:mxparser and
+	xmlpull:xmlpull.  However it depends on the use case.  XStream will run without dependencies using the DOM driver
+	on all Java runtimes or the StAX driver in combination with Java 6 or greater. See the list of <a
     href="download.html#optional-deps">optional dependencies</a>.</p>
     <p>Note, that XStream's manifest contains OSGi entries that declare all dependencies as optional.</p>
 
@@ -129,40 +129,10 @@
     <p>The <a href="http://www.xmlpull.org/">XML Pull Parser API</a> defines an own mechanism to load the factory for
     the available XPP implementation. XStream's XppDriver never used this lookup mechanism automatically before version
     1.4, now it will. Therefore you will have to add a <a href="download.html#optional-deps">dependency to xmlpull</a>
-    if the XPP implementation does not deliver the classes on its own. This dependency is necessary for Xpp3 in
-    contrast to kXML2 that contains the classes. Use the Xpp3Driver or the KXml2Driver if you want to select one of the
-    directly supported XPP implementation on your own without using the XPP factory. Note, that the minimal version of
-    kXML2 does not support the XPP factory, but can be used by the KXml2Driver.</p>
-
-    <!-- ...................................................... -->
-    <h2 id="Compatibility_Android">Can I use XStream in an Android application?</h2>
-
-	<p>XStream does work in Android 1.0, but is reported to have limited capabilities. Since XStream 1.4 Android is 
-	treated at least as JDK 5 platform, but it e.g. does not include the java.beans package. Therefore you cannot use
-	the JavaBeanConverter. Note, that Android provides an XML Pull Parser, therefore XStream can work without
-	additional dependencies.</p>
-
-	<p>XStream contains class files targeting different Java runtime versions.  Depending on the target version of
-	Android, it is not possible to use the original XStream library directly, because it tries to convert all classes
-	of XStream to the Dalvik runtime.  You might have to build a custom version of XStream (see BUILD.txt) with a JDK
-	that is equivalent to the Java level supported by the target version of Android.</p>
-	
-	<p>Since XStream 1.4.10 an additional artifact is deployed to the Central Maven Repository with <em>-java7</em>
-	appended to the version that explicitly does not contain any Java 8 related stuff. Note that this version will fail
-	on higher runtimes.</p>
-
-    <!-- ...................................................... -->
-    <h2 id="Compatibility_GAE">Which limits exists for XStream in Google's Application Engine (GAE)?</h2>
-
-	<p>Starting with XStream 1.4.6 it is possible to instantiate an XStream instance in a GAE environment. Nevertheless
-	does GAE set some severe restrictions for XStream and therefore XStream will behave differently. Actually a
-	reflection-based converter cannot handle any type from the JDK itself. Nor is it possible to create an
-	ObjectInputStream or an ObjectOutputStream. It is not possible to define a field alias for any type within the JDK.
-	XStream will typically work as general rule, if you process your own objects.</p>
-
-    <!-- ...................................................... -->
-    <h2 id="Compatibility_unsupported_JVM">Are there plans to provide enhanced mode support to other JVMs?</h2>
-    <p>Yes. <a href="mailing-lists.html">Let us know</a> which JVM you would like supported.</p>
+    if the XPP implementation does not deliver the classes on its own. This dependency is necessary for MXParser and
+	Xpp3 in contrast to kXML2 that contains the classes. Use the MXParserDriver, Xpp3Driver or the KXml2Driver if you
+	want to select one of the directly supported XPP implementation on your own without using the XPP factory. Note,
+	that the minimal version of kXML2 does not support the XPP factory, but can be used by the KXml2Driver.</p>
 
     <!-- ...................................................... -->
     <h2 id="Compatibility_no_enhanced_mode">When should I use XStream not in enhanced mode?</h2>
@@ -203,7 +173,7 @@
     <h2 id="Compatibility_WebSphere_8">WebShere 8 can no longer use XStream 1.4.x?</h2>
 
     <p>XStream has a long history to support types from recent JDKs without dropping backward compatibility.  Therefore it contains class files targeting different JDKs.
-    However, WebShpere scans by default all JAR files in its classpath for annotations to support CDI independent of the presence of a beans.xml file in META-INF.  This
+    However, WebSphere scans by default all JAR files in its classpath for annotations to support CDI independent of the presence of a beans.xml file in META-INF.  This
     scanning fails for class files targeting a higher JDK runtime as currently used by WebSphere. Please, consult your WebSphere documentation, how to turn off the
     scanning for individual files by providing an <a href="http://www-01.ibm.com/support/knowledgecenter/SSAW57_8.0.0/com.ibm.websphere.nd.doc/info/ae/ae/trun_app_reduce_annot.html?cp=SSAW57_8.0.0%2F1-8-12-0">amm.filter.proeprties</a>
     file.</p>
@@ -290,7 +260,7 @@
     <!-- ...................................................... -->
     <h2 id="Serialization_reflection_types">Why do serialized types, fields or methods do not use aliasing for the names?</h2>
 
-	<p>XStream normally has no to separate between a primitive and its boxed type. The complete reflection API works
+	<p>XStream normally has not to separate between a primitive and its boxed type. The complete reflection API works
 	always with the boxed types and converts to primitives types on the fly. However, for method and field type
 	signatures the difference is essential. Nevertheless it is possible to register derived versions of the converters
 	that are able to respect the aliasing with some minor effort. Following lines are taken from the AliasTest in the
@@ -707,10 +677,10 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!-- ...................................................... -->
     <h2 id="XML_entities">Does XStream support entities?</h2>
 
-	<p>Entity support is completely dependent on the XML parser. XStream uses by default the Xpp3 parser that does not
-	support entities at all (like the kXML2 parser). Other parsers support entities, but they might have been turned
-	off to avoid <a href="#Security_XXEVulnerability">XXE vulnerability</a>. To enable the entities again, you have to
-	overload the individual method of the
+	<p>Entity support is completely dependent on the XML parser. XStream uses by default the MXParser parser that does
+	not support entities at all (like the kXML2 parser). Other parsers support entities, but they might have been
+	turned off to avoid <a href="#Security_XXEVulnerability">XXE vulnerability</a>. To enable the entities again, you
+	have to overload the individual method of the
 	<a href="javadoc/com/thoughtworks/xstream/io/HierarchicalStreamDriver.html">HierarchicalStreamDriver</a>
 	implementation that generated the parser factory.</p>
 
@@ -737,7 +707,8 @@ xstream = new XStream(new Sun14ReflectionProvider(new FieldDictionary(sorter)));
     <!-- ...................................................... -->
     <h2 id="JSON_Jettison_version">Which versions of Jettison are supported?</h2>
 
-	<p>Users of Java 6 or higher can use Jettison 1.2.  Jettison 1.3 or higher is currently not supported.</p>
+	<p>Users of Java 8 or higher can use Jettison 1.5.4 or higher, Users of Java 5, 6 or 7 or higher can use Jettison
+	1.2.2, users of Java 1.4.2 have to use Jettison 1.0.1.  Jettison 1.1 nor Jettison 1.3.x or 1.4.x is supported.</p>
 
     <!-- ...................................................... -->
     <h2 id="JSON_deserialize_top_level_array">Why is it not possible to deserialize a JSON string starting with an array?</h2>
