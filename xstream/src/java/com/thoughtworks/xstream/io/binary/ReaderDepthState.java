@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 04. June 2006 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.binary;
@@ -34,6 +34,7 @@ class ReaderDepthState {
         List attributes;
         boolean hasMoreChildren;
         State parent;
+        int level;
     }
 
     private static class Attribute {
@@ -46,11 +47,16 @@ class ReaderDepthState {
     public void push() {
         State newState = new State();
         newState.parent = current;
+        newState.level = getLevel() + 1;
         current = newState;
     }
 
     public void pop() {
         current = current.parent;
+    }
+
+    public int getLevel() {
+        return current != null ? current.level : 0;
     }
 
     public String getName() {
