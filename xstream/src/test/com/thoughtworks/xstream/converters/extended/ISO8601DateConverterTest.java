@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -62,7 +62,7 @@ public class ISO8601DateConverterTest extends TestCase {
         Date out = (Date) converter.fromString(isoFormat);
         Date control = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(simpleFormat);
         // verify for EST
-        assertEquals("Sun Feb 14 13:10:30 " + (JVM.isVersion(23) ? "GMT-05:00" : "EST") + " 1993", out.toString());
+        assertEquals("Sun Feb 14 13:10:30 EST 1993", out.toString());
         assertEquals(control, out);
     }
 
