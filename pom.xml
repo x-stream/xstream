@@ -1079,7 +1079,7 @@
     <version.plugin.maven.enforcer>3.0.0-M2</version.plugin.maven.enforcer>
     <version.plugin.maven.failsafe>${version.plugin.maven.surefire}</version.plugin.maven.failsafe>
     <version.plugin.maven.gpg>3.0.1</version.plugin.maven.gpg>
-    <version.plugin.maven.install>3.0.0-M1</version.plugin.maven.install>
+    <version.plugin.maven.install>3.1.4</version.plugin.maven.install>
     <version.plugin.maven.jar>3.2.0</version.plugin.maven.jar>
     <version.plugin.maven.javadoc>3.2.0</version.plugin.maven.javadoc>
     <version.plugin.maven.jxr>3.0.0</version.plugin.maven.jxr>
