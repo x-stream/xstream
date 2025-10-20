@@ -1093,7 +1093,7 @@
     <version.plugin.sonatype.central-publishing>0.7.0</version.plugin.sonatype.central-publishing>
     <version.plugin.io.wcm.devops.eclipse>3.1.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
-    <version.plugin.jacoco>0.8.6</version.plugin.jacoco>
+    <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
 
     <version.cglib.nodep>2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
