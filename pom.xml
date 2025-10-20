@@ -1068,7 +1068,7 @@
     <version.java.enforced>[11,)</version.java.enforced>
     <version.maven.enforced>[3.3.9,)</version.maven.enforced>
 
-    <version.plugin.codehaus.xsite>1.3</version.plugin.codehaus.xsite>
+    <version.plugin.codehaus.xsite>1.4</version.plugin.codehaus.xsite>
     <version.plugin.felix.bundle>3.5.1</version.plugin.felix.bundle>
     <version.plugin.maven.antrun>1.8</version.plugin.maven.antrun>
     <version.plugin.maven.assembly>3.2.0</version.plugin.maven.assembly>
