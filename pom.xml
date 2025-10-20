@@ -1102,7 +1102,7 @@
     <version.commons.lang3>3.8.1</version.commons.lang3>
     <version.hsqldb>2.2.8</version.hsqldb>
     <version.io.github.x-stream.mxparser>1.2.3</version.io.github.x-stream.mxparser>
-    <version.jakarta.inject.api>1.0</version.jakarta.inject.api>
+    <version.jakarta.inject.api>1.0.5</version.jakarta.inject.api>
     <version.jakarta.activation.api>2.1.4</version.jakarta.activation.api>
     <version.javax.activation>1.1.1</version.javax.activation>
     <version.javax.annotation.api>1.3.2</version.javax.annotation.api>
