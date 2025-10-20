@@ -1200,7 +1200,7 @@
     <version.plugin.maven.source>2.1.2</version.plugin.maven.source>
     <version.plugin.maven.surefire>2.4.3</version.plugin.maven.surefire>
     <version.plugin.mojo.build-helper>1.5</version.plugin.mojo.build-helper>
-    <version.plugin.sonatype.central-publishing>0.7.0</version.plugin.sonatype.central-publishing>
+    <version.plugin.sonatype.central-publishing>0.9.0</version.plugin.sonatype.central-publishing>
     <version.plugin.eluder.coveralls>4.2.0</version.plugin.eluder.coveralls>
     <version.plugin.jacoco>0.8.1</version.plugin.jacoco>
 
