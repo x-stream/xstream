@@ -12,7 +12,7 @@ updates:
     groups:
       plugins:
         patterns:
-          - "*:*-plugins:*"
+          - "*:*-plugin:*"
     ignore:
       - dependency-name: "org.apache.maven.plugins:*"
         versions: ["[4.x,)"] # These are for Maven 4
