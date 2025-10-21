@@ -1134,7 +1134,7 @@
     <version.stax>1.2.0</version.stax>
     <version.xerces.impl>2.8.1</version.xerces.impl>
     <version.xmlpull>1.1.3.4a</version.xmlpull>
-    <version.xom>1.3.2</version.xom>
+    <version.xom>1.3.9</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
