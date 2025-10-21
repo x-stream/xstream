@@ -1107,7 +1107,7 @@
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
     <version.commons.codec>1.11</version.commons.codec>
     <version.commons.lang3>3.8.1</version.commons.lang3>
-    <version.hsqldb>2.2.8</version.hsqldb>
+    <version.hsqldb>2.7.4</version.hsqldb>
     <version.io.github.x-stream.mxparser>1.2.3</version.io.github.x-stream.mxparser>
     <version.jakarta.activation.api>2.1.4</version.jakarta.activation.api>
     <version.javax.activation>1.1.1</version.javax.activation>
