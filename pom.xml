@@ -958,6 +958,18 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>io.github.git-commit-id</groupId>
+          <artifactId>git-commit-id-maven-plugin</artifactId>
+          <version>${version.plugin.io.github.git-commit-id}</version>
+          <configuration>
+            <runOnlyOnce>true</runOnlyOnce>
+            <skipPoms>false</skipPoms>
+            <includeOnlyProperties>
+              <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+            </includeOnlyProperties>
+          </configuration>
+        </plugin>
+        <plugin>
           <groupId>io.wcm.devops.maven.plugins</groupId>
           <artifactId>eclipse-maven-plugin</artifactId>
           <version>${version.plugin.io.wcm.devops.eclipse}</version>
@@ -1001,6 +1013,18 @@
                 </requireMavenVersion>
               </rules>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>git-info</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -1068,7 +1092,7 @@
   </scm>
   
   <properties>
-    <project.build.outputTimestamp>1</project.build.outputTimestamp>
+    <project.build.outputTimestamp>${git.commit.time}</project.build.outputTimestamp>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <version.java.target>11</version.java.target>
@@ -1098,6 +1122,7 @@
     <version.plugin.mojo.build-helper>3.6.1</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.7.3</version.plugin.mojo.flatten>
     <version.plugin.sonatype.central-publishing>0.9.0</version.plugin.sonatype.central-publishing>
+    <version.plugin.io.github.git-commit-id>9.0.2</version.plugin.io.github.git-commit-id>
     <version.plugin.io.wcm.devops.eclipse>3.2.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
     <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
