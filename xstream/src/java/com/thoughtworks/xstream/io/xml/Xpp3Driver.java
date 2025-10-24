@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011, 2014 XStream Committers.
+ * Copyright (C) 2009, 2011, 2014, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -22,14 +22,18 @@ import com.thoughtworks.xstream.io.naming.NameCoder;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
+ * @deprecated As of upcoming, use {@link MXParserDriver} instead
  */
+@Deprecated
 public class Xpp3Driver extends AbstractXppDriver {
 
     /**
      * Construct an Xpp3Driver.
      * 
      * @since 1.4
+     * @deprecated As of upcoming, use {@link MXParserDriver#MXParserDriver()} instead
      */
+    @Deprecated
     public Xpp3Driver() {
         super(new XmlFriendlyNameCoder());
     }
@@ -39,7 +43,9 @@ public class Xpp3Driver extends AbstractXppDriver {
      * 
      * @param nameCoder the replacer for XML friendly names
      * @since 1.4
+     * @deprecated As of upcoming, use {@link MXParserDriver#MXParserDriver(NameCoder)} instead
      */
+    @Deprecated
     public Xpp3Driver(final NameCoder nameCoder) {
         super(nameCoder);
     }
