@@ -134,6 +134,16 @@
 	want to select one of the directly supported XPP implementation on your own without using the XPP factory. Note,
 	that the minimal version of kXML2 does not support the XPP factory, but can be used by the KXml2Driver.</p>
 
+	<!-- ...................................................... -->
+	<h2 id="Compatibility_XPP3_deprecation">Why is the Xpp3Driver deprecated?</h2>
+
+	<p>The Xpp3 implementation was the preferred implementation of XStream for nearly two decades.  However, it is no
+	longer maintained for many years and has some (minor) bugs which will not be fixed.  Therefore the XStream project
+	created its own fork with the MXParser and incorporated a lot of fixed from other forks and fixed the long standing
+	ones.  The main reason for the deprecation though is an incompatible service entry of the service SPI, which
+	predates the final SPI definition in Java 1.6 many years, but causes now a
+	java.lang.module.InvalidModuleDescriptorException when the module path is scanned by the Java runtime.</p>
+
     <!-- ...................................................... -->
     <h2 id="Compatibility_no_enhanced_mode">When should I use XStream not in enhanced mode?</h2>
 

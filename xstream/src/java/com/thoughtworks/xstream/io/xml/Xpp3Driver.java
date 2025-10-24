@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009, 2011 XStream Committers.
+ * Copyright (C) 2009, 2011, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -23,6 +23,7 @@ import org.xmlpull.v1.XmlPullParser;
  * 
  * @author J&ouml;rg Schaible
  * @since 1.4
+ * @deprecated As of upcoming, use {@link MXParserDriver} instead
  */
 public class Xpp3Driver extends AbstractXppDriver {
 
@@ -30,6 +31,7 @@ public class Xpp3Driver extends AbstractXppDriver {
      * Construct an Xpp3Driver.
      * 
      * @since 1.4
+     * @deprecated As of upcoming, use {@link MXParserDriver#MXParserDriver()} instead
      */
     public Xpp3Driver() {
         super(new XmlFriendlyNameCoder());
@@ -40,6 +42,7 @@ public class Xpp3Driver extends AbstractXppDriver {
      * 
      * @param nameCoder the replacer for XML friendly names
      * @since 1.4
+     * @deprecated As of upcoming, use {@link MXParserDriver#MXParserDriver(NameCoder)} instead
      */
     public Xpp3Driver(NameCoder nameCoder) {
         super(nameCoder);
