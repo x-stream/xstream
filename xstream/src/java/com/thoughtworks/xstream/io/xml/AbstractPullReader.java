@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 24. April 2005 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.xml;
@@ -58,7 +58,7 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
     protected AbstractPullReader(XmlFriendlyReplacer replacer) {
         this((NameCoder)replacer);
     }
-    
+
 
     /**
      * Pull the next event from the stream.
@@ -112,6 +112,11 @@ public abstract class AbstractPullReader extends AbstractXmlReader {
         while (elementStack.size() >= currentDepth) {
             move();
         }
+    }
+
+    @Override
+    public int getLevel() {
+        return elementStack.size();
     }
 
     private void move() {
