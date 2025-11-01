@@ -1149,7 +1149,7 @@
     <version.org.codehaus.jettison>1.5.4</version.org.codehaus.jettison>
     <version.com.fasterxml.woodstox.core>6.4.0</version.com.fasterxml.woodstox.core>
     <version.org.dom4j>2.0.2</version.org.dom4j>
-    <version.org.hibernate.orm.core>7.1.4.Final</version.org.hibernate.orm.core>
+    <version.org.hibernate.orm.core>7.1.5.Final</version.org.hibernate.orm.core>
     <version.org.hibernate.orm.envers>${version.org.hibernate.orm.core}</version.org.hibernate.orm.envers>
     <version.org.jdom>1.1.3</version.org.jdom>
     <version.org.jdom2>2.0.6</version.org.jdom2>
