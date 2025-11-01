@@ -20,8 +20,7 @@ import java.util.concurrent.ConcurrentMap;
  * Instantiates a new object bypassing the constructor using undocumented internal JDK features.
  * <p>
  * The code in the constructor will never be executed and parameters do not have to be known. This is the same method
- * used by the internals of standard Java serialization, but relies on internal code (sun.misc.Unsafe) that may not be
- * present on all JVMs.
+ * used by the internals of standard Java serialization, but relies on internal code (jdk.internal.misc.Unsafe).
  * <p>
  * <p>
  * The implementation will use the same internals to write into fields. This is a lot faster and was additionally the

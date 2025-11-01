@@ -12,15 +12,13 @@ import java.lang.reflect.Field;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
 
-import sun.misc.Unsafe;
-
+import jdk.internal.misc.Unsafe;
 
 /**
  * Instantiates a new object bypassing the constructor using undocumented internal JDK features.
  * <p>
  * The code in the constructor will never be executed and parameters do not have to be known. This is the same method
- * used by the internals of standard Java serialization, but relies on internal code (sun.misc.Unsafe) that may not be
- * present on all JVMs.
+ * used by the internals of standard Java serialization, but relies on internal code (jdk.internal.misc.Unsafe).
  * <p>
  * <p>
  * The implementation will use standard Java functionality to write any fields. This requires Java 5 as minimum runtime

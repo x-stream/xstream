@@ -95,7 +95,7 @@ public class JVM implements Caching {
         boolean test = true;
         Object unsafe = null;
         try {
-            final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            final Class<?> unsafeClass = Class.forName("jdk.internal.misc.Unsafe");
             final Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             unsafe = unsafeField.get(null);
