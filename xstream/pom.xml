@@ -296,7 +296,7 @@
               <execution>
                 <id>compile-jdk16</id>
                 <configuration>
-                  <release>16</release>
+                  <target>16</target>
                   <testExcludes combine.self="override" />
                   <testIncludes>
                     <include>**/Record**</include>
@@ -330,7 +330,7 @@
               <execution>
                 <id>compile-jdk15</id>
                 <configuration>
-                  <release>15</release>
+                  <target>15</target>
                   <testExcludes combine.self="override" />
                   <testIncludes>
                     <include>**/Record**</include>
@@ -383,6 +383,8 @@
             <configuration>
               <compilerArgs>
                 <arg>-XDignore.symbol.file</arg>
+                <arg>--add-exports</arg>
+                <arg>java.base/jdk.internal.misc=ALL-UNNAMED</arg>
               </compilerArgs>
             </configuration>
           </plugin>
@@ -468,6 +470,7 @@
       --add-opens java.xml/com.sun.xml.internal.stream=ALL-UNNAMED
       --add-opens java.xml/com.sun.org.apache.xerces.internal.parsers=ALL-UNNAMED
       --add-opens java.xml/com.sun.org.apache.xerces.internal.util=ALL-UNNAMED
+      --add-opens java.base/jdk.internal.misc=ALL-UNNAMED
     </surefire.argline>
     <surefire.preview.arg/>
   </properties>
