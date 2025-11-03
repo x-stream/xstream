@@ -874,7 +874,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${version.plugin.maven.surefire}</version>
           <configuration>
-            <forkMode>once</forkMode>
+            <runOrder>random</runOrder>
             <printSummary>true</printSummary>
             <useFile>false</useFile>
             <includes>
