@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016, 2017, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2009, 2010, 2013, 2015, 2016, 2017, 2024, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -15,6 +15,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.core.JVM;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.testutil.DynamicSecurityManager;
 
 import junit.framework.TestCase;
@@ -126,7 +127,7 @@ public class SecurityManagerTest extends TestCase {
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        xstream = new XStream();
+        xstream = new XStream(new MXParserDriver());
 
         assertBothWays();
     }
@@ -162,7 +163,7 @@ public class SecurityManagerTest extends TestCase {
         sm.setReadOnly();
         System.setSecurityManager(sm);
 
-        xstream = new XStream(new PureJavaReflectionProvider());
+        xstream = new XStream(new PureJavaReflectionProvider(), new MXParserDriver());
 
         assertBothWays();
     }
@@ -202,6 +203,9 @@ public class SecurityManagerTest extends TestCase {
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.maxXMLNameLimit", "read"));
         sm.addPermission(source, new PropertyPermission("jdk.xml.totalEntitySizeLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.xpathExprGrpLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.xpathExprOpLimit", "read"));
+        sm.addPermission(source, new PropertyPermission("jdk.xml.xpathTotalOpLimit", "read"));
         sm.addPermission(source, new PropertyPermission("maxOccurLimit", "read"));
         sm.addPermission(source, new PropertyPermission("sun.boot.class.path", "read"));
         sm.addPermission(source, new PropertyPermission("sun.nio.fs.chdirAllowed", "read"));
