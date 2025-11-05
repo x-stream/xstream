@@ -1037,7 +1037,6 @@
             <id>versions</id>
             <phase>initialize</phase>
             <goals>
-              <goal>maven-version</goal>
               <goal>parse-version</goal>
             </goals>
             <configuration>
