@@ -90,7 +90,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <!-- overwrite codehaus-parent -->
             <version>${version.plugin.maven.enforcer}</version>
             <executions>
               <execution>
@@ -308,8 +307,7 @@
       <post>xstream-user@googlegroups.com</post>
       <archive>https://groups.google.com/forum/#!forum/xstream-user</archive>
       <otherArchives>
-        <otherArchive>http://news.gmane.org/gmane.comp.java.xstream.user</otherArchive>
-        <otherArchive>http://markmail.org/search/list:org.codehaus.xstream.user</otherArchive>
+        <otherArchive>https://user.xstream.codehaus.narkive.com/</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
@@ -319,19 +317,12 @@
       <post>xstream-notifications@googlegroups.com</post>
       <archive>https://groups.google.com/forum/#!forum/xstream-notifications</archive>
       <otherArchives>
-        <otherArchive>http://news.gmane.org/gmane.comp.java.xstream.scm</otherArchive>
+        <otherArchive>https://scm.xstream.codehaus.narkive.com/</otherArchive>
       </otherArchives>
     </mailingList>
     <mailingList>
       <name>Former (pre-2015-06) Development List</name>
-      <archive>http://news.gmane.org/gmane.comp.java.xstream.dev</archive>
-      <otherArchives>
-        <otherArchive>http://markmail.org/search/list:org.codehaus.xstream.dev</otherArchive>
-      </otherArchives>
-    </mailingList>
-    <mailingList>
-      <name>Former (pre-2015-06) Announcements List</name>
-      <archive>http://markmail.org/search/list:org.codehaus.xstream.announce</archive>
+      <archive>https://dev.xstream.codehaus.narkive.com/</archive>
     </mailingList>
   </mailingLists>
 
@@ -1068,9 +1059,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <tagBase>https://svn.codehaus.org/xstream/tags</tagBase>
-        </configuration>
       </plugin>
     </plugins>
   </build>
