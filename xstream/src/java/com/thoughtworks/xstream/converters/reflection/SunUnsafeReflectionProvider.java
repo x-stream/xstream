@@ -89,7 +89,7 @@ public class SunUnsafeReflectionProvider extends SunLimitedUnsafeReflectionProvi
                     throw ex;
                 }
             } else {
-                unsafe.putObject(object, offset, value);
+                unsafe.putReference(object, offset, value);
             }
 
         } catch (final IllegalArgumentException e) {
