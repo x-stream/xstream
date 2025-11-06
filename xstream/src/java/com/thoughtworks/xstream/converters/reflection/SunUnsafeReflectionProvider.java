@@ -15,7 +15,6 @@ import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-
 /**
  * Instantiates a new object bypassing the constructor using undocumented internal JDK features.
  * <p>
