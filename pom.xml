@@ -278,7 +278,7 @@
   <modules>
     <module>xstream</module>
     <module>xstream-hibernate</module>
-    <!--module>xstream-its</module-->
+    <module>xstream-its</module>
     <module>xstream-jmh</module>
     <module>xstream-distribution</module>
   </modules>
