@@ -712,7 +712,12 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${version.plugin.maven.compiler}</version>
           <configuration>
-            <release>${version.java.target}</release>
+            <target>${version.java.target}</target>
+            <source>${version.java.target}</source>
+            <compilerArgs>
+              <arg>--add-exports</arg>
+              <arg>java.base/jdk.internal.misc=ALL-UNNAMED</arg>
+            </compilerArgs>
           </configuration>
         </plugin>
         <plugin>

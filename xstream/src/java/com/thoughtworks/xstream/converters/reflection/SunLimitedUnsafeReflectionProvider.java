@@ -12,9 +12,6 @@ import java.lang.reflect.Field;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
 
-import sun.misc.Unsafe;
-
-
 /**
  * Instantiates a new object bypassing the constructor using undocumented internal JDK features.
  * <p>
@@ -35,21 +32,11 @@ import sun.misc.Unsafe;
  */
 public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvider {
 
-    protected static final Unsafe unsafe;
+    protected static final jdk.internal.misc.Unsafe unsafe = jdk.internal.misc.Unsafe.getUnsafe();
     protected static final Exception exception;
 
     static {
-        Unsafe u = null;
-        Exception ex = null;
-        try {
-            final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            u = (Unsafe)unsafeField.get(null);
-        } catch (final SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-            ex = e;
-        }
-        exception = ex;
-        unsafe = u;
+        exception = null;
     }
 
     /**

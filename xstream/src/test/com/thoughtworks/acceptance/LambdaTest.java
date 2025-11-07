@@ -158,7 +158,7 @@ public class LambdaTest extends AbstractAcceptanceTest {
             + "    <implClass>com/thoughtworks/acceptance/LambdaTest</implClass>\n"
             + "    <implMethodName>lambda$0</implMethodName>\n"
             + "    <implMethodSignature>()V</implMethodSignature>\n"
-            + "    <implMethodKind>7</implMethodKind>\n"
+            + "    <implMethodKind>5</implMethodKind>\n"
             + "    <instantiatedMethodType>()V</instantiatedMethodType>\n"
             + "    <capturedArgs>\n"
             + "      <com.thoughtworks.acceptance.LambdaTest>\n"
