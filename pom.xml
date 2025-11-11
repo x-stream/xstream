@@ -91,7 +91,7 @@
         <version.org.codehaus.jettison>1.5.4</version.org.codehaus.jettison>
       </properties>
       <modules>
-        <!--module>xstream-its</module--><!-- requires installed repo -->
+        <module>xstream-its</module><!-- requires installed repo -->
         <module>xstream-jmh</module>
         <module>xstream-distribution</module>
       </modules>
@@ -1225,7 +1225,7 @@
     <version.org.jdom2>2.0.5</version.org.jdom2>
     <version.org.json>20080701</version.org.json>
     <version.org.openjdk.jmh>1.21</version.org.openjdk.jmh>
-    <version.org.ops4j.pax.exam>3.5.0</version.org.ops4j.pax.exam><!-- Java 6 -->
+    <version.org.ops4j.pax.exam>4.13.4</version.org.ops4j.pax.exam><!-- Java 7 -->
     <version.org.slf4j>1.6.1</version.org.slf4j>
     <version.stax>1.2.0</version.stax>
     <version.stax.api>1.0.1</version.stax.api>
