@@ -1214,7 +1214,7 @@
     <version.joda-time>1.6</version.joda-time>
     <version.junit>3.8.2</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
-    <version.org.apache.felix>4.4.1</version.org.apache.felix>
+    <version.org.apache.felix>7.0.5</version.org.apache.felix>
     <version.org.codehaus.jettison>1.2</version.org.codehaus.jettison>
     <version.org.codehaus.woodstox.asl>3.2.7</version.org.codehaus.woodstox.asl>
     <version.org.hibernate.core>5.6.15.Final</version.org.hibernate.core>
