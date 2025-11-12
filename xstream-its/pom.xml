@@ -22,6 +22,16 @@
   <name>XStream ITs</name>
   <description>Integration tests for XStream.</description>
 
+  <profiles>
+    <profile>
+      <id>release-prepare</id>
+      <properties>
+        <!-- Skip ITs preparing the release.  The ITs require installed artifacts, but at preparation they're not and should not -->
+        <failsafe.skipITs>true</failsafe.skipITs>
+      </properties>
+    </profile>
+  </profiles>
+
   <build>
     <testResources>
       <testResource>
@@ -48,6 +58,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <skipITs>${failsafe.skipITs}</skipITs>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -134,6 +147,7 @@
 
   <properties>
     <version.junit>4.11</version.junit>
+    <failsafe.skipITs>false</failsafe.skipITs>
     <jar.module.name>xstream.its</jar.module.name>
     <surefire.argline>
       --add-opens java.base/java.net=ALL-UNNAMED

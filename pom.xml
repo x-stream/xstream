@@ -193,7 +193,7 @@
       </properties>
     </profile>
     <profile>
-      <id>xstream-release</id>
+      <id>release</id>
       <properties>
         <version.java.enforced>[17,18)</version.java.enforced>
       </properties>
@@ -814,7 +814,8 @@
             <goals>deploy</goals>
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <useReleaseProfile>false</useReleaseProfile>
-            <arguments>-Pxstream-release</arguments>
+            <preparationProfiles>release,release-prepare</preparationProfiles>
+            <releaseProfiles>release,release-perform</releaseProfiles>
           </configuration>
         </plugin>
         <plugin>
