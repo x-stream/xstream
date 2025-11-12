@@ -13,7 +13,7 @@ package com.thoughtworks.xstream.converters.extended;
 import com.thoughtworks.acceptance.AbstractAcceptanceTest;
 
 
-abstract class AbstractActivationDataFlavorConverterTest extends AbstractAcceptanceTest {
+public abstract class AbstractActivationDataFlavorConverterTest extends AbstractAcceptanceTest {
     
     protected abstract Object newActivationDataFlavor(String mimeType, String humanPresentableName, Class type);
 
