@@ -1119,7 +1119,7 @@
     <version.cglib.nodep>2.2.2</version.cglib.nodep>
     <version.com.brsanthu.migbase64>2.2</version.com.brsanthu.migbase64>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
-    <version.commons.codec>1.11</version.commons.codec>
+    <version.commons.codec>1.20.0</version.commons.codec>
     <version.commons.lang3>3.19.0</version.commons.lang3>
     <version.hsqldb>2.7.4</version.hsqldb>
     <version.io.github.x-stream.mxparser>1.2.3</version.io.github.x-stream.mxparser>
