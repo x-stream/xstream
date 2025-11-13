@@ -409,12 +409,6 @@
       </dependency>
 
       <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${version.joda-time}</version>
-      </dependency>
-
-      <dependency>
         <groupId>com.megginson.sax</groupId>
         <artifactId>xml-writer</artifactId>
         <version>${version.com.megginson.sax.xml-writer}</version>
@@ -1130,7 +1124,6 @@
     <version.javax.xml.bind.api>2.3.1</version.javax.xml.bind.api>
     <version.javax.xml.ws.jaxws.rt>2.3.7</version.javax.xml.ws.jaxws.rt><!-- Java 5 -->
     <version.jmock>1.0.1</version.jmock>
-    <version.joda-time>2.10.1</version.joda-time>
     <version.junit>3.8.2</version.junit>
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.apache.felix>7.0.5</version.org.apache.felix>
