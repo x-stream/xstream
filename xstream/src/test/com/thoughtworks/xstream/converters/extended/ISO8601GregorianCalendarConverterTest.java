@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2011, 2017, 2018, 2021, 2025 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -11,6 +11,8 @@
  */
 package com.thoughtworks.xstream.converters.extended;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -18,8 +20,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import org.joda.time.DateTime;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.core.JVM;
@@ -67,8 +67,7 @@ public class ISO8601GregorianCalendarConverterTest extends TestCase {
 
     public void testSavedTimeIsInUTC() {
         final Calendar in = Calendar.getInstance();
-        final String iso8601;
-        iso8601 = new DateTime(in).toString();
+        final String iso8601 = OffsetDateTime.ofInstant(in.toInstant(), ZoneId.of("America/Panama")).toString();
         final String converterXML = converter.toString(in);
         assertEquals(iso8601, converterXML);
 
