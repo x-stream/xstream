@@ -150,16 +150,20 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <groupId>javax.xml.ws</groupId>
-          <artifactId>jaxws-api</artifactId>
+          <groupId>com.sun.activation</groupId>
+          <artifactId>jakarta.activation</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>com.sun.istack</groupId>
-          <artifactId>istack-commons-runtime</artifactId>
+          <groupId>com.sun.mail</groupId>
+          <artifactId>jakarta.mail</artifactId>
         </exclusion>
         <exclusion>
           <groupId>com.sun.xml.bind</groupId>
           <artifactId>jaxb-impl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.sun.xml.fastinfoset</groupId>
+          <artifactId>FastInfoset</artifactId>
         </exclusion>
         <exclusion>
           <groupId>com.sun.xml.messaging.saaj</groupId>
@@ -174,15 +178,19 @@
           <artifactId>policy</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>com.sun.org.apache.xml.internal</groupId>
-          <artifactId>resolver</artifactId>
+          <groupId>org.glassfish.external</groupId>
+          <artifactId>management-api</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.glassfish.gmbal</groupId>
           <artifactId>gmbal-api-only</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>org.jvnet</groupId>
+          <groupId>org.glassfish.ha</groupId>
+          <artifactId>ha-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.jvnet.mimepull</groupId>
           <artifactId>mimepull</artifactId>
         </exclusion>
         <exclusion>
