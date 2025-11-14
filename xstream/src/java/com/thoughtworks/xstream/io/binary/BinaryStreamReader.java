@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 04. June 2006 by Joe Walnes
  */
 package com.thoughtworks.xstream.io.binary;
@@ -146,6 +146,11 @@ public class BinaryStreamReader implements ExtendedHierarchicalStreamReader {
                 throw new StreamException("Unexpected token " + nextToken);
         }
         pushBack(nextToken);
+    }
+
+    @Override
+    public int getLevel() {
+        return depthState.getLevel();
     }
 
     private Token readToken() {
