@@ -1108,7 +1108,7 @@
     <version.net.sf.kxml.kxml2>2.3.0</version.net.sf.kxml.kxml2>
     <version.org.apache.felix>7.0.5</version.org.apache.felix>
     <version.org.codehaus.jettison>1.5.4</version.org.codehaus.jettison>
-    <version.com.fasterxml.woodstox.core>6.4.0</version.com.fasterxml.woodstox.core>
+    <version.com.fasterxml.woodstox.core>6.7.0</version.com.fasterxml.woodstox.core>
     <version.org.dom4j>2.2.0</version.org.dom4j>
     <version.org.hibernate.orm.core>7.2.0.Final</version.org.hibernate.orm.core>
     <version.org.hibernate.orm.envers>${version.org.hibernate.orm.core}</version.org.hibernate.orm.envers>
