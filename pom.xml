@@ -1224,7 +1224,7 @@
     <version.org.json>20080701</version.org.json>
     <version.org.openjdk.jmh>1.37</version.org.openjdk.jmh>
     <version.org.ops4j.pax.exam>4.13.4</version.org.ops4j.pax.exam><!-- Java 7 -->
-    <version.org.slf4j>1.6.1</version.org.slf4j>
+    <version.org.slf4j>1.6.6</version.org.slf4j><!-- Java 1.4 -->
     <version.stax>1.2.0</version.stax>
     <version.stax.api>1.0.1</version.stax.api>
     <version.xerces.impl>2.8.1</version.xerces.impl>
