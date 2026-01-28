@@ -1199,7 +1199,7 @@
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang>2.4</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
-    <version.hsqldb>2.2.8</version.hsqldb>
+    <version.hsqldb>2.3.5</version.hsqldb><!-- Java 6 -->
     <version.io.github.x-stream.mxparser>1.2.3</version.io.github.x-stream.mxparser>
     <version.jakarta.activation.api>2.1.4</version.jakarta.activation.api>
     <version.javaassist>3.12.1.GA</version.javaassist>
