@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007, 2009, 2011, 2025 XStream Committers.
+ * Copyright (C) 2007, 2009, 2011, 2025, 2026 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -19,10 +19,6 @@ public final class WstxWriterTest extends AbstractStaxWriterTest {
     protected void assertXmlProducedIs(String expected) {
         if (!staxDriver.isRepairingNamespace() || expected.matches("<\\w+:\\w+ xmlns:\\w+=.+")) {
             expected = expected.replaceAll(" xmlns=\"\"", "");
-        }
-        if (!JVM.isVersion(6)) { // uses by default no longer org.codehaus.woodstox:wstx-asl:3.2.7
-            expected = expected.replaceAll("<(\\w+)([^>]*)/>", "<$1$2 />");
-            expected = replaceAll(expected, "&#x0D;", "&#xd;");
         }
         expected = replaceAll(expected, "&gt;", ">"); // Woodstox behavior !!
         expected = getXMLHeader() + expected;
