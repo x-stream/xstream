@@ -1195,7 +1195,7 @@
     <version.com.fasterxml.woodstox.core>5.4.0</version.com.fasterxml.woodstox.core>
     <version.com.megginson.sax.xml-writer>0.2</version.com.megginson.sax.xml-writer>
     <version.commons.cli>1.1</version.commons.cli>
-    <version.commons.codec>1.19.0</version.commons.codec>
+    <version.commons.codec>1.21.0</version.commons.codec>
     <version.commons.io>1.4</version.commons.io>
     <version.commons.lang>2.6</version.commons.lang>
     <version.dom4j>1.6.1</version.dom4j>
