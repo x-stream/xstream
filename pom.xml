@@ -78,6 +78,7 @@
       </activation>
       <properties>
         <version.plugin.maven.enforcer>3.0.0-M1</version.plugin.maven.enforcer>
+        <version.xom>1.3.9</version.xom>
       </properties>
     </profile>
     <profile>
@@ -1230,7 +1231,7 @@
     <version.xerces.impl>2.8.1</version.xerces.impl>
     <version.xml-apis>1.3.04</version.xml-apis>
     <version.xmlpull>1.1.3.4a</version.xmlpull>
-    <version.xom>1.1</version.xom>
+    <version.xom>1.2.5</version.xom><!-- Java 1.4 -->
     <version.xpp3>1.1.4c</version.xpp3>
 
     <javadoc.link.javase>http://docs.oracle.com/javase/8/docs/api/</javadoc.link.javase>
