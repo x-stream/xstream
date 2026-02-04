@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016, 2017, 2020 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2011, 2013, 2014, 2016, 2017, 2020, 2026 XStream Committers.
  * All rights reserved.
  *
  * Created on 08. January 2014 by Joerg Schaible, factored out from SunUnsafeReflectionProvider
@@ -11,8 +11,7 @@ import java.lang.reflect.Field;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.converters.ErrorWritingException;
-
-import sun.misc.Unsafe;
+import com.thoughtworks.xstream.core.util.UnsafeProvider;
 
 
 /**
@@ -35,22 +34,8 @@ import sun.misc.Unsafe;
  */
 public class SunLimitedUnsafeReflectionProvider extends PureJavaReflectionProvider {
 
-    protected static final Unsafe unsafe;
-    protected static final Exception exception;
-
-    static {
-        Unsafe u = null;
-        Exception ex = null;
-        try {
-            final Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            u = (Unsafe)unsafeField.get(null);
-        } catch (final SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-            ex = e;
-        }
-        exception = ex;
-        unsafe = u;
-    }
+    protected static final Unsafe unsafe = UnsafeProvider.get().unsafe;
+    protected static final Exception exception = UnsafeProvider.get().exception;
 
     /**
      * @since 1.4.7

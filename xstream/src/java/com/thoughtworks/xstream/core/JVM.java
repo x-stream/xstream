@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2024 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2024, 2026 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -13,7 +13,6 @@ package com.thoughtworks.xstream.core;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.AttributedString;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,11 +29,13 @@ import com.thoughtworks.xstream.converters.reflection.FieldDictionary;
 import com.thoughtworks.xstream.converters.reflection.ObjectAccessException;
 import com.thoughtworks.xstream.converters.reflection.PureJavaReflectionProvider;
 import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.converters.reflection.Unsafe;
 import com.thoughtworks.xstream.core.util.Base64JavaUtilCodec;
 import com.thoughtworks.xstream.core.util.CustomObjectOutputStream;
 import com.thoughtworks.xstream.core.util.DependencyInjectionFactory;
 import com.thoughtworks.xstream.core.util.PresortedMap;
 import com.thoughtworks.xstream.core.util.PresortedSet;
+import com.thoughtworks.xstream.core.util.UnsafeProvider;
 
 
 public class JVM implements Caching {
@@ -92,19 +93,8 @@ public class JVM implements Caching {
         final StackTraceElement[] stackTrace = exception.getStackTrace();
         isUnnamedModule = !stackTrace[0].toString().contains("xstream@"); // Java 9: getModule() == null
 
-        boolean test = true;
-        Object unsafe = null;
-        try {
-            final Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-            final Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            unsafe = unsafeField.get(null);
-            final Method allocateInstance = unsafeClass.getDeclaredMethod("allocateInstance", new Class[]{Class.class});
-            allocateInstance.setAccessible(true);
-            test = allocateInstance.invoke(unsafe, new Object[]{Test.class}) != null;
-        } catch (final Exception | Error e) {
-            test = false;
-        }
+        final Unsafe unsafe = UnsafeProvider.get().unsafe;
+        boolean test = unsafe != null && unsafe.getInitException() == null;
         canAllocateWithUnsafe = test;
         test = false;
         Class<? extends ReflectionProvider> type = PureJavaReflectionProvider.class;
