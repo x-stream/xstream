@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024, 2025, 2026 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -106,6 +106,8 @@ import java.util.UUID;
 import java.util.Vector;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -141,6 +143,8 @@ import com.thoughtworks.xstream.converters.collections.ArrayConverter;
 import com.thoughtworks.xstream.converters.collections.BitSetConverter;
 import com.thoughtworks.xstream.converters.collections.CharArrayConverter;
 import com.thoughtworks.xstream.converters.collections.CollectionConverter;
+import com.thoughtworks.xstream.converters.collections.CopyOnWriteArrayListConverter;
+import com.thoughtworks.xstream.converters.collections.CopyOnWriteArraySetConverter;
 import com.thoughtworks.xstream.converters.collections.MapConverter;
 import com.thoughtworks.xstream.converters.collections.PropertiesConverter;
 import com.thoughtworks.xstream.converters.collections.SingletonCollectionConverter;
@@ -248,8 +252,8 @@ import com.thoughtworks.xstream.mapper.SystemAttributeAliasingMapper;
 import com.thoughtworks.xstream.mapper.XStream11XmlFriendlyMapper;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 import com.thoughtworks.xstream.security.ArrayTypePermission;
-import com.thoughtworks.xstream.security.InputManipulationException;
 import com.thoughtworks.xstream.security.ExplicitTypePermission;
+import com.thoughtworks.xstream.security.InputManipulationException;
 import com.thoughtworks.xstream.security.InterfaceTypePermission;
 import com.thoughtworks.xstream.security.NoPermission;
 import com.thoughtworks.xstream.security.NoTypePermission;
@@ -737,13 +741,15 @@ public class XStream {
         types.addAll(Arrays.<Class<?>>asList(AtomicBoolean.class, AtomicInteger.class, AtomicLong.class,
             AtomicReference.class, BitSet.class, Charset.class, Class.class, Currency.class, Date.class,
             DecimalFormatSymbols.class, File.class, Locale.class, Object.class, Pattern.class, StackTraceElement.class,
-            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class));
+            String.class, StringBuffer.class, StringBuilder.class, URL.class, URI.class, UUID.class,
+            CopyOnWriteArrayList.class, CopyOnWriteArraySet.class));
+
         if (JVM.isSQLAvailable()) {
             types.add(JVM.loadClassForName("java.sql.Timestamp"));
             types.add(JVM.loadClassForName("java.sql.Time"));
             types.add(JVM.loadClassForName("java.sql.Date"));
         }
-        
+
         allowTypeHierarchy(Clock.class);
         types.add(Duration.class);
         types.add(Instant.class);
@@ -780,8 +786,8 @@ public class XStream {
     /**
      * Setup the security framework of a XStream instance.
      * <p>
-     * This method was a pure helper method for XStream 1.4.10 to 1.4.17.  It initialized an XStream instance with a
-     * whitelist of well-known and simply types of the Java runtime as it is done in XStream 1.4.18 by default.  This
+     * This method was a pure helper method for XStream 1.4.10 to 1.4.17. It initialized an XStream instance with a
+     * whitelist of well-known and simply types of the Java runtime as it is done in XStream 1.4.18 by default. This
      * method will do therefore nothing in XStream 1.4.18 or higher.
      * </p>
      *
@@ -847,6 +853,8 @@ public class XStream {
         alias("linked-hash-set", LinkedHashSet.class);
         alias("weak-hash-map", WeakHashMap.class);
         alias("concurrent-hash-map", ConcurrentHashMap.class);
+        alias("copy-on-write-array-list", CopyOnWriteArrayList.class);
+        alias("copy-on-write-array-set", CopyOnWriteArraySet.class);
         alias("atomic-boolean", AtomicBoolean.class);
         alias("atomic-int", AtomicInteger.class);
         alias("atomic-long", AtomicLong.class);
@@ -980,6 +988,8 @@ public class XStream {
         registerConverter(new BigIntegerConverter(), PRIORITY_NORMAL);
         registerConverter(new BigDecimalConverter(), PRIORITY_NORMAL);
         registerConverter(new PathConverter(), PRIORITY_NORMAL);
+        registerConverter(new CopyOnWriteArrayListConverter(mapper), PRIORITY_NORMAL);
+        registerConverter(new CopyOnWriteArraySetConverter(mapper), PRIORITY_NORMAL);
         registerConverter((Converter)new AtomicBooleanConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new AtomicIntegerConverter(), PRIORITY_NORMAL);
         registerConverter((Converter)new AtomicLongConverter(), PRIORITY_NORMAL);
@@ -1060,8 +1070,9 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
         }
         if (JVM.loadClassForName("jakarta.activation.ActivationDataFlavor") != null) {
-            registerConverterDynamically("com.thoughtworks.xstream.converters.extended.ActivationDataFlavorJakartaConverter",
-                PRIORITY_NORMAL, null, null);
+            registerConverterDynamically(
+                "com.thoughtworks.xstream.converters.extended.ActivationDataFlavorJakartaConverter", PRIORITY_NORMAL,
+                null, null);
         }
         if (JVM.isVersion(14)) {
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.RecordConverter",
@@ -1183,15 +1194,12 @@ public class XStream {
     }
 
     /**
-     * Set time limit for adding elements to collections or maps.
-     * 
-     * Manipulated content may be used to create recursive hash code calculations or sort operations. An
-     * {@link InputManipulationException} is thrown, if the summed up time to add elements to collections or maps
-     * exceeds the provided limit.
-     * 
-     * Note, that the time to add an individual element is calculated in seconds, not milliseconds. However, attacks
-     * typically use objects with exponential growing calculation times.
-     * 
+     * Set time limit for adding elements to collections or maps. Manipulated content may be used to create recursive
+     * hash code calculations or sort operations. An {@link InputManipulationException} is thrown, if the summed up time
+     * to add elements to collections or maps exceeds the provided limit. Note, that the time to add an individual
+     * element is calculated in seconds, not milliseconds. However, attacks typically use objects with exponential
+     * growing calculation times.
+     *
      * @param maxSeconds limit in seconds or 0 to disable check
      * @since 1.4.19
      */

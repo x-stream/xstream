@@ -1,7 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005 Joe Walnes.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2018, 2021 XStream Committers.
- * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2018, 2021 XStream Committers.
+ * Copyright (C) 2006, 2007, 2010, 2011, 2013, 2014, 2018, 2021, 2026 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -117,5 +116,13 @@ public class CollectionConverter extends AbstractCollectionConverter {
     @Override
     protected Collection<?> createCollection(final Class<?> type) {
         return (Collection<?>)super.createCollection(this.type != null ? this.type : type);
+    }
+
+    /**
+     * @since upcoming
+     */
+    @SuppressWarnings("rawtypes")
+    protected Class<? extends Collection> getCollectionType() {
+        return type;
     }
 }

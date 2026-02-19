@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD:xstream/src/test/com/thoughtworks/acceptance/ConcurrentTypesTest.java
  * Copyright (C) 2012, 2015, 2017, 2018, 2021, 2022, 2023 XStream Committers.
+=======
+ * Copyright (C) 2012, 2015, 2017, 2018, 2022, 2023, 2026 XStream Committers.
+>>>>>>> a53eed40 (Add converter for CopyOnWriteArray types. Closes #463.):xstream/src/test/com/thoughtworks/acceptance/Concurrent15TypesTest.java
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -10,8 +14,11 @@
  */
 package com.thoughtworks.acceptance;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -138,5 +145,76 @@ public class ConcurrentTypesTest extends AbstractAcceptanceTest {
             + "    <replacedValue>TEST</replacedValue>\n"
             + "  </value>\n" //
             + "</atomic-reference>").replace('\'', '"'));
+    }
+
+    public void testCopyOnWriteArrayList() {
+        final CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>(Arrays.asList("A", "B", "C"));
+        assertBothWays(list, ("" //
+            + "<copy-on-write-array-list>\n"
+            + "  <string>A</string>\n"
+            + "  <string>B</string>\n"
+            + "  <string>C</string>\n"
+            + "</copy-on-write-array-list>").replace('\'', '"'));
+    }
+
+    public void testCopyOnWriteArrayListFormatJavaRuntime() {
+        final CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<String>(Arrays.asList("A", "B", "C"));
+        assertEquals(list, xstream.fromXML(("" //
+            + "<java.util.concurrent.CopyOnWriteArrayList serialization='custom'>\n"
+            + "  <java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "    <default/>\n"
+            + "    <int>3</int>\n"
+            + "    <string>A</string>\n"
+            + "    <string>B</string>\n"
+            + "    <string>C</string>\n"
+            + "  </java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "</java.util.concurrent.CopyOnWriteArrayList>").replace('\'', '"')));
+    }
+
+    public void testCopyOnWriteArraySet() {
+        final CopyOnWriteArraySet<String> set = new CopyOnWriteArraySet<String>(Arrays.asList("A"));
+        assertBothWays(set, ("" //
+            + "<copy-on-write-array-set serialization='xstream'>\n"
+            + "  <string>A</string>\n"
+            + "</copy-on-write-array-set>").replace('\'', '"'));
+    }
+
+    public void testCopyOnWriteArraySetFormatFromOldJavaRuntime() {
+        final CopyOnWriteArraySet<String> set = new CopyOnWriteArraySet<String>(Arrays.asList("A", "B", "C"));
+        // Versions before 8.482, 11.0.30, 17.0.18, 21.0.10 and 25.0.2
+        assertEquals(set, xstream.fromXML(("" //
+            + "<java.util.concurrent.CopyOnWriteArraySet>\n"
+            + "  <al serialization='custom'>\n"
+            + "    <java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "      <default/>\n"
+            + "      <int>3</int>\n"
+            + "      <string>B</string>\n"
+            + "      <string>A</string>\n"
+            + "      <string>C</string>\n"
+            + "    </java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "  </al>\n"
+            + "</java.util.concurrent.CopyOnWriteArraySet>").replace('\'', '"')));
+    }
+
+    public void testCopyOnWriteArraySetFormatFromNewerJavaRuntime() {
+        final CopyOnWriteArraySet<String> set = new CopyOnWriteArraySet<String>(Arrays.asList("A", "B", "C"));
+        // Versions since 8.482, 11.0.30, 17.0.18, 21.0.10 and 25.0.2
+        assertEquals(set, xstream.fromXML(("" //
+            + "<java.util.concurrent.CopyOnWriteArraySet serialization='custom'>\n"
+            + "  <unserializable-parents/>\n"
+            + "  <java.util.concurrent.CopyOnWriteArraySet>\n"
+            + "    <default>\n"
+            + "      <al serialization='custom'>\n"
+            + "        <java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "          <default/>\n"
+            + "          <int>3</int>\n"
+            + "          <string>C</string>\n"
+            + "          <string>A</string>\n"
+            + "          <string>B</string>\n"
+            + "        </java.util.concurrent.CopyOnWriteArrayList>\n"
+            + "      </al>\n"
+            + "    </default>\n"
+            + "  </java.util.concurrent.CopyOnWriteArraySet>\n"
+            + "</java.util.concurrent.CopyOnWriteArraySet>").replace('\'', '"')));
     }
 }
