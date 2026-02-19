@@ -319,6 +319,7 @@
                 <exclude>**/enums/*</exclude>
                 <exclude>**/EnumMapper*</exclude>
                 <exclude>**/*15.java</exclude>
+                <exclude>**/*CopyOnWrite*Converter.java</exclude>
                 <exclude>**/Atomic*Converter.java</exclude>
                 <exclude>**/PathConverter.java</exclude>
                 <exclude>**/Optional*Converter.java</exclude>
@@ -345,9 +346,9 @@
                   <excludes combine.self="override">
                     <exclude>**/Lambda**</exclude>
                     <exclude>**/time/**</exclude>
-                    <exclude>**/Optional*Converter.java</exclude>
+	                <exclude>**/Optional*Converter.java</exclude>
                     <exclude>**/ISO8601JavaTimeConverter.java</exclude>
-                  </excludes>
+	              </excludes>
                   <testExcludes combine.self="override">
                     <exclude>**/Lambda**</exclude>
                     <exclude>**/*18TypesTest.java</exclude>
@@ -611,6 +612,7 @@
                 <exclude>**/extended/Atomic*Converter.java</exclude>
                 <exclude>**/extended/Optional*Converter.java</exclude>
                 <exclude>**/extended/PathConverter*</exclude>
+                <exclude>**/*CopyOnWrite*Converter.java</exclude>
                 <exclude>**/io/xml/JDom2*</exclude>
               </excludes>
               <testExcludes>

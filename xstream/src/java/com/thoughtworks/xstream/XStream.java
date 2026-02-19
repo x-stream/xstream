@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2003, 2004, 2005, 2006 Joe Walnes.
- * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024, 2025 XStream Committers.
+ * Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2021, 2022, 2024, 2025, 2026 XStream Committers.
  * All rights reserved.
  *
  * The software in this package is published under the terms of the BSD
@@ -684,6 +684,8 @@ public class XStream {
         types.add(URL.class);
         types.add(URI.class);
         types.add(JVM.loadClassForName("java.util.UUID"));
+        types.add(JVM.loadClassForName("java.util.concurrent.CopyOnWriteArrayList"));
+        types.add(JVM.loadClassForName("java.util.concurrent.CopyOnWriteArraySet"));
         types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicBoolean"));
         types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicInteger"));
         types.add(JVM.loadClassForName("java.util.concurrent.atomic.AtomicLong"));
@@ -847,6 +849,8 @@ public class XStream {
         if (JVM.isVersion(5)) {
             aliasDynamically("xml-duration", "javax.xml.datatype.Duration");
             alias("concurrent-hash-map", JVM.loadClassForName("java.util.concurrent.ConcurrentHashMap"));
+            alias("copy-on-write-array-list", JVM.loadClassForName("java.util.concurrent.CopyOnWriteArrayList"));
+            alias("copy-on-write-array-set", JVM.loadClassForName("java.util.concurrent.CopyOnWriteArraySet"));
             alias("enum-set", JVM.loadClassForName("java.util.EnumSet"));
             alias("enum-map", JVM.loadClassForName("java.util.EnumMap"));
             alias("string-builder", JVM.loadClassForName("java.lang.StringBuilder"));
@@ -1018,6 +1022,10 @@ public class XStream {
                 PRIORITY_NORMAL, null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.basic.UUIDConverter", PRIORITY_NORMAL,
                 null, null);
+            registerConverterDynamically("com.thoughtworks.xstream.converters.collections.CopyOnWriteArrayListConverter", PRIORITY_NORMAL,
+                new Class[]{Mapper.class}, new Object[]{mapper});
+            registerConverterDynamically("com.thoughtworks.xstream.converters.collections.CopyOnWriteArraySetConverter", PRIORITY_NORMAL,
+                new Class[]{Mapper.class}, new Object[]{mapper});
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicBooleanConverter", PRIORITY_NORMAL,
                 null, null);
             registerConverterDynamically("com.thoughtworks.xstream.converters.extended.AtomicIntegerConverter", PRIORITY_NORMAL,

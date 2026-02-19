@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -49,6 +49,8 @@
 	<h2>Minor changes</h2>
 
 	<ul>
+		<li>GHI:#463: Provide own converters for CopyOnWriteArrayList and CopyOnWriteArraySet to use a format
+		independent of the class layout.</li>
 		<li>GHI:#372: Support ActivationDataFlavor of Jakarta.</li>
 		<li>GHI:#347: PrettyPrintWriter exposes internal classes of com.thoughtworks.xstream.core.util.</li>
 		<li>GHPR:#346: XStream supports now Hibernate from 3.x up to current version 7.1.0.</li>
@@ -57,6 +59,8 @@
 	<h2>API changes</h2>
 
 	<ul>
+		<li>Added type c.t.x.converters.collection.CopyOnWriteArrayListConverter.</li>
+		<li>Added type c.t.x.converters.collection.CopyOnWriteArraySetConverter.</li>
 		<li>Added type c.t.x.converters.extended.ActivationDataFlavorJakartaConverter.</li>
 		<li>Added method c.t.x.io.xml.PrettyPrintWriter.writeAttributeValue(c.t.x.io.xml.PrettyPrintWriter.PureWriter, String).</li>
 		<li>Added method c.t.x.io.xml.PrettyPrintWriter.writeText(c.t.x.io.xml.PrettyPrintWriter.PureWriter, String).</li>
@@ -77,6 +81,8 @@
 		<li>The type ActivationDataFlavor from the jakarta.activation package has now precedence over the one from the
 		package javax.activation.  See <a href="faq.html#Serialization_ActivationDataFlavor_javax_jakarta">FAQ</a> for
 		full compatibility information.</li>
+		<li>The CopyOnWriteArrayList and CopyOnWriteArraySet instances, that have been written with previous versions of
+		XStream, can still be unmarshalled.</li>
 	</ul>
 
 	<h1 id="1.4.21">1.4.21</h1>

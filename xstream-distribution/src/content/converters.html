@@ -1,7 +1,7 @@
 <html>
 <!--
  Copyright (C) 2005, 2006 Joe Walnes.
- Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022, 2024, 2025 XStream committers.
+ Copyright (C) 2006, 2007, 2008, 2009, 2011, 2013, 2014, 2015, 2016, 2017, 2022, 2024, 2025, 2026 XStream committers.
  All rights reserved.
  
  The software in this package is published under the terms of the BSD
@@ -501,6 +501,48 @@
                 &lt;/java.util.regex.Pattern&gt;
                 </td>
                 <td>Available with Java 1.4 or higher.</td>
+                <td>normal</td>
+            </tr>
+
+            <!-- .................................................................................................. -->
+            <tr>
+                <td colspan="5" class="headerRow"><h1 id="java.util.concurrent">java.util.concurrent</h1></td>
+            </tr>
+            <tr>
+                <th>Converter</th>
+                <th>Supported types</th>
+                <th>Example</th>
+                <th>Notes</th>
+                <th>Prio</th>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CopyOnWriteArrayListConverter.html">CopyOnWriteArrayListConverter</a></td>
+                <td>java.util.concurrent.CopyOnWriteArrayList</td>
+                <td class="example">
+                    &lt;copy-on-write-array-list&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
+                    &lt;/copy-on-write-array-list&gt;
+                </td>
+                <td>Available with Java 1.5 or higher.  The objects inside the collection can be any type of objects,
+                including nested collections.  Can be registered for a derived CopyOnWriteArrayList type or locally,
+                suppression of implicit type might be necessary.</td>
+                <td>normal</td>
+            </tr>
+            <tr>
+                <td><a href="javadoc/com/thoughtworks/xstream/converters/collections/CopyOnWriteArraySetConverter.html">CopyOnWriteArraySetConverter</a></td>
+                <td>java.util.concurrent.CopyOnWriteArraySet</td>
+                <td class="example">
+                    &lt;copy-on-write-array-set serialization=&quot;xstream&quot;&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;apple&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;string&gt;banana&lt;/string&gt;<br/>
+                    &nbsp;&nbsp;&lt;big-decimal&gt;12345.4555&lt;/big-decimal&gt;<br/>
+                    &lt;/copy-on-write-array-set&gt;
+                </td>
+                <td>Available with Java 1.5 or higher.  The objects inside the collection can be any type of objects,
+                including nested collections.  Can be registered for a derived CopyOnWriteArraySet type or locally,
+                suppression of implicit type might be necessary.</td>
                 <td>normal</td>
             </tr>
 
