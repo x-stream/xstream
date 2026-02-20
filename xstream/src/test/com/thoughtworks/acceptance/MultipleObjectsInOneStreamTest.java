@@ -6,7 +6,7 @@
  * The software in this package is published under the terms of the BSD
  * style license a copy of which has been included with this distribution in
  * the LICENSE.txt file.
- * 
+ *
  * Created on 09. December 2005 by Joe Walnes
  */
 package com.thoughtworks.acceptance;
@@ -24,6 +24,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.ReaderWrapper;
 import com.thoughtworks.xstream.io.xml.MXParserDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 import com.thoughtworks.xstream.io.xml.XppReader;
 import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.testutil.CallLog;
@@ -225,6 +226,41 @@ public class MultipleObjectsInOneStreamTest extends AbstractAcceptanceTest {
             fail("Thrown " + ConversionException.class.getName() + " expected");
         } catch (final ConversionException e) {
             assertEquals(3, reader.getLevel() - level);
+            do {
+                reader.moveUp();
+            } while (level != reader.getLevel());
+        }
+        assertEquals("bottom", ois.readObject());
+        ois.close();
+    }
+
+    public void testFailSafeDeserializationWithHierarchicalStreamReader() throws IOException, ClassNotFoundException {
+        final String xml = ""
+                + "<object-stream>\n"
+                + "  <string>top</string>\n"
+                + "  <list>\n"
+                + "    <string>first</string>\n"
+                + "    <int-array>\n"
+                + "      <int>1</int>\n"
+                + "      <int>invalid</int>\n" // deserialization will fail here
+                + "      <int>3</int>\n"
+                + "    </int-array>\n"
+                + "    <string>last</string>\n"
+                + "  </list>\n"
+                + "  <string>bottom</string>\n"
+                + "</object-stream>";
+
+        @SuppressWarnings("resource")
+        final HierarchicalStreamReader reader = new Xpp3Driver().createReader(new StringReader(xml));
+        final ObjectInputStream ois = xstream.createObjectInputStream(reader);
+        final int level = reader.getLevel();
+        assertEquals(1, level);
+        assertEquals("top", ois.readObject());
+        try {
+            ois.readObject();
+            fail("Thrown " + ConversionException.class.getName() + " expected");
+        } catch (final ConversionException e) {
+            assertEquals(4, reader.getLevel());
             do {
                 reader.moveUp();
             } while (level != reader.getLevel());
