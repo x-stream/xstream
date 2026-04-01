@@ -1085,7 +1085,7 @@
     <version.plugin.mojo.build-helper>3.6.1</version.plugin.mojo.build-helper>
     <version.plugin.mojo.flatten>1.7.3</version.plugin.mojo.flatten>
     <version.plugin.sonatype.central-publishing>0.10.0</version.plugin.sonatype.central-publishing>
-    <version.plugin.io.github.git-commit-id>9.0.2</version.plugin.io.github.git-commit-id>
+    <version.plugin.io.github.git-commit-id>9.1.0</version.plugin.io.github.git-commit-id>
     <version.plugin.io.wcm.devops.eclipse>3.3.0</version.plugin.io.wcm.devops.eclipse>
     <version.plugin.eluder.coveralls>4.3.0</version.plugin.eluder.coveralls>
     <version.plugin.jacoco>0.8.14</version.plugin.jacoco>
