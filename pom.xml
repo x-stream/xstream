@@ -1120,7 +1120,7 @@
     <version.org.slf4j>1.7.36</version.org.slf4j>
     <version.stax>1.2.0</version.stax>
     <version.xmlpull>1.1.3.4a</version.xmlpull>
-    <version.xom>1.3.9</version.xom>
+    <version.xom>1.4.1</version.xom>
     <version.xpp3>1.1.4c</version.xpp3>
 
     <jar.module.name>${project.artifactId}</jar.module.name>
