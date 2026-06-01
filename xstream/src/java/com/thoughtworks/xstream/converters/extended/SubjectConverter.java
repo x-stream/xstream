@@ -105,7 +105,7 @@ public class SubjectConverter extends AbstractCollectionConverter {
 
     protected boolean unmarshalReadOnly(final HierarchicalStreamReader reader) {
         reader.moveDown();
-        final boolean readOnly = Boolean.getBoolean(reader.getValue());
+        final boolean readOnly = Boolean.parseBoolean(reader.getValue());
         reader.moveUp();
         return readOnly;
     };

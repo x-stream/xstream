@@ -243,6 +243,19 @@ public class ExtendedTypesTest extends AbstractAcceptanceTest {
         assertBothWays(subject, expectedXml);
     }
 
+    public void testReadOnlySubject() {
+        xstream.allowTypes(Subject.class);
+        xstream.allowTypeHierarchy(Principal.class);
+
+        final Subject subject = new Subject();
+        subject.setReadOnly();
+        assertTrue(subject.isReadOnly());
+
+        final String xml = xstream.toXML(subject);
+        final Subject unmarshalled = (Subject)xstream.fromXML(xml);
+        assertTrue(unmarshalled.isReadOnly());
+    }
+
     public void testCharset() {
         final Charset charset = Charset.forName("utf-8");
         final String expectedXml = "<charset>UTF-8</charset>";
