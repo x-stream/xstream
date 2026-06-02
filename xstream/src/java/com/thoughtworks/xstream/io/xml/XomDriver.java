@@ -20,6 +20,12 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.StreamException;
@@ -101,7 +107,17 @@ public class XomDriver extends AbstractXmlDriver {
      */
     protected Builder createBuilder() {
         final Builder builder = getBuilder();
-        return builder != null ? builder : new Builder();
+        if (builder != null) {
+            return builder;
+        }
+        try {
+            final SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            final XMLReader xmlReader = factory.newSAXParser().getXMLReader();
+            return new Builder(xmlReader);
+        } catch (final ParserConfigurationException | SAXException e) {
+            throw new StreamException(e);
+        }
     }
 
     @Override
