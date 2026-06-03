@@ -154,7 +154,12 @@ public class FilePersistenceStrategy<K, V> extends AbstractFilePersistenceStrate
             if (c >= ' ' && illegalChars.indexOf(c) < 0) {
                 buffer.append(c);
             } else {
-                buffer.append("%" + Integer.toHexString(c).toUpperCase());
+                final String hex = Integer.toHexString(c).toUpperCase();
+                buffer.append('%');
+                if (hex.length() < 2) {
+                    buffer.append('0');
+                }
+                buffer.append(hex);
             }
         }
         return buffer.toString();

@@ -97,6 +97,22 @@ public class FilePersistenceStrategyTest extends TestCase {
         assertEquals("%guilherme", strategy.extractKey("string@%25guilherme.xml"));
     }
 
+    public void testEscapesControlCharacterWithTwoHexDigits() {
+        final FilePersistenceStrategy<String, String> strategy = new FilePersistenceStrategy<String, String>(baseDir);
+        assertEquals("string@%09guilherme.xml", strategy.getName("\tguilherme"));
+        assertEquals("\tguilherme", strategy.extractKey("string@%09guilherme.xml"));
+    }
+
+    public void testRoundTripsKeyWithControlCharacter() {
+        final FilePersistenceStrategy<String, String> strategy = new FilePersistenceStrategy<String, String>(baseDir);
+        assertEquals("\nguilherme", strategy.extractKey(strategy.getName("\nguilherme")));
+    }
+
+    public void testDistinctKeysDoNotShareAFilename() {
+        final FilePersistenceStrategy<String, String> strategy = new FilePersistenceStrategy<String, String>(baseDir);
+        assertFalse(strategy.getName("\u0012").equals(strategy.getName("\u0001" + "2")));
+    }
+
     public void testEscapesNullKeyWhileGettingAFileName() {
         final FilePersistenceStrategy<String, String> strategy = new FilePersistenceStrategy<String, String>(baseDir);
         assertEquals("null@null.xml", strategy.getName(null));
