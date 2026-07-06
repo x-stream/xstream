@@ -90,7 +90,9 @@ public class JVM implements Caching {
         canAllocateWithUnsafe = test;
         test = false;
         Class type = PureJavaReflectionProvider.class;
-        if (canUseSunUnsafeReflectionProvider()) {
+        if (isVersion(23) && canUseSunUnsafeReflectionProvider()) {
+            type = loadClassForName("com.thoughtworks.xstream.converters.reflection.SunLimitedUnsafeReflectionProvider");
+        } else if (canUseSunUnsafeReflectionProvider()) {
             Class cls = loadClassForName("com.thoughtworks.xstream.converters.reflection.SunUnsafeReflectionProvider");
             if (cls != null) {
                 try {
